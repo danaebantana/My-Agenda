@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">My Agenda</string>
+    <string name="sign_up">Εγγραφή</string>
+    <string name="email">Εμαιλ</string>
+    <string name="password">Κωδικός</string>
+    <string name="verify_password">Επιβεβαίωση κωδικού</string>
+    <string name="login">Είσοδος</string>
+    <string name="not_registered_press_here">Δεν έχετε λογαριασμό; Πατήστε εδώ</string>
+    <string name="toast_FillBoxes">Πρέπει να συμπληρώσετε όλα τα απαραίτητα πεδία</string>
+    <string name="toast_LoginSuccessful">Επιτυχή είσοδο!</string>
+    <string name="toast_Password">Πρέπει να ξαναεισάγεται τον κωδικό σας</string>
+    <string name="toast_SignUpSuccessful">Δημιουργία χρήστη με εμαιλ: Επιτυχής!</string>
+    <string name="toast_Logout">Επιτυχής αποσύνδεση!</string>
+</resources>

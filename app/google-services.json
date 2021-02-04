@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1060368734848",
+    "project_id": "my-agenda-4e8e6",
+    "storage_bucket": "my-agenda-4e8e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060368734848:android:01c8ebe673a2391305e465",
+        "android_client_info": {
+          "package_name": "com.unipi.danaeb.myagenda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060368734848-etvrvcj2gjftb78hgue46r965mioac6o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.unipi.danaeb.myagenda",
+            "certificate_hash": "98efa1654ad64ea20cdde484bbb188f788101c05"
+          }
+        },
+        {
+          "client_id": "1060368734848-rjj1ej3obmlk9djid5jvkrgsp5r3dl8f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQJ29NeGGUeYRFRv5U1JyIn3JZIZokEOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060368734848-rjj1ej3obmlk9djid5jvkrgsp5r3dl8f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

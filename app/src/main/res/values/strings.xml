@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">My Agenda</string>
+
+    <string name="sign_up">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="verify_password">Verify Password</string>
+
+    <string name="login">Login</string>
+    <string name="not_registered_press_here">Not Registered? Press Here</string>
+
+    <string name="toast_FillBoxes">You must fill out all the necessary boxes</string>
+    <string name="toast_LoginSuccessful">Login successful!</string>
+    <string name="toast_Password">Re-write your password</string>
+    <string name="toast_SignUpSuccessful">Create user with email:Successful!</string>
+    <string name="toast_Logout">Log out successful!</string>
 </resources>
