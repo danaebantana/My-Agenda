@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">My Agenda</string>
+    <string name="log_out">Log out</string>
+
+    <string name="add_new_event">Add new event:</string>
+    <string name="back">Back</string>
 
     <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
@@ -14,4 +18,19 @@
     <string name="toast_Password">Re-write your password</string>
     <string name="toast_SignUpSuccessful">Create user with email:Successful!</string>
     <string name="toast_Logout">Log out successful!</string>
+
+    <string name="todo">TODO</string>
+    <string name="title">Title</string>
+    <string name="set_reminder">Set Reminder:</string>
+    <string name="event_time">Event Time:</string>
+    <string name="description">Description</string>
+    <string name="location">Location</string>
+
+    <string name="purple">Purple</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="teal">Teal</string>
+    <string name="black">Black</string>
+    <string name="white">White</string>
+
 </resources>

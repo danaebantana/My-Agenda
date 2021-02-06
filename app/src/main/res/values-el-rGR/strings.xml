@@ -8,8 +8,23 @@
     <string name="login">Είσοδος</string>
     <string name="not_registered_press_here">Δεν έχετε λογαριασμό; Πατήστε εδώ</string>
     <string name="toast_FillBoxes">Πρέπει να συμπληρώσετε όλα τα απαραίτητα πεδία</string>
-    <string name="toast_LoginSuccessful">Επιτυχή είσοδο!</string>
+    <string name="toast_LoginSuccessful">Επιτυχής είσοδος!</string>
     <string name="toast_Password">Πρέπει να ξαναεισάγεται τον κωδικό σας</string>
     <string name="toast_SignUpSuccessful">Δημιουργία χρήστη με εμαιλ: Επιτυχής!</string>
     <string name="toast_Logout">Επιτυχής αποσύνδεση!</string>
+    <string name="back">Πισω</string>
+    <string name="log_out">Αποσυνδεση</string>
+    <string name="todo">TODO</string>
+    <string name="title">Τίτλος</string>
+    <string name="set_reminder">Υπενθύμιση:</string>
+    <string name="event_time">Ώρα εκδήλωσης:</string>
+    <string name="description">Περιγραφή</string>
+    <string name="location">Τοποθεσία</string>
+    <string name="purple">Μωβ</string>
+    <string name="red">Κόκκινο</string>
+    <string name="green">Πράσινο</string>
+    <string name="teal">Πράσινο</string>
+    <string name="black">Μαύρο</string>
+    <string name="white">Άσπρο</string>
+    <string name="add_new_event">Προσθέστε νέα εκδήλωση:</string>
 </resources>

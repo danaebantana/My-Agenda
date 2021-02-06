@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     EditText email, password1, password2;
     Button signUp;
+    FloatingActionButton back_bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,16 @@ public class SignUpActivity extends AppCompatActivity {
         password1 = findViewById(R.id.editText_password1);
         password2 = findViewById(R.id.editText_password2);
         signUp = findViewById(R.id.button_signUp);
+        back_bt = findViewById(R.id.back_bt);
+
+        back_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
 
     }
 
