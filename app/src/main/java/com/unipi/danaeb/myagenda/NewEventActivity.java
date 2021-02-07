@@ -33,7 +33,7 @@ import java.util.Locale;
 
 public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FloatingActionButton back_bt1, save_bt;
+    FloatingActionButton back_bt1, save_bt, location_bt;
     Dialog myDialog;
     TextView color_txt;
     TextView start_date, start_time, end_date, end_time;
@@ -52,6 +52,17 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        });
+
+        // Map button
+        location_bt = findViewById(R.id.location_bt);
+        location_bt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -172,7 +183,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 } else if (selection.equals("White")){
                     color_txt.setBackgroundResource(R.color.White);
                 }
-                color_txt.setText(selection);
                 myDialog.dismiss();
             }
         });
