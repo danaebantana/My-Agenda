@@ -13,12 +13,13 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 
 public class NewEventActivity extends AppCompatActivity {
 
     Dialog myDialog;
-    Button color_bt;
+    TextView color_txt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,24 +38,26 @@ public class NewEventActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                color_txt = findViewById(R.id.color_txt);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
-                int radioId = radioGroup.indexOfChild(radioButton);
+                int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
                 RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
                 String selection = (String) btn.getText();
-                if (selection == "Purple"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.Purple));
-                } else if (selection == "Red"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.Red));
-                } else if (selection == "Green"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.Green));
-                } else if (selection == "Teal"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.Teal));
-                } else if (selection == "Black"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.Black));
-                } else if (selection == "White"){
-                    color_bt.setBackgroundColor(color_bt.getContext().getResources().getColor(R.color.White));
+                if (selection.equals("Purple")){
+                    color_txt.setBackgroundResource(R.color.Purple);
+                } else if (selection.equals("Red")){
+                    color_txt.setBackgroundResource(R.color.Red);
+                } else if (selection.equals("Green")){
+                    color_txt.setBackgroundResource(R.color.Green);
+                } else if (selection.equals("Teal")){
+                    color_txt.setBackgroundResource(R.color.Teal);
+                } else if (selection.equals("Black")){
+                    color_txt.setBackgroundResource(R.color.Black);
+                } else if (selection.equals("White")){
+                    color_txt.setBackgroundResource(R.color.White);
                 }
+                color_txt.setText(selection);
                 myDialog.dismiss();
             }
         });
