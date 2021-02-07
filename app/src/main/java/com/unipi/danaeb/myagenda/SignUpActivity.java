@@ -17,19 +17,25 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    EditText email, password1, password2;
-    Button signUp;
-    FloatingActionButton back_bt;
+    private FirebaseDatabase database;
+    private DatabaseReference rootRef;
+    private FirebaseUser currentUser;
+    private EditText email, password1, password2;
+    private Button signUp;
+    private FloatingActionButton back_bt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        database = FirebaseDatabase.getInstance();
+        rootRef = database.getReference("Users");
         mAuth = FirebaseAuth.getInstance();
         email = findViewById(R.id.editText_emailAddress);
         password1 = findViewById(R.id.editText_password1);
@@ -66,6 +72,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (task.isSuccessful()){
                                 Toast.makeText(getApplicationContext(),R.string.toast_SignUpSuccessful,Toast.LENGTH_LONG).show();
                                 currentUser = mAuth.getCurrentUser();
+                                rootRef.child(currentUser.getUid()).setValue(currentUser.getEmail());
                                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                 startActivity(intent);
                             } else {

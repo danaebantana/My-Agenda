@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">My Agenda</string>
-    <string name="log_out">Log out</string>
+    <string name="log_out">Log Out</string>
 
     <string name="add_new_event">Add new event:</string>
     <string name="back">Back</string>
@@ -13,11 +13,25 @@
     <string name="login">Login</string>
     <string name="not_registered_press_here">Not Registered? Press Here</string>
 
+    <string name="yourProfile">Your Profile</string>
+    <string name="name">Name</string>
+    <string name="surname">Surname</string>
+    <string name="address">Address</string>
+    <string name="profession">Profession</string>
+    <string name="save">Save</string>
+
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="exit">Exit</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+
     <string name="toast_FillBoxes">You must fill out all the necessary boxes</string>
     <string name="toast_LoginSuccessful">Login successful!</string>
     <string name="toast_Password">Re-write your password</string>
-    <string name="toast_SignUpSuccessful">Create user with email:Successful!</string>
+    <string name="toast_SignUpSuccessful">Create user with email: Successful!</string>
     <string name="toast_Logout">Log out successful!</string>
+    <string name="toast_ProfileSave">Your personal data has been successfully saved!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>

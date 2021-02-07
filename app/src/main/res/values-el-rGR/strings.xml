@@ -27,4 +27,16 @@
     <string name="black">Μαύρο</string>
     <string name="white">Άσπρο</string>
     <string name="add_new_event">Προσθέστε νέα εκδήλωση:</string>
+    <string name="home">Αρχική</string>
+    <string name="profile">Προφίλ</string>
+    <string name="exit">Έξοδος</string>
+    <string name="open">Άνοιγμα</string>
+    <string name="close">Κλείσιμο</string>
+    <string name="toast_ProfileSave">Τα προσωπικά σας δεδομένα έχουν αποθηκευτεί επιτυχώς!</string>
+    <string name="name">Όνομα</string>
+    <string name="surname">Επίθετο</string>
+    <string name="address">Διεύθυνση</string>
+    <string name="profession">Επάγγελμα</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="yourProfile">Το προφίλ σου</string>
 </resources>

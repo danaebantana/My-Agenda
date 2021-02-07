@@ -1,28 +1,34 @@
 package com.unipi.danaeb.myagenda;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button logout;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        logout = findViewById(R.id.button_logout);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
@@ -33,13 +39,47 @@ public class MainActivity extends AppCompatActivity {
                Intent intent = new Intent(getApplicationContext(), DayActivity.class);
                startActivity(intent);
             }
-    });
+        });
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView = findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+                switch (item.getItemId()){
+                    case R.id.home:
+                        intent = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.profile:
+                        intent = new Intent(getApplicationContext(),ProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.logOut:
+                        mAuth.signOut();
+                        Toast.makeText(getApplicationContext(), R.string.toast_Logout, Toast.LENGTH_LONG).show();
+                        intent = new Intent(getApplicationContext(),LoginActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
-    public void logout(View view){
-        mAuth.signOut();
-        Toast.makeText(getApplicationContext(), R.string.toast_Logout, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-        startActivity(intent);
+    public void navigationBar(){
+        //Navigation Bar
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
