@@ -7,7 +7,7 @@
     <string name="verify_password">Επιβεβαίωση κωδικού</string>
     <string name="login">Είσοδος</string>
     <string name="not_registered_press_here">Δεν έχετε λογαριασμό; Πατήστε εδώ</string>
-    <string name="toast_FillBoxes">Πρέπει να συμπληρώσετε όλα τα απαραίτητα πεδία</string>
+    <string name="toast_FillBoxes">Πρέπει να συμπληρώσετε όλα τα πεδία</string>
     <string name="toast_LoginSuccessful">Επιτυχής είσοδος!</string>
     <string name="toast_Password">Πρέπει να ξαναεισάγεται τον κωδικό σας</string>
     <string name="toast_SignUpSuccessful">Δημιουργία χρήστη με εμαιλ: Επιτυχής!</string>
@@ -34,9 +34,12 @@
     <string name="close">Κλείσιμο</string>
     <string name="toast_ProfileSave">Τα προσωπικά σας δεδομένα έχουν αποθηκευτεί επιτυχώς!</string>
     <string name="name">Όνομα</string>
-    <string name="surname">Επίθετο</string>
     <string name="address">Διεύθυνση</string>
     <string name="profession">Επάγγελμα</string>
     <string name="save">Αποθήκευση</string>
     <string name="yourProfile">Το προφίλ σου</string>
+    <string name="toast_personalData">Καλως ήρθες στο My Agenda! Συμπλήρωσε τα πεδία.</string>
+    <string name="phoneNumber">Τηλέφωνο</string>
+    <string name="toast_uploadSuccess">Η μεταμόρφωση έγινε με επιτυχία!</string>
+    <string name="toast_uploadFailure">Η μεταμόρφωση απέτυχε!</string>
 </resources>

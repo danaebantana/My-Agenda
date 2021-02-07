@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
                startActivity(intent);
             }
         });
+        navigationBar();
+    }
+
+    public void navigationBar(){
+        //Navigation Bar
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -69,11 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-    }
-
-    public void navigationBar(){
-        //Navigation Bar
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item){

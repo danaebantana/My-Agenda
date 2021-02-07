@@ -15,7 +15,7 @@
 
     <string name="yourProfile">Your Profile</string>
     <string name="name">Name</string>
-    <string name="surname">Surname</string>
+    <string name="phoneNumber">Phone Number</string>
     <string name="address">Address</string>
     <string name="profession">Profession</string>
     <string name="save">Save</string>
@@ -26,12 +26,15 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
 
-    <string name="toast_FillBoxes">You must fill out all the necessary boxes</string>
+    <string name="toast_FillBoxes">You must fill out all the boxes</string>
     <string name="toast_LoginSuccessful">Login successful!</string>
     <string name="toast_Password">Re-write your password</string>
     <string name="toast_SignUpSuccessful">Create user with email: Successful!</string>
     <string name="toast_Logout">Log out successful!</string>
     <string name="toast_ProfileSave">Your personal data has been successfully saved!</string>
+    <string name="toast_personalData">Welcome to My Agenda! Fill the boxes.</string>
+    <string name="toast_uploadSuccess">Upload Successful!</string>
+    <string name="toast_uploadFailure">Upload Failed!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>
