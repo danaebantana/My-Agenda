@@ -203,15 +203,85 @@
         android:id="@+id/time_txt2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="224dp"
+        android:layout_marginTop="136dp"
         android:text="@string/collaborators"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.053"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clock_image"
-        app:layout_constraintVertical_bias="0.903" />
+        app:layout_constraintTop_toBottomOf="@+id/clock_image" />
+
+    <ImageView
+        android:id="@+id/reminder_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.042"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time_txt2"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/add_reminder" />
+
+    <TextView
+        android:id="@+id/reminder_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/set_reminder"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/reminder_image"
+        app:layout_constraintTop_toBottomOf="@+id/time_txt2" />
+
+    <Spinner
+        android:id="@+id/reminder_sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/color_txt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/reminder_txt"
+        app:layout_constraintTop_toBottomOf="@+id/time_txt2"
+        app:layout_constraintVertical_bias="0.459" />
+
+    <ImageView
+        android:id="@+id/color_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.039"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reminder_image"
+        app:layout_constraintVertical_bias="0.585"
+        app:srcCompat="@drawable/color_palette" />
+
+    <TextView
+        android:id="@+id/color_txt"
+        android:layout_width="330dp"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="28dp"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:gravity="center"
+        android:onClick="ShowPopup"
+        android:text="@string/white"
+        android:textAlignment="center"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.038"
+        app:layout_constraintStart_toEndOf="@+id/color_image"
+        app:layout_constraintTop_toBottomOf="@+id/reminder_txt"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/clock_image"
@@ -226,79 +296,5 @@
         app:layout_constraintTop_toBottomOf="@+id/event_description"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/clock" />
-
-    <TextView
-        android:id="@+id/reminder_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="152dp"
-        android:text="@string/set_reminder"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/reminder_image"
-        app:layout_constraintTop_toBottomOf="@+id/time_txt2"
-        app:layout_constraintVertical_bias="0.857" />
-
-    <ImageView
-        android:id="@+id/reminder_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="152dp"
-        android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_txt2"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/add_reminder" />
-
-    <Spinner
-        android:id="@+id/reminder_sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/color_txt"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/reminder_txt"
-        app:layout_constraintTop_toBottomOf="@+id/time_txt2"
-        app:layout_constraintVertical_bias="0.523" />
-
-    <TextView
-        android:id="@+id/color_txt"
-        android:layout_width="330dp"
-        android:layout_height="34dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="60dp"
-        android:background="#FFFFFF"
-        android:clickable="true"
-        android:gravity="center"
-        android:onClick="ShowPopup"
-        android:text="@string/white"
-        android:textAlignment="center"
-        android:textStyle="bold|italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/color_image"
-        app:layout_constraintTop_toBottomOf="@+id/reminder_txt"
-        app:layout_constraintVertical_bias="0.756" />
-
-    <ImageView
-        android:id="@+id/color_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/todo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.042"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reminder_image"
-        app:layout_constraintVertical_bias="0.366"
-        app:srcCompat="@drawable/color_palette" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
