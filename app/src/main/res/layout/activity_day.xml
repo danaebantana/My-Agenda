@@ -7,11 +7,26 @@
     android:background="#fff3e6"
     tools:context=".DayActivity">
 
+    <TextView
+        android:id="@+id/date_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:fontFamily="serif-monospace"
+        android:textSize="24sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.027" />
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newEvent_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:contentDescription="@string/todo"
         app:backgroundTint="#4CAF50"
         app:fabSize="auto"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,7 +34,6 @@
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.914"
-        app:srcCompat="@android:drawable/ic_input_add"
-        android:contentDescription="@string/todo" />
+        app:layout_constraintVertical_bias="0.973"
+        app:srcCompat="@android:drawable/ic_input_add" />
 </androidx.constraintlayout.widget.ConstraintLayout>

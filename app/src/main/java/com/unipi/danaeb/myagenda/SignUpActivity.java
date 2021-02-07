@@ -43,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         signUp = findViewById(R.id.button_signUp);
         back_bt = findViewById(R.id.back_bt);
 
+        // Back button
         back_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    //Sign up new user to firebase, while checking the activities condition.
+    // Sign up new user to firebase, while checking the activities condition.
     public void signUp(View view){
         if (TextUtils.isEmpty(email.getText()) || TextUtils.isEmpty(password1.getText()) || TextUtils.isEmpty(password2.getText())){
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
