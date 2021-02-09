@@ -2,7 +2,9 @@ package com.unipi.danaeb.myagenda;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,17 +51,19 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     EditText name, address, profession, phoneNumber;
-    Button save;
+    FloatingActionButton save;
     ImageView profilePic;
     public Uri imageUri;
     private StorageReference storageReference;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        navigationBar();
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -74,14 +81,6 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 choosePicture();
-            }
-        });
-        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.config_settings);
-        mFirebaseRemoteConfig.fetch(3).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                mFirebaseRemoteConfig.fetchAndActivate();
             }
         });
         viewProfilePic();
@@ -189,23 +188,60 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void viewProfilePic(){
         try {
-            String s = mFirebaseRemoteConfig.getString(currentUser.getUid());
             File localFile = File.createTempFile("temp","jpg");
-            StorageReference imageRef = storageReference.child("images/"+s);
+            StorageReference imageRef = storageReference.child("images/"+currentUser.getUid());
             imageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     profilePic.setImageBitmap(BitmapFactory.decodeFile(localFile.getAbsolutePath()));
-                    Toast.makeText(getApplication(), "Success", Toast.LENGTH_LONG).show();
                 }
-            }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+            }).addOnFailureListener(new OnFailureListener() {
                 @Override
-                public void onProgress(@NonNull FileDownloadTask.TaskSnapshot snapshot) {
-                    double progress = (100.0 * snapshot.getBytesTransferred()) / snapshot.getTotalByteCount();
-                    Toast.makeText(getApplication(), "Download is " + progress + "% done", Toast.LENGTH_LONG).show();
+                public void onFailure(@NonNull Exception exception) {
+                    Toast.makeText(getApplication(), exception.getMessage(), Toast.LENGTH_LONG).show();
                 }});
         } catch (IOException e) {
             Toast.makeText(this, "No profile picture", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void navigationBar(){
+        //Navigation Bar
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayoutProfile);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        navigationView = findViewById(R.id.navigationProfile);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Intent intent;
+                switch (item.getItemId()){
+                    case R.id.home:
+                        intent = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.profile:
+                        intent = new Intent(getApplicationContext(),ProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.logOut:
+                        mAuth.signOut();
+                        Toast.makeText(getApplicationContext(), R.string.toast_Logout, Toast.LENGTH_LONG).show();
+                        intent = new Intent(getApplicationContext(),LoginActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
