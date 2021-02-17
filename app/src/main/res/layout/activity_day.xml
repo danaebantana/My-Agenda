@@ -7,6 +7,22 @@
     android:background="#fff3e6"
     tools:context=".DayActivity">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/back_bt2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.045"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        app:rippleColor="#FFFFFF"
+        app:srcCompat="@drawable/abc_vector_test"
+        app:tint="@null" />
+
     <TextView
         android:id="@+id/date_txt"
         android:layout_width="wrap_content"
@@ -16,10 +32,10 @@
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.392"
+        app:layout_constraintStart_toEndOf="@+id/back_bt2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.027" />
+        app:layout_constraintVertical_bias="0.049" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/newEvent_bt"
@@ -36,4 +52,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.973"
         app:srcCompat="@android:drawable/ic_input_add" />
+
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="408dp"
+        android:layout_height="448dp"
+        app:layout_constraintBottom_toTopOf="@+id/newEvent_bt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/date_txt"
+        app:layout_constraintVertical_bias="0.758">
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 package com.unipi.danaeb.myagenda;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -22,8 +23,18 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,16 +44,41 @@ import java.util.Locale;
 
 public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
 
+    FirebaseDatabase database;
+    DatabaseReference rootRef, ref;
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+    private StorageReference storageReference;
     FloatingActionButton back_bt1, save_bt, location_bt;
     Dialog myDialog;
-    TextView color_txt;
+    TextView color_txt, event_title, event_location, event_description, collaborators_emails;
     TextView start_date, start_time, end_date, end_time;
+    Spinner reminder_sp;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
+
+        String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
+
+        database = FirebaseDatabase.getInstance();
+        rootRef = database.getReference("Users");
+        storageReference = FirebaseStorage.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        ref = rootRef.child(currentUser.getUid());
+        event_title = findViewById(R.id.event_title);
+        event_location = findViewById(R.id.event_location);
+        event_description = findViewById(R.id.event_description);
+        start_date = findViewById(R.id.start_date);
+        end_date = findViewById(R.id.end_date);
+        start_time = findViewById(R.id.start_time);
+        end_time = findViewById(R.id.end_time);
+        collaborators_emails = findViewById(R.id.collaborators_emails);
+        reminder_sp = findViewById(R.id.reminder_sp);
+        color_txt = findViewById(R.id.color_txt);
 
         myDialog = new Dialog(this);
 
@@ -68,8 +104,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        // Set current date to textboxes
-        String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+        // Set selected date to textboxes
         start_date = findViewById(R.id.start_date);
         start_date.setText(date);
         end_date = findViewById(R.id.end_date);
@@ -186,5 +221,30 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 myDialog.dismiss();
             }
         });
+    }
+
+    // Save event to firebase
+    public void save(View view) {
+        if (event_title.getText().equals("") || event_location.getText().equals("") || event_description.getText().equals("")) {
+            Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
+        } else {
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    ref.child("Events").push().child("Title").setValue(event_title.getText().toString());
+                    ref.child("Events").child("Location").setValue(event_location.getText().toString());
+                    ref.child("Events").child("Description").setValue(event_description.getText().toString());
+
+                    Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), DayActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 }

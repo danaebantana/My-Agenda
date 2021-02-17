@@ -40,6 +40,11 @@
     <string name="yourProfile">Το προφίλ σου</string>
     <string name="toast_personalData">Καλως ήρθες στο My Agenda! Συμπλήρωσε τα πεδία.</string>
     <string name="phoneNumber">Τηλέφωνο</string>
-    <string name="toast_uploadSuccess">Η μεταμόρφωση έγινε με επιτυχία!</string>
-    <string name="toast_uploadFailure">Η μεταμόρφωση απέτυχε!</string>
+    <string name="toast_uploadSuccess">Η μεταφόρτωση έγινε με επιτυχία!</string>
+    <string name="toast_uploadFailure">Η μεταφόρτωση απέτυχε!</string>
+    <string name="start_date">start_date</string>
+    <string name="start_time">start_time</string>
+    <string name="end_date">end_date</string>
+    <string name="end_time">end_time</string>
+    <string name="toast_EventSave">Η εκδήλωση αποθηκεύτηκε!</string>
 </resources>
