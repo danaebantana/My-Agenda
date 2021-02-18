@@ -1,8 +1,5 @@
 package com.unipi.danaeb.myagenda;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -20,6 +17,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,14 +35,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
+public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseDatabase database;
     DatabaseReference rootRef, ref;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
-    FloatingActionButton back_bt1, save_bt, location_bt;
+    FloatingActionButton back_bt3, save_bt, location_bt;
     Dialog myDialog;
     TextView color_txt, event_title, event_location, event_description, collaborators_emails;
     TextView start_date, start_time, end_date, end_time;
@@ -76,11 +76,11 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         myDialog = new Dialog(this);
 
         // Back button
-        back_bt1 = findViewById(R.id.back_bt3);
-        back_bt1.setOnClickListener(new View.OnClickListener() {
+        back_bt3 = findViewById(R.id.back_bt3);
+        back_bt3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
+                Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
@@ -91,35 +91,19 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
+                Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
 
-        // Set selected date to textboxes
+        // Set date/time to textboxes
         start_date = findViewById(R.id.start_date);
         start_date.setText(date);
         end_date = findViewById(R.id.end_date);
         end_date.setText(date);
-
-        // Set current hour to textbox
-        Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm");
-        String strDate = mdformat.format(calendar.getTime());
         start_time = findViewById(R.id.start_time);
-        start_time.setText(strDate);
-
-        // Add 1 hour to end_time textbox
-        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        String strDate1 = mdformat.format(calendar.getTime());
         end_time = findViewById(R.id.end_time);
-        end_time.setText(strDate1);
-
-        start_date.setOnClickListener(this);
-        end_date.setOnClickListener(this);
-        start_time.setOnClickListener(this);
-        end_time.setOnClickListener(this);
 
         // Create spinner dropdown for reminder notification
         Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
@@ -216,15 +200,15 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    // Save event to firebase
-    public void save(View view) {
+    // Edit event to firebase
+    public void saveChanges(View view) {
         if (event_title.getText().toString().equals("")) {
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    DatabaseReference events_ref = ref.child("Events").push();
+                    DatabaseReference events_ref = ref.child("Events");
                     events_ref.child("Title").setValue(event_title.getText().toString());
                     events_ref.child("Location").setValue(event_location.getText().toString());
                     events_ref.child("Description").setValue(event_description.getText().toString());
@@ -247,5 +231,10 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 }
             });
         }
+    }
+
+    // Delete event from firebase
+    public void deleteEvent(View view) {
+
     }
 }

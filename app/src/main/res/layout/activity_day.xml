@@ -53,17 +53,13 @@
         app:layout_constraintVertical_bias="0.973"
         app:srcCompat="@android:drawable/ic_input_add" />
 
-    <ScrollView
-        android:id="@+id/ScrollView"
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="408dp"
-        android:layout_height="448dp"
-        app:layout_constraintBottom_toTopOf="@+id/newEvent_bt"
+        android:layout_height="440dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_txt"
-        app:layout_constraintVertical_bias="0.758">
-
-    </ScrollView>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
