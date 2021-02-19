@@ -1,5 +1,6 @@
 package com.unipi.danaeb.myagenda;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -42,7 +46,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
-    FloatingActionButton back_bt3, save_bt, location_bt;
+    FloatingActionButton back_bt3, save_bt, delete_bt, location_bt;
     Dialog myDialog;
     TextView color_txt, event_title, event_location, event_description, collaborators_emails;
     TextView start_date, start_time, end_date, end_time;
@@ -52,9 +56,11 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_event);
+        setContentView(R.layout.activity_edit_event);
 
-        String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
+        String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
+        String date = getIntent().getStringExtra("Date"); // Get date from day activity
+        String time = getIntent().getStringExtra("Time"); // Get time from day activity
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
@@ -62,7 +68,15 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         ref = rootRef.child(currentUser.getUid());
+        DatabaseReference events_ref = ref.child("Events");
+        Query retrieve_ref = events_ref.orderByChild("Title").equalTo(title);
+
+        save_bt = findViewById(R.id.save_bt);
+        delete_bt = findViewById(R.id.delete_bt);
+
+        // Retrieve data from firebase and print them to textboxes
         event_title = findViewById(R.id.event_title);
+        event_title.setText(title);
         event_location = findViewById(R.id.event_location);
         event_description = findViewById(R.id.event_description);
         start_date = findViewById(R.id.start_date);
@@ -73,6 +87,50 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
+        retrieve_ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    String location = zoneSnapshot.child("Location").getValue().toString();
+                    event_location.setText(location);
+                    String description = zoneSnapshot.child("Description").getValue().toString();
+                    event_description.setText(description);
+                    String start_d = zoneSnapshot.child("Start date").getValue().toString();
+                    start_date.setText(start_d);
+                    String end_d = zoneSnapshot.child("End date").getValue().toString();
+                    end_date.setText(end_d);
+                    String start_t = zoneSnapshot.child("Start time").getValue().toString();
+                    start_time.setText(start_t);
+                    String end_t = zoneSnapshot.child("End time").getValue().toString();
+                    end_time.setText(end_t);
+                    String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
+                    collaborators_emails.setText(collaborators);
+                    //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
+                    //reminder_sp.setSelection(reminder);
+                    String color = zoneSnapshot.child("Color").getValue().toString();
+                    color_txt.setText(color);
+                    if (color.equals("Purple")){
+                        color_txt.setBackgroundResource(R.color.Purple);
+                    } else if (color.equals("Red")){
+                        color_txt.setBackgroundResource(R.color.Red);
+                    } else if (color.equals("Green")){
+                        color_txt.setBackgroundResource(R.color.Green);
+                    } else if (color.equals("Teal")){
+                        color_txt.setBackgroundResource(R.color.Teal);
+                    } else if (color.equals("Black")){
+                        color_txt.setBackgroundResource(R.color.Black);
+                    } else if (color.equals("White")){
+                        color_txt.setBackgroundResource(R.color.White);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         myDialog = new Dialog(this);
 
         // Back button
@@ -82,6 +140,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             public void onClick(View v) {
                 Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Date", date);
                 startActivity(intent);
             }
         });
@@ -96,14 +155,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 startActivity(intent);
             }
         });
-
-        // Set date/time to textboxes
-        start_date = findViewById(R.id.start_date);
-        start_date.setText(date);
-        end_date = findViewById(R.id.end_date);
-        end_date.setText(date);
-        start_time = findViewById(R.id.start_time);
-        end_time = findViewById(R.id.end_time);
 
         // Create spinner dropdown for reminder notification
         Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
@@ -202,39 +253,54 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
     // Edit event to firebase
     public void saveChanges(View view) {
-        if (event_title.getText().toString().equals("")) {
-            Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
-        } else {
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    DatabaseReference events_ref = ref.child("Events");
-                    events_ref.child("Title").setValue(event_title.getText().toString());
-                    events_ref.child("Location").setValue(event_location.getText().toString());
-                    events_ref.child("Description").setValue(event_description.getText().toString());
-                    events_ref.child("Start date").setValue(start_date.getText().toString());
-                    events_ref.child("Start time").setValue(start_time.getText().toString());
-                    events_ref.child("End date").setValue(end_date.getText().toString());
-                    events_ref.child("End time").setValue(end_time.getText().toString());
-                    events_ref.child("Collaborators").setValue(collaborators_emails.getText().toString());
-                    events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
-                    events_ref.child("Color").setValue(color_txt.getText().toString());
+        //Query update_ref = ref.orderByChild("Title").equalTo("ECOR");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                DatabaseReference events_ref = ref.child("Events");
+                events_ref.child("Title").setValue(event_title.getText().toString());
+                events_ref.child("Location").setValue(event_location.getText().toString());
+                events_ref.child("Description").setValue(event_description.getText().toString());
+                events_ref.child("Start date").setValue(start_date.getText().toString());
+                events_ref.child("Start time").setValue(start_time.getText().toString());
+                events_ref.child("End date").setValue(end_date.getText().toString());
+                events_ref.child("End time").setValue(end_time.getText().toString());
+                events_ref.child("Collaborators").setValue(collaborators_emails.getText().toString());
+                events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
+                events_ref.child("Color").setValue(color_txt.getText().toString());
 
-                    Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                }
+                Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getApplicationContext(), DayActivity.class);
+                startActivity(intent);
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        }
+            }
+        });
     }
 
     // Delete event from firebase
     public void deleteEvent(View view) {
+        DatabaseReference events_ref = ref.child("Events");
+        Query remove_ref = events_ref.orderByChild("Title").equalTo(event_title.toString());
+        remove_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot removeSnapshot: dataSnapshot.getChildren()) {
+                    removeSnapshot.getRef().removeValue();
+                    Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("Date", start_date.toString());
+                    startActivity(intent);
+                }
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

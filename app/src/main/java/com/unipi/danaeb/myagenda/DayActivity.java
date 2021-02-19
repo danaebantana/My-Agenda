@@ -3,9 +3,11 @@ package com.unipi.danaeb.myagenda;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -49,7 +51,7 @@ public class DayActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         ref = rootRef.child(currentUser.getUid());
 
-        String date = getIntent().getStringExtra("Date"); // Get selected date from main activity
+        String date = getIntent().getStringExtra("Date"); // Get selected date from main activity or edit activity
         date_txt = findViewById(R.id.date_txt);
         date_txt.setText(date);
 
@@ -72,11 +74,43 @@ public class DayActivity extends AppCompatActivity {
         newEvent_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), NewEventActivity.class);
+                Intent intent = new Intent(DayActivity.this, NewEventActivity.class);
                 intent.putExtra("Date", date);
                 startActivity(intent);
             }
         });
+
+        // Click item on listview listener
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object item = listView.getItemAtPosition(position);
+                String title = item.toString();
+                DatabaseReference events_ref1 = ref.child("Events");
+                events_ref1.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot zoneSnapshot1 : dataSnapshot.getChildren()) {
+                            String title = zoneSnapshot1.child("Title").getValue().toString();
+                            String date = zoneSnapshot1.child("Start date").getValue().toString();
+                            String time = zoneSnapshot1.child("Start time").getValue().toString();
+
+                            Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
+                            intent.putExtra("Title", title);
+                            intent.putExtra("Date", date);
+                            intent.putExtra("Time", time);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
     }
 
     // Retrieve data from firebase
@@ -91,8 +125,9 @@ public class DayActivity extends AppCompatActivity {
                     String date = zoneSnapshot.child("Start date").getValue().toString();
                     if (date.equals(date_txt.getText().toString())) {
                         final String title = zoneSnapshot.child("Title").getValue().toString();
+                        final String time = zoneSnapshot.child("Start time").getValue().toString();
                         StringBuilder builder = new StringBuilder();
-                        builder.append(title);
+                        builder.append(title + " " + time);
                         arrayList.add(builder.toString());
                     } else {
                         arrayList.add("No events this day");
