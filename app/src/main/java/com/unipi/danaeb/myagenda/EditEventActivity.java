@@ -253,11 +253,12 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
     // Edit event to firebase
     public void saveChanges(View view) {
-        //Query update_ref = ref.orderByChild("Title").equalTo("ECOR");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        String date = getIntent().getStringExtra("Date");
+        DatabaseReference events_ref = ref.child("Events");
+        Query update_ref = events_ref.orderByChild("Title").equalTo(event_title.toString());
+        update_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                DatabaseReference events_ref = ref.child("Events");
                 events_ref.child("Title").setValue(event_title.getText().toString());
                 events_ref.child("Location").setValue(event_location.getText().toString());
                 events_ref.child("Description").setValue(event_description.getText().toString());
@@ -271,6 +272,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
                 Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getApplicationContext(), DayActivity.class);
+                intent.putExtra("Date", date);
                 startActivity(intent);
             }
 
