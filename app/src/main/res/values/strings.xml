@@ -26,6 +26,10 @@
     <string name="open">Open</string>
     <string name="close">Close</string>
 
+    <string name="contacts">Contacts</string>
+    <string name="new_contact">New Contact</string>
+    <string name="contact_list">Contact List</string>
+
     <string name="toast_FillBoxes">You must fill out all the boxes</string>
     <string name="toast_LoginSuccessful">Login successful!</string>
     <string name="toast_Password">Re-write your password</string>
@@ -35,6 +39,8 @@
     <string name="toast_personalData">Welcome to My Agenda! Fill the boxes.</string>
     <string name="toast_uploadSuccess">Upload Successful!</string>
     <string name="toast_uploadFailure">Upload Failed!</string>
+    <string name="toast_save">Save Successful!</string>
+    <string name="toast_noUserFound">There was no user found with the given credentials or user already exists as a contact.</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>

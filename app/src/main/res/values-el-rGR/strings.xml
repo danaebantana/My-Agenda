@@ -47,4 +47,11 @@
     <string name="end_date">end_date</string>
     <string name="end_time">end_time</string>
     <string name="toast_EventSave">Η εκδήλωση αποθηκεύτηκε!</string>
+    <string name="collaborators">Συνεργάτες</string>
+    <string name="collaborators_emails">Εμαίλ συνεργατών</string>
+    <string name="contact_list">Λίστα Επαφών</string>
+    <string name="contacts">Επαφές</string>
+    <string name="new_contact">Νέα Επαφή</string>
+    <string name="toast_save">Αποθήκευση επιτυχής!</string>
+    <string name="toast_noUserFound">Δεν υπάρχει χρήστης με τα δοθέντα στοιχεία ή υπάρχει ήδη ο χρήστης σαν επαφή.</string>
 </resources>

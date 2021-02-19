@@ -9,6 +9,10 @@
         android:icon="@mipmap/profile"
         android:title="@string/profile" />
 
+    <item android:id="@+id/contacts"
+        android:icon="@mipmap/contacts"
+        android:title="@string/contacts" />
+
     <item android:id="@+id/logOut"
         android:icon="@mipmap/exit"
         android:title="@string/log_out" />

@@ -84,19 +84,21 @@ public class DayActivity extends AppCompatActivity {
         DatabaseReference events_ref = ref.child("Events");
         listView = findViewById(R.id.listView);
         ArrayList<String> arrayList = new ArrayList<>();
-        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child("Start date").getValue() == date_txt.getText().toString()) {
-                    String date = snapshot.getValue(String.class);
-                    final String title = snapshot.child("Title").getValue().toString();
-                    StringBuilder builder = new StringBuilder();
-                    builder.append(date);
-                    arrayList.add(builder.toString());
-                } else {
-                    arrayList.add("No events this day");
+                if(snapshot.exists()){
+                    String date = snapshot.child("Start date").getValue().toString();
+                    if (date.equals(date_txt.getText().toString())) {
+                        final String title = snapshot.child("Title").getValue().toString();
+                        StringBuilder builder = new StringBuilder();
+                        builder.append(date);
+                        builder.append(title);
+                        arrayList.add(builder.toString());
+                    } else {
+                        arrayList.add("No events this day");
+                    }
                 }
-
                 arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
                 listView.setAdapter(arrayAdapter);
             }

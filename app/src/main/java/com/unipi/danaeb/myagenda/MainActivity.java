@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                         intent = new Intent(getApplicationContext(),ProfileActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.contacts:
+                        intent = new Intent(getApplicationContext(),ContactActivity.class);
+                        startActivity(intent);
+                        break;
                     case R.id.logOut:
                         mAuth.signOut();
                         Toast.makeText(getApplicationContext(), R.string.toast_Logout, Toast.LENGTH_LONG).show();
