@@ -32,7 +32,7 @@ public class DayActivity extends AppCompatActivity {
     ListView listView;
     ListAdapter arrayAdapter;
     FirebaseDatabase database;
-    DatabaseReference rootRef, ref, dataSnapshot;
+    DatabaseReference rootRef, ref;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
@@ -80,27 +80,27 @@ public class DayActivity extends AppCompatActivity {
     }
 
     // Retrieve data from firebase
-    public void retrieveData(){
+    public void retrieveData() {
         DatabaseReference events_ref = ref.child("Events");
         listView = findViewById(R.id.listView);
         ArrayList<String> arrayList = new ArrayList<>();
         events_ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    String date = snapshot.child("Start date").getValue().toString();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
+                    String date = zoneSnapshot.child("Start date").getValue().toString();
                     if (date.equals(date_txt.getText().toString())) {
-                        final String title = snapshot.child("Title").getValue().toString();
+                        final String title = zoneSnapshot.child("Title").getValue().toString();
                         StringBuilder builder = new StringBuilder();
-                        builder.append(date);
                         builder.append(title);
                         arrayList.add(builder.toString());
                     } else {
                         arrayList.add("No events this day");
                     }
+
+                    arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
+                    listView.setAdapter(arrayAdapter);
                 }
-                arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
-                listView.setAdapter(arrayAdapter);
             }
 
             @Override
@@ -109,5 +109,4 @@ public class DayActivity extends AppCompatActivity {
             }
         });
     }
-
 }
