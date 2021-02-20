@@ -15,7 +15,6 @@
     <string name="back">Πισω</string>
     <string name="log_out">Αποσυνδεση</string>
     <string name="todo">TODO</string>
-    <string name="title">Τίτλος</string>
     <string name="set_reminder">Υπενθύμιση:</string>
     <string name="event_time">Ώρα εκδήλωσης:</string>
     <string name="description">Περιγραφή</string>
@@ -54,4 +53,8 @@
     <string name="new_contact">Νέα Επαφή</string>
     <string name="toast_save">Αποθήκευση επιτυχής!</string>
     <string name="toast_noUserFound">Δεν υπάρχει χρήστης με τα δοθέντα στοιχεία ή υπάρχει ήδη ο χρήστης σαν επαφή.</string>
+    <string name="toast_ErrorSave">Η εκδήλωση υπάρχει ήδη!</string>
+    <string name="title">Τίτλος</string>
+    <string name="toast_checkBoxes">Δεν έχετε επιλέξει επαφή. Είτε επιλέξτε επαφές είτε πηγαίνετε πίσω στη σελίδα της δημιουργίας εκδήλωσης.</string>
+    <string name="toast_emptyList">Κίνδυνος: Άδεια λίστα!</string>
 </resources>

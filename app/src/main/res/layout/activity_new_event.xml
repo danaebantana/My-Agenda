@@ -8,6 +8,21 @@
     tools:context=".NewEventActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_collaborators"
+        android:layout_width="46dp"
+        android:layout_height="43dp"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        android:onClick="addCollaborators"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.807"
+        app:tint="@null" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/back_bt3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +114,7 @@
         app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintStart_toEndOf="@+id/event_location"
         app:layout_constraintTop_toBottomOf="@+id/event_title"
-        app:layout_constraintVertical_bias="0.008"
+        app:layout_constraintVertical_bias="0.027"
         app:rippleColor="@null"
         app:srcCompat="@drawable/google_maps"
         app:tint="@null" />
@@ -209,26 +224,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.183"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clock_image"
         app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/collaborators_emails"
-        android:layout_width="260dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:hint="@string/collaborators_emails"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.078"
-        app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-        app:layout_constraintTop_toBottomOf="@+id/end_time"
-        app:layout_constraintVertical_bias="0.105" />
 
     <ImageView
         android:id="@+id/reminder_image"
@@ -314,5 +313,16 @@
         app:layout_constraintTop_toBottomOf="@+id/event_description"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/clock" />
+
+    <TextView
+        android:id="@+id/textView_collaborators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
+        app:layout_constraintTop_toBottomOf="@+id/end_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

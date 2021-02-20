@@ -15,6 +15,28 @@
         android:layout_height="wrap_content"
         android:background="#fff3e6">
 
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="345dp"
+            android:layout_height="523dp"
+            android:layout_marginTop="8dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.658"
+            app:layout_constraintStart_toStartOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/button_newContact"
+            app:layout_constraintVertical_bias="0.005">
+
+            <LinearLayout
+                android:id="@+id/linear_Layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </ScrollView>
+
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/button_newContact"
             android:layout_width="wrap_content"
@@ -22,6 +44,7 @@
             android:clickable="true"
             android:contentDescription="@string/todo"
             android:onClick="newContact"
+            android:visibility="invisible"
             app:backgroundTint="#4CAF50"
             app:fabSize="auto"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -31,6 +54,23 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.029"
             app:srcCompat="@android:drawable/ic_input_add" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_selectedCollab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@string/todo"
+            android:onClick="selectedCollab"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.957"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.023"
+            app:srcCompat="@drawable/check"
+            app:tint="@null" />
 
         <TextView
             android:id="@+id/textView_contactList"
@@ -45,12 +85,14 @@
 
         <ListView
             android:id="@+id/listView"
-            android:layout_width="388dp"
-            android:layout_height="488dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="96dp"
+            android:layout_width="401dp"
+            android:layout_height="516dp"
+            android:layout_marginTop="80dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+        </ListView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

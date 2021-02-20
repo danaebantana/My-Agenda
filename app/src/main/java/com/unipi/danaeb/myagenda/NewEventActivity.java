@@ -1,6 +1,7 @@
 package com.unipi.danaeb.myagenda;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -44,7 +46,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     private StorageReference storageReference;
     FloatingActionButton back_bt1, save_bt, location_bt;
     Dialog myDialog;
-    TextView color_txt, event_title, event_location, event_description, collaborators_emails;
+    TextView color_txt, event_title, event_location, event_description, collaborators;
     TextView start_date, start_time, end_date, end_time;
     Spinner reminder_sp;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -69,7 +71,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_date = findViewById(R.id.end_date);
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
-        collaborators_emails = findViewById(R.id.collaborators_emails);
+        collaborators = findViewById(R.id.textView_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
@@ -232,10 +234,10 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     events_ref.child("Start time").setValue(start_time.getText().toString());
                     events_ref.child("End date").setValue(end_date.getText().toString());
                     events_ref.child("End time").setValue(end_time.getText().toString());
-                    events_ref.child("Collaborators").setValue(collaborators_emails.getText().toString());
+                    events_ref.child("Collaborators").setValue(collaborators.getText().toString());
                     events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                     events_ref.child("Color").setValue(color_txt.getText().toString());
-
+                    //Need to create collaborators in firebase.
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
@@ -246,6 +248,26 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
+        }
+    }
+
+    public void addCollaborators(View view){
+        Intent intent = new Intent(getApplicationContext(),ContactActivity.class);
+        intent.putExtra("id","Event");
+        startActivityForResult(intent,456);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode==456){
+            ArrayList<Contact> contacts = data.getParcelableArrayListExtra("contactList");
+            if(contacts == null || contacts.isEmpty()){
+                Toast.makeText(getApplication(), R.string.toast_emptyList, Toast.LENGTH_LONG).show();
+            } else {
+                //Show all selected contacts
+                collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
+            }
         }
     }
 }
