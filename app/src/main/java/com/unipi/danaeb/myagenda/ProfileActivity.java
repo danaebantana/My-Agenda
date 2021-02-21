@@ -123,6 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                         ref.child("Profession").setValue(profession.getText().toString());
                         ref.child("Phone Number").setValue(phoneNumber.getText().toString());
                         ref.child("Email").setValue(currentUser.getEmail());
+                        ref.child("Events").setValue("");
                     }
                     else { //update data.
                         ref.child("Name").setValue(name.getText().toString());
@@ -130,6 +131,7 @@ public class ProfileActivity extends AppCompatActivity {
                         ref.child("Profession").setValue(profession.getText().toString());
                         ref.child("Phone Number").setValue(phoneNumber.getText().toString());
                         ref.child("Email").setValue(currentUser.getEmail());
+                        ref.child("Events").setValue("");
                     }
                     Toast.makeText(getApplicationContext(), R.string.toast_ProfileSave, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
