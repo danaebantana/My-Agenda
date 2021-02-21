@@ -117,6 +117,7 @@ public class DayActivity extends AppCompatActivity {
     public void retrieveData() {
         DatabaseReference events_ref = ref.child("Events");
         listView = findViewById(R.id.listView);
+        StringBuilder builder = new StringBuilder();
         ArrayList<String> arrayList = new ArrayList<>();
         events_ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -126,15 +127,15 @@ public class DayActivity extends AppCompatActivity {
                     if (date.equals(date_txt.getText().toString())) {
                         final String title = zoneSnapshot.child("Title").getValue().toString();
                         final String time = zoneSnapshot.child("Start time").getValue().toString();
-                        StringBuilder builder = new StringBuilder();
                         builder.append(title + " " + time);
                         arrayList.add(builder.toString());
-                    } else {
-                        arrayList.add("No events this day");
                     }
-
                     arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
                     listView.setAdapter(arrayAdapter);
+                    builder.delete(0,builder.length());
+                }
+                if (arrayList == null || arrayList.isEmpty()) {
+                    arrayList.add("No events this day");
                 }
             }
 
