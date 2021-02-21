@@ -56,7 +56,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
         String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
-        String time = getIntent().getStringExtra("Time"); // Get time from day activity
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
@@ -102,7 +101,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
                     collaborators_emails.setText(collaborators);
                     //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
-                    //reminder_sp.setSelection(reminder);
+                    //reminder_sp.setSelection(Integer.parseInt(reminder));
                     String color = zoneSnapshot.child("Color").getValue().toString();
                     color_txt.setText(color);
                     if (color.equals("Purple")){
@@ -242,6 +241,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 } else if (selection.equals("White")){
                     color_txt.setBackgroundResource(R.color.White);
                 }
+                color_txt.setText(selection);
                 myDialog.dismiss();
             }
         });
@@ -281,24 +281,29 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
     // Delete event from firebase
     public void deleteEvent(View view) {
+        String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
+        String date = getIntent().getStringExtra("Date"); // Get date from day activity
         DatabaseReference events_ref = ref.child("Events");
-        Query remove_ref = events_ref.orderByChild("Title").equalTo(event_title.toString());
-        remove_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query remove_ref = events_ref.orderByChild("Title").equalTo(title);
+        remove_ref.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot removeSnapshot: dataSnapshot.getChildren()) {
-                    removeSnapshot.getRef().removeValue();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
+                    String key = zoneSnapshot.getKey();
+                    events_ref.child(key).removeValue();
+                    Toast.makeText(getApplicationContext(), R.string.toast_EventDelete, Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("Date", start_date.toString());
+                    intent.putExtra("Date", date);
                     startActivity(intent);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
+
     }
 }

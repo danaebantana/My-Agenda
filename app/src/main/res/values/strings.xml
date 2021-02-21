@@ -58,6 +58,7 @@
     <string name="set_reminder">Set Reminder:</string>
     <string name="toast_EventSave">Event was saved!</string>
     <string name="toast_ErrorSave">Event already exists!</string>
+    <string name="toast_EventDelete">Event was deleted!</string>
 
     <string name="purple">Purple</string>
     <string name="red">Red</string>

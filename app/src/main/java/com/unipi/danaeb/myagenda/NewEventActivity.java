@@ -213,6 +213,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 } else if (selection.equals("White")){
                     color_txt.setBackgroundResource(R.color.White);
                 }
+                color_txt.setText(selection);
                 myDialog.dismiss();
             }
         });
@@ -220,10 +221,11 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
     // Save event to firebase
     public void save(View view) {
+        String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
         if (event_title.getText().toString().equals("")) {
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     DatabaseReference events_ref = ref.child("Events").push();
@@ -239,7 +241,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     events_ref.child("Color").setValue(color_txt.getText().toString());
                     //Need to create collaborators in firebase.
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
+                    intent.putExtra("Date", date);
                     startActivity(intent);
                 }
 
