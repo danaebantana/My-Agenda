@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -44,8 +45,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private StorageReference storageReference;
     FloatingActionButton back_bt3, save_bt, delete_bt, location_bt;
     Dialog myDialog;
-    TextView color_txt, event_title, event_location, event_description, collaborators_emails;
-    TextView start_date, start_time, end_date, end_time;
+    EditText event_title, event_location, event_description, collaborators_emails;
+    TextView start_date, start_time, end_date, end_time, color_txt;
     Spinner reminder_sp;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
@@ -56,6 +57,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
         String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
+        String key = getIntent().getStringExtra("Key");
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
@@ -63,8 +65,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         ref = rootRef.child(currentUser.getUid());
-        DatabaseReference events_ref = ref.child("Events");
-        Query retrieve_ref = events_ref.orderByChild("Title").equalTo(title);
 
         save_bt = findViewById(R.id.save_bt);
         delete_bt = findViewById(R.id.delete_bt);
@@ -82,41 +82,41 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
-        retrieve_ref.addValueEventListener(new ValueEventListener() {
+        DatabaseReference events_ref = ref.child("Events").child(key);
+        Toast.makeText(this, key, Toast.LENGTH_LONG).show();
+        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    String location = zoneSnapshot.child("Location").getValue().toString();
-                    event_location.setText(location);
-                    String description = zoneSnapshot.child("Description").getValue().toString();
-                    event_description.setText(description);
-                    String start_d = zoneSnapshot.child("Start date").getValue().toString();
-                    start_date.setText(start_d);
-                    String end_d = zoneSnapshot.child("End date").getValue().toString();
-                    end_date.setText(end_d);
-                    String start_t = zoneSnapshot.child("Start time").getValue().toString();
-                    start_time.setText(start_t);
-                    String end_t = zoneSnapshot.child("End time").getValue().toString();
-                    end_time.setText(end_t);
-                    //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
-                    //collaborators_emails.setText(collaborators);
-                    //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
-                    //reminder_sp.setSelection(Integer.parseInt(reminder));
-                    String color = zoneSnapshot.child("Color").getValue().toString();
-                    color_txt.setText(color);
-                    if (color.equals("Purple")){
-                        color_txt.setBackgroundResource(R.color.Purple);
-                    } else if (color.equals("Red")){
-                        color_txt.setBackgroundResource(R.color.Red);
-                    } else if (color.equals("Green")){
-                        color_txt.setBackgroundResource(R.color.Green);
-                    } else if (color.equals("Teal")){
-                        color_txt.setBackgroundResource(R.color.Teal);
-                    } else if (color.equals("Black")){
-                        color_txt.setBackgroundResource(R.color.Black);
-                    } else if (color.equals("White")){
-                        color_txt.setBackgroundResource(R.color.White);
-                    }
+                String location = dataSnapshot.child("Location").getValue().toString();
+                event_location.setText(location);
+                String description = dataSnapshot.child("Description").getValue().toString();
+                event_description.setText(description);
+                String start_d = dataSnapshot.child("Start date").getValue().toString();
+                start_date.setText(start_d);
+                String end_d = dataSnapshot.child("End date").getValue().toString();
+                end_date.setText(end_d);
+                String start_t = dataSnapshot.child("Start time").getValue().toString();
+                start_time.setText(start_t);
+                String end_t = dataSnapshot.child("End time").getValue().toString();
+                end_time.setText(end_t);
+                //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
+                //collaborators_emails.setText(collaborators);
+                //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
+                //reminder_sp.setSelection(Integer.parseInt(reminder));
+                String color = dataSnapshot.child("Color").getValue().toString();
+                color_txt.setText(color);
+                if (color.equals("Purple")){
+                    color_txt.setBackgroundResource(R.color.Purple);
+                } else if (color.equals("Red")){
+                    color_txt.setBackgroundResource(R.color.Red);
+                } else if (color.equals("Green")){
+                    color_txt.setBackgroundResource(R.color.Green);
+                } else if (color.equals("Teal")){
+                    color_txt.setBackgroundResource(R.color.Teal);
+                } else if (color.equals("Black")){
+                    color_txt.setBackgroundResource(R.color.Black);
+                } else if (color.equals("White")){
+                    color_txt.setBackgroundResource(R.color.White);
                 }
             }
 

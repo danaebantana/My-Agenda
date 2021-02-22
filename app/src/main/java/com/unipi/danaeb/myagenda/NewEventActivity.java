@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -46,8 +47,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     private StorageReference storageReference;
     FloatingActionButton back_bt1, save_bt, location_bt;
     Dialog myDialog;
-    TextView color_txt, event_title, event_location, event_description, collaborators;
-    TextView start_date, start_time, end_date, end_time;
+    EditText event_title, event_location, event_description;
+    TextView start_date, start_time, end_date, end_time, collaborators, color_txt;
     Spinner reminder_sp;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
@@ -223,15 +224,19 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     // Save event to firebase
     public void save(View view) {
         String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
-        if (event_title.getText().toString().equals("")) {
+        DatabaseReference events_ref = ref.child("Events").push();
+        if (event_title.getText().toString().matches("")) {
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
-            ref.addValueEventListener(new ValueEventListener() {
+            events_ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    DatabaseReference events_ref = ref.child("Events").push();
                     events_ref.child("Title").setValue(event_title.getText().toString());
-                    events_ref.child("Location").setValue(event_location.getText().toString());
+                    if (event_location.getText().toString().matches("")) {
+                        events_ref.child("Location").setValue("-");
+                    } else {
+                        events_ref.child("Location").setValue(event_location.getText().toString());
+                    }
                     events_ref.child("Description").setValue(event_description.getText().toString());
                     events_ref.child("Start date").setValue(start_date.getText().toString());
                     events_ref.child("Start time").setValue(start_time.getText().toString());

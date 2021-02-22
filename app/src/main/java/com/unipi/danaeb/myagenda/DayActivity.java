@@ -91,6 +91,7 @@ public class DayActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot zoneSnapshot1 : dataSnapshot.getChildren()) {
+                            String key = zoneSnapshot1.getKey();
                             String title = zoneSnapshot1.child("Title").getValue().toString();
                             String date = zoneSnapshot1.child("Start date").getValue().toString();
                             String time = zoneSnapshot1.child("Start time").getValue().toString();
@@ -99,6 +100,7 @@ public class DayActivity extends AppCompatActivity {
                             intent.putExtra("Title", title);
                             intent.putExtra("Date", date);
                             intent.putExtra("Time", time);
+                            intent.putExtra("Key", key);
                             startActivity(intent);
                         }
                     }
@@ -122,17 +124,30 @@ public class DayActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
-                    String date = zoneSnapshot.child("Start date").getValue().toString();
-                    StringBuilder builder = new StringBuilder();
-                    if (date.equals(date_txt.getText().toString())) {
-                        final String title = zoneSnapshot.child("Title").getValue().toString();
-                        final String time = zoneSnapshot.child("Start time").getValue().toString();
-                        builder.append(title + " " + time);
-                        arrayList.add(builder.toString());
-                    }
-                    arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
-                    listView.setAdapter(arrayAdapter);
+                    String key = zoneSnapshot.getKey();
+                    DatabaseReference key_ref = events_ref.child(key);
+                    key_ref.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String date = zoneSnapshot.child("Start date").getValue().toString();
+                            StringBuilder builder = new StringBuilder();
+                            if (date.equals(date_txt.getText().toString())) {
+                                final String title = zoneSnapshot.child("Title").getValue().toString();
+                                final String time = zoneSnapshot.child("Start time").getValue().toString();
+                                builder.append(title + " " + time);
+                                arrayList.add(builder.toString());
+                            }
+                            arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
+                            listView.setAdapter(arrayAdapter);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
+
                 if (arrayList.isEmpty()) {
                     arrayList.add("No events this day");
                     arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
