@@ -240,21 +240,21 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                     events_ref.child("Color").setValue(color_txt.getText().toString());
                     //Add collaborators to firebase.
+                    events_ref.child("Collaborators").setValue("-");
                     DatabaseReference collab_ref = events_ref.child("Collaborators");
                     for(Contact c : contacts){
                         collab_ref.child(c.getName()).setValue(c.getPhoneNumber());
                     }
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-                    /*Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
-                    intent.putExtra("Date", date);
-                    startActivity(intent);*/
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
             });
+            Intent intent = new Intent(this, DayActivity.class);
+            intent.putExtra("Date", date);
+            startActivity(intent);
         }
     }
 
