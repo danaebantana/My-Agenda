@@ -98,8 +98,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     start_time.setText(start_t);
                     String end_t = zoneSnapshot.child("End time").getValue().toString();
                     end_time.setText(end_t);
-                    String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
-                    collaborators_emails.setText(collaborators);
+                    //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
+                    //collaborators_emails.setText(collaborators);
                     //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
                     //reminder_sp.setSelection(Integer.parseInt(reminder));
                     String color = zoneSnapshot.child("Color").getValue().toString();
