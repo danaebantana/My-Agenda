@@ -50,6 +50,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     TextView start_date, start_time, end_date, end_time;
     Spinner reminder_sp;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -236,14 +237,18 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     events_ref.child("Start time").setValue(start_time.getText().toString());
                     events_ref.child("End date").setValue(end_date.getText().toString());
                     events_ref.child("End time").setValue(end_time.getText().toString());
-                    events_ref.child("Collaborators").setValue(collaborators.getText().toString());
+
                     events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                     events_ref.child("Color").setValue(color_txt.getText().toString());
                     //Need to create collaborators in firebase.
+                    DatabaseReference collab_ref = events_ref.child("Collaborators");
+                    for(Contact c : contacts){
+                        collab_ref.child(c.getName()).setValue(c.getPhoneNumber());
+                    }
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
+                    /*Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
                     intent.putExtra("Date", date);
-                    startActivity(intent);
+                    startActivity(intent);*/
                 }
 
                 @Override
@@ -264,7 +269,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==456){
-            ArrayList<Contact> contacts = data.getParcelableArrayListExtra("contactList");
+            contacts = data.getParcelableArrayListExtra("contactList");
             if(contacts == null || contacts.isEmpty()){
                 Toast.makeText(getApplication(), R.string.toast_emptyList, Toast.LENGTH_LONG).show();
             } else {

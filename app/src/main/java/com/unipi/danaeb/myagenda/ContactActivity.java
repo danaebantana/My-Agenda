@@ -137,7 +137,7 @@ public class ContactActivity extends AppCompatActivity {
                 checkBox.setId(i);
                 checkBox.setTextAppearance(android.R.style.TextAppearance_Holo_Medium);
                 i++;
-                checkBox.setText("Name: " + cursor.getString(0) + "\n" + "Phone Number: " + cursor.getString(1));
+                checkBox.setText("Name:" + cursor.getString(0) + "\n" + "Phone Number:" + cursor.getString(1));
                 linearLayout.addView(checkBox);
             }
         }
