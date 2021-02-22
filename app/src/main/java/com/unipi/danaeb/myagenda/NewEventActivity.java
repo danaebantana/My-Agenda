@@ -237,10 +237,9 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     events_ref.child("Start time").setValue(start_time.getText().toString());
                     events_ref.child("End date").setValue(end_date.getText().toString());
                     events_ref.child("End time").setValue(end_time.getText().toString());
-
                     events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                     events_ref.child("Color").setValue(color_txt.getText().toString());
-                    //Need to create collaborators in firebase.
+                    //Add collaborators to firebase.
                     DatabaseReference collab_ref = events_ref.child("Collaborators");
                     for(Contact c : contacts){
                         collab_ref.child(c.getName()).setValue(c.getPhoneNumber());
