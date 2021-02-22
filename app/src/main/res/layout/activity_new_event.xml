@@ -202,14 +202,14 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_collaborators"
-        android:layout_width="46dp"
-        android:layout_height="43dp"
-        android:backgroundTint="#FFFFFF"
+        android:layout_width="41dp"
+        android:layout_height="42dp"
+        android:backgroundTint="#8BC34A"
         android:clickable="true"
         android:contentDescription="@string/todo"
         android:onClick="addCollaborators"
         android:src="@drawable/group_add"
-        app:fabSize="auto"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.013"
@@ -237,15 +237,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="TextView"
+        android:text="@string/textview"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
         app:layout_constraintTop_toBottomOf="@+id/end_time"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.185" />
 
     <ImageView
         android:id="@+id/reminder_image"

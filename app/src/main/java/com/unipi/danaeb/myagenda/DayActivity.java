@@ -85,23 +85,24 @@ public class DayActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = listView.getItemAtPosition(position);
-                String title = item.toString();
+                String[] title = item.toString().split("\n");
+                String t = title[0];
+                String time = title[1];
                 DatabaseReference events_ref1 = ref.child("Events");
                 events_ref1.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot zoneSnapshot1 : dataSnapshot.getChildren()) {
-                            String key = zoneSnapshot1.getKey();
-                            String title = zoneSnapshot1.child("Title").getValue().toString();
-                            String date = zoneSnapshot1.child("Start date").getValue().toString();
-                            String time = zoneSnapshot1.child("Start time").getValue().toString();
-
-                            Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
-                            intent.putExtra("Title", title);
-                            intent.putExtra("Date", date);
-                            intent.putExtra("Time", time);
-                            intent.putExtra("Key", key);
-                            startActivity(intent);
+                            if (zoneSnapshot1.child("Title").getValue().toString().equals(t) && zoneSnapshot1.child("Start date").getValue().toString().equals(date_txt.getText().toString())
+                                    &&  zoneSnapshot1.child("Start time").getValue().toString().equals(time)) {
+                                String key = zoneSnapshot1.getKey();
+                                Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
+                                intent.putExtra("Title", t);
+                                intent.putExtra("Date", date);
+                                intent.putExtra("Time", time);
+                                intent.putExtra("Key", key);
+                                startActivity(intent);
+                            }
                         }
                     }
 
@@ -134,24 +135,20 @@ public class DayActivity extends AppCompatActivity {
                             if (date.equals(date_txt.getText().toString())) {
                                 final String title = zoneSnapshot.child("Title").getValue().toString();
                                 final String time = zoneSnapshot.child("Start time").getValue().toString();
-                                builder.append(title + " " + time);
+                                builder.append(title + "\n" + time);
                                 arrayList.add(builder.toString());
                             }
                             arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
                             listView.setAdapter(arrayAdapter);
                         }
 
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }
-                    });
-                }
 
-                if (arrayList.isEmpty()) {
-                    arrayList.add("No events this day");
-                    arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
-                    listView.setAdapter(arrayAdapter);
+                    });
                 }
             }
 

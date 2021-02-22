@@ -226,7 +226,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
         DatabaseReference events_ref = ref.child("Events").push();
         if (event_title.getText().toString().matches("")) {
-            Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
+            Toast.makeText(NewEventActivity.this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
             events_ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -237,14 +237,18 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         events_ref.child("Location").setValue(event_location.getText().toString());
                     }
-                    events_ref.child("Description").setValue(event_description.getText().toString());
+                    if (event_description.getText().toString().matches("")) {
+                        events_ref.child("Description").setValue("-");
+                    } else {
+                        events_ref.child("Description").setValue(event_description.getText().toString());
+                    }
                     events_ref.child("Start date").setValue(start_date.getText().toString());
                     events_ref.child("Start time").setValue(start_time.getText().toString());
                     events_ref.child("End date").setValue(end_date.getText().toString());
                     events_ref.child("End time").setValue(end_time.getText().toString());
                     events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                     events_ref.child("Color").setValue(color_txt.getText().toString());
-                    //Add collaborators to firebase.
+                    // Add collaborators to firebase
                     events_ref.child("Collaborators").setValue("-");
                     DatabaseReference collab_ref = events_ref.child("Collaborators");
                     for(Contact c : contacts){
@@ -257,7 +261,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
-            Intent intent = new Intent(this, DayActivity.class);
+
+            Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
             intent.putExtra("Date", date);
             startActivity(intent);
         }
