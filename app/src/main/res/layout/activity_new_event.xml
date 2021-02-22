@@ -8,21 +8,6 @@
     tools:context=".NewEventActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_collaborators"
-        android:layout_width="46dp"
-        android:layout_height="43dp"
-        android:clickable="true"
-        android:contentDescription="@string/todo"
-        android:onClick="addCollaborators"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.013"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.807"
-        app:tint="@null" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/back_bt3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,10 +96,10 @@
         android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.21"
+        app:layout_constraintHorizontal_bias="0.157"
         app:layout_constraintStart_toEndOf="@+id/event_location"
         app:layout_constraintTop_toBottomOf="@+id/event_title"
-        app:layout_constraintVertical_bias="0.027"
+        app:layout_constraintVertical_bias="0.014"
         app:rippleColor="@null"
         app:srcCompat="@drawable/google_maps"
         app:tint="@null" />
@@ -215,18 +200,51 @@
         app:layout_constraintTop_toBottomOf="@+id/start_time"
         app:layout_constraintVertical_bias="0.005" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_collaborators"
+        android:layout_width="46dp"
+        android:layout_height="43dp"
+        android:backgroundTint="#FFFFFF"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        android:onClick="addCollaborators"
+        android:src="@drawable/group_add"
+        app:fabSize="auto"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clock_image"
+        app:layout_constraintVertical_bias="0.427"
+        app:tint="@null" />
+
     <TextView
         android:id="@+id/collaborators_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginStart="8dp"
         android:text="@string/collaborators"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/clock_image"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/button_collaborators"
+        app:layout_constraintTop_toBottomOf="@+id/end_date"
+        app:layout_constraintVertical_bias="0.185" />
+
+    <TextView
+        android:id="@+id/textView_collaborators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="TextView"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
+        app:layout_constraintTop_toBottomOf="@+id/end_time"
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
@@ -239,7 +257,7 @@
         app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/collaborators_txt"
-        app:layout_constraintVertical_bias="0.303"
+        app:layout_constraintVertical_bias="0.228"
         app:srcCompat="@drawable/add_reminder" />
 
     <TextView
@@ -313,16 +331,5 @@
         app:layout_constraintTop_toBottomOf="@+id/event_description"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/clock" />
-
-    <TextView
-        android:id="@+id/textView_collaborators"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="32dp"
-        android:text="TextView"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-        app:layout_constraintTop_toBottomOf="@+id/end_time" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
