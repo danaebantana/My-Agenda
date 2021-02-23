@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -51,7 +52,9 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     EditText event_title, event_location, event_description;
     TextView start_date, start_time, end_date, end_time, collaborators, color_txt;
     Spinner reminder_sp;
-    int GOOGLE_MAPS_ACTIVITY = 1;
+    int GOOGLE_MAPS_ACTIVITY = 123;
+    Double lat,lon;
+    String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -100,7 +103,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             public void onClick(View v) {
 
                 Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
             }
         });
@@ -136,19 +139,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == LAUNCH_SECOND_ACTIVITY) {
-            if(resultCode == Activity.RESULT_OK){
-                String result=data.getStringExtra("result");
-            }
-            if (resultCode == Activity.RESULT_CANCELED) {
-                //Write your code if there's no result
-            }
-        }
-    }//onActivityResult
     //Pop up window to choose date and time
     @Override
     public void onClick(View v) {
@@ -301,6 +292,14 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             } else {
                 //Show all selected contacts
                 collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
+            }
+        }else{
+            if(requestCode==GOOGLE_MAPS_ACTIVITY){
+                    lat = data.getDoubleExtra("latitude",0.0);
+                    lon = data.getDoubleExtra("longitude",0.0);
+                    location_name = data.getStringExtra("name");
+                    event_location.setText(location_name);
+
             }
         }
     }

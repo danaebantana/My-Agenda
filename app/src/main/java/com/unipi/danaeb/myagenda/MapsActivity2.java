@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +23,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     Button selectBtn;
     TextView lat,lon;
+    EditText name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,17 +34,25 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         lat = findViewById((R.id.latTextView));
         lon = findViewById(R.id.longTextView);
-
+        selectBtn = findViewById(R.id.saveLocatioBtn);
+        name = findViewById(R.id.editTextName);
         selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                double latitude = Double.valueOf(lat.getText().toString());
-                double longitude = Double.valueOf(lon.getText().toString());
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("latitude",latitude);
-                returnIntent.putExtra("longitude",longitude);
-                setResult(Activity.RESULT_OK,returnIntent);
-                finish();
+                String text = name.getText().toString();
+                if(text.equals("")){
+                    Toast.makeText(getApplicationContext(), "Please add name for location", Toast.LENGTH_LONG).show();
+                }else{
+                    double longitude = Double.valueOf(lon.getText().toString());
+                    double latitude = Double.valueOf(lat.getText().toString());
+                    Intent returnIntent = new Intent();
+                    returnIntent.putExtra("latitude",latitude);
+                    returnIntent.putExtra("longitude",longitude);
+                    returnIntent.putExtra("name",text);
+                    setResult(123,returnIntent);
+                    finish();
+                }
+
             }
         });
     }
