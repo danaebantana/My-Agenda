@@ -86,6 +86,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             public void onClick(View v) {
                 Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Date", date);
                 startActivity(intent);
             }
         });
