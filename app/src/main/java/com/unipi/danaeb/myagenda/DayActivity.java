@@ -48,12 +48,6 @@ public class DayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_day);
 
-        //Getting permission to send SMS
-        if (ActivityCompat.checkSelfPermission(DayActivity.this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(DayActivity.this, new String[]{Manifest.permission.SEND_SMS}, 5434);
-            return;
-        }
-
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference();
