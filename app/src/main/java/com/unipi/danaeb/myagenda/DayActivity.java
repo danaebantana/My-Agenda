@@ -85,9 +85,10 @@ public class DayActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = listView.getItemAtPosition(position);
-                String[] title = item.toString().split("\n");
-                String t = title[0];
-                String time = title[1];
+                String[] obj = item.toString().split("\n");
+                String t = obj[0];
+                String time = obj[1];
+                String collaborators = obj[2];
                 DatabaseReference events_ref1 = ref.child("Events");
                 events_ref1.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -135,7 +136,22 @@ public class DayActivity extends AppCompatActivity {
                             if (date.equals(date_txt.getText().toString())) {
                                 final String title = zoneSnapshot.child("Title").getValue().toString();
                                 final String time = zoneSnapshot.child("Start time").getValue().toString();
-                                builder.append(title + "\n" + time);
+                                if(zoneSnapshot.child("Collaborators").getValue().equals("-")){
+                                    builder.append(title + "\n" + time + "\nCollaborators: -");
+                                } else {
+                                    String collab = "";
+                                    long count = zoneSnapshot.getChildrenCount();
+                                    long i = 1;
+                                    for (DataSnapshot ds : zoneSnapshot.child("Collaborators").getChildren()){
+                                       if(count==1 || i==1){
+                                           collab = ds.getKey();
+                                       } else {
+                                           collab = ds.getKey() + ", " + collab;
+                                       }
+                                       i++;
+                                    }
+                                    builder.append(title + "\n" + time + "\nCollaborators: " + collab);
+                                }
                                 arrayList.add(builder.toString());
                             }
                             arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
