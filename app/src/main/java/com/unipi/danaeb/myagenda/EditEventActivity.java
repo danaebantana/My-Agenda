@@ -144,7 +144,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
+                Intent intent = new Intent(EditEventActivity.this, MapsActivity2.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
