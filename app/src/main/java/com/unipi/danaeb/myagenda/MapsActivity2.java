@@ -127,6 +127,8 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                 if (location != null) {
                     curr_lat = location.getLatitude();
                     curr_lon = location.getLongitude();
+                    lat.setText(String.valueOf(curr_lat));
+                    lon.setText((String.valueOf(curr_lon)));
 
                 } else {
                     curr_lat = 0.0;
