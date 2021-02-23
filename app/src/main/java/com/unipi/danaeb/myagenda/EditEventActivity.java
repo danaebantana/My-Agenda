@@ -57,7 +57,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
         String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
-        String key = getIntent().getStringExtra("Key");
+        String key = getIntent().getStringExtra("Key"); // Get key from day activity
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
@@ -83,7 +83,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         color_txt = findViewById(R.id.color_txt);
 
         DatabaseReference events_ref = ref.child("Events").child(key);
-        Toast.makeText(this, key, Toast.LENGTH_LONG).show();
         events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -250,9 +249,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     // Edit event to firebase
     public void saveChanges(View view) {
         String date = getIntent().getStringExtra("Date");
-        DatabaseReference events_ref = ref.child("Events");
-        Query update_ref = events_ref.orderByChild("Title").equalTo(event_title.toString());
-        update_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        String key = getIntent().getStringExtra("Key");
+        DatabaseReference events_ref = ref.child("Events").child(key);
+        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 events_ref.child("Title").setValue(event_title.getText().toString());
@@ -265,11 +264,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 events_ref.child("Collaborators").setValue(collaborators_emails.getText().toString());
                 events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                 events_ref.child("Color").setValue(color_txt.getText().toString());
-
-                Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(getApplicationContext(), DayActivity.class);
-                intent.putExtra("Date", date);
-                startActivity(intent);
             }
 
             @Override
@@ -277,6 +271,11 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
+        Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("Date", date);
+        startActivity(intent);
     }
 
     // Delete event from firebase
