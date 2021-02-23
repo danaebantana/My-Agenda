@@ -3,14 +3,20 @@ package com.unipi.danaeb.myagenda;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -55,6 +61,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     int GOOGLE_MAPS_ACTIVITY = 123;
     Double lat,lon;
     String location_name;
+    LocationManager locationManager;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -81,6 +88,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         collaborators = findViewById(R.id.textView_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         myDialog = new Dialog(this);
 
@@ -101,10 +109,14 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
-                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
+                if(ActivityCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivateGPS(v);
+                }else{
+                    Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
+                }
             }
         });
 
@@ -282,6 +294,17 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         startActivityForResult(intent,456);
     }
 
+    public void ActivateGPS(View view){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.
+                    requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},234);
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
+                (LocationListener) this);
+        //locationManager.removeUpdates(this);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
