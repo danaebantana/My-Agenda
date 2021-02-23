@@ -40,10 +40,6 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
         lat = findViewById((R.id.latTextView));
         lon = findViewById(R.id.longTextView);
         selectBtn = findViewById(R.id.saveLocatioBtn);
@@ -88,10 +84,9 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         if(curr_lat != 0){
             LatLng curr = new LatLng(curr_lat, curr_lon);
             mMap.addMarker(new MarkerOptions().position(curr).title("Marker in Current Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(curr));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(curr,10));
+
         }
-
-
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -123,7 +118,6 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         locationProviderClient.getLastLocation().addOnSuccessListener(MapsActivity2.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                String currentLocation = "";
                 if (location != null) {
                     curr_lat = location.getLatitude();
                     curr_lon = location.getLongitude();
@@ -134,6 +128,10 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                     curr_lat = 0.0;
                     curr_lon = 0.0;
                 }
+                // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(MapsActivity2.this);
             }
         });
     }
