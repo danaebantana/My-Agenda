@@ -280,22 +280,18 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
     // Delete event from firebase
     public void deleteEvent(View view) {
-        String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
+        String key = getIntent().getStringExtra("Key"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
-        DatabaseReference events_ref = ref.child("Events");
-        Query remove_ref = events_ref.orderByChild("Title").equalTo(title);
-        remove_ref.addValueEventListener(new ValueEventListener() {
+        DatabaseReference events_ref = ref.child("Events").child(key);
+        events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot zoneSnapshot: dataSnapshot.getChildren()) {
-                    String key = zoneSnapshot.getKey();
-                    events_ref.child(key).removeValue();
-                    Toast.makeText(getApplicationContext(), R.string.toast_EventDelete, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("Date", date);
-                    startActivity(intent);
-                }
+                events_ref.removeValue();
+                Toast.makeText(getApplicationContext(), R.string.toast_EventDelete, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Date", date);
+                startActivity(intent);
             }
 
             @Override
