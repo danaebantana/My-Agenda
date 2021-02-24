@@ -8,10 +8,12 @@ public class Contact implements Parcelable {
 
     private String name;
     private String phoneNumber;
+    private boolean selected;
 
     public Contact(String n, String pn){
         setName(n);
         setPhoneNumber(pn);
+        setSelected(false);
     }
 
     protected Contact(Parcel in) {
@@ -46,6 +48,10 @@ public class Contact implements Parcelable {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public boolean isSelected() { return selected; }
+
+    public void setSelected(boolean selected) { this.selected = selected; }
 
     @Override
     public int describeContents() {

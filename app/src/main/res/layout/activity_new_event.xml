@@ -250,34 +250,6 @@
                     app:layout_constraintVertical_bias="0.0"
                     app:tint="@null" />
 
-                <TextView
-                    android:id="@+id/collaborators_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/collaborators"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/button_collaborators"
-                    app:layout_constraintTop_toBottomOf="@+id/end_date"
-                    app:layout_constraintVertical_bias="0.195" />
-
-                <TextView
-                    android:id="@+id/textView_collaborators"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/textview"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/end_time"
-                    app:layout_constraintVertical_bias="0.044" />
-
                 <ImageView
                     android:id="@+id/reminder_image"
                     android:layout_width="wrap_content"
@@ -297,27 +269,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="88dp"
                     android:text="@string/set_reminder"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.004"
+                    app:layout_constraintHorizontal_bias="0.008"
                     app:layout_constraintStart_toEndOf="@+id/reminder_image"
-                    app:layout_constraintTop_toBottomOf="@+id/collaborators_txt"
-                    app:layout_constraintVertical_bias="0.083" />
+                    app:layout_constraintTop_toBottomOf="@+id/button_collaborators"
+                    app:layout_constraintVertical_bias="0.909" />
 
                 <Spinner
                     android:id="@+id/reminder_sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="88dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.172"
+                    app:layout_constraintHorizontal_bias="0.109"
                     app:layout_constraintStart_toEndOf="@+id/reminder_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_collaborators"
-                    app:layout_constraintVertical_bias="0.375" />
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_collaborators"
+                    app:layout_constraintVertical_bias="0.942" />
 
                 <ImageView
                     android:id="@+id/color_image"
@@ -354,12 +327,16 @@
 
                 <Spinner
                     android:id="@+id/spinner_collaborators"
-                    android:layout_width="157dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="44dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_marginTop="32dp"
-                    app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/end_time" />
+                    app:layout_constraintBottom_toTopOf="@+id/reminder_txt"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.006"
+                    app:layout_constraintStart_toEndOf="@+id/button_collaborators"
+                    app:layout_constraintTop_toBottomOf="@+id/end_time"
+                    app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

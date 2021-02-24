@@ -7,14 +7,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -52,6 +58,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     Spinner reminder_sp, spinner_collaborators;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,10 +81,12 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_date = findViewById(R.id.end_date);
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
-        collaborators = findViewById(R.id.textView_collaborators);
+        //collaborators = findViewById(R.id.textView_collaborators);
         spinner_collaborators = findViewById(R.id.spinner_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
+        db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
         myDialog = new Dialog(this);
 
@@ -126,6 +135,34 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_date.setOnClickListener(this);
         start_time.setOnClickListener(this);
         end_time.setOnClickListener(this);
+
+        Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
+        //Create contact list
+        contacts.add(new Contact("Collaborators", "-"));
+        if (cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                Contact contact = new Contact(cursor.getString(0), cursor.getString(1));
+                contacts.add(contact);
+            }
+        }
+        //load Contact Spinner
+        SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(this, 0, contacts);
+        spinner_collaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
+        /*ArrayList<Contact> selectedContacts = new ArrayList<Contact>();
+        spinner_collaborators.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                String name = spinner_collaborators.getSelectedItem().toString();
+                if(!name.equals("Collaborators")){
+                    Contact c =
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });*/
 
         // Create spinner dropdown for reminder notification
         Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
@@ -255,27 +292,29 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     event_ref.child("Collaborators").setValue("-");
                     DatabaseReference collab_ref = event_ref.child("Collaborators");
                     for(Contact c : contacts){
-                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
-                                    String uid = zoneSnapshot.getKey();
-                                    DatabaseReference uid_ref = usersRef.child(uid);
-                                    String name = zoneSnapshot.child("Name").getValue().toString();
-                                    String phone = zoneSnapshot.child("Phone Number").getValue().toString();
-                                    if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
-                                        collab_ref.child(uid).child("Name").setValue(c.getName());
-                                        collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
-                                        collab_ref.child(uid).child("Comments").setValue("-");
-                                        collab_ref.child(uid).child("Attendance").setValue("false");
+                        if(c.isSelected()){
+                            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
+                                        String uid = zoneSnapshot.getKey();
+                                        DatabaseReference uid_ref = usersRef.child(uid);
+                                        String name = zoneSnapshot.child("Name").getValue().toString();
+                                        String phone = zoneSnapshot.child("Phone Number").getValue().toString();
+                                        if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
+                                            collab_ref.child(uid).child("Name").setValue(c.getName());
+                                            collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
+                                            collab_ref.child(uid).child("Comments").setValue("-");
+                                            collab_ref.child(uid).child("Attendance").setValue("false");
+                                        }
                                     }
                                 }
-                            }
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
                 }
@@ -300,19 +339,20 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==456){
-            contacts = data.getParcelableArrayListExtra("contactList");
+            /*contacts = data.getParcelableArrayListExtra("contactList");
             if(contacts == null || contacts.isEmpty()){
                 Toast.makeText(getApplication(), R.string.toast_emptyList, Toast.LENGTH_LONG).show();
             } else {
                 //Show all selected contacts
-                ArrayList<String> items = new ArrayList<String>();
+                ArrayList<Contact> items = new ArrayList<Contact>();
+                int i = 0;
                 for(Contact c : contacts){
-                    items.add(c.getName());
+                    items.add(c);
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
+                SpinnerContactAdapter adapter = new SpinnerContactAdapter(this, 0, items);
                 spinner_collaborators.setAdapter(adapter); // Set the spinners adapter to the previously created one.
-                collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
-            }
+                //collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
+            }*/
         } else if(requestCode==123){   //Return from MapsActivity
             double latitude = data.getDoubleExtra("latitude",0.0);
             double longitude = data.getDoubleExtra("longitude",0.0);
