@@ -132,9 +132,12 @@
                     android:hint="@string/description"
                     android:importantForAutofill="no"
                     android:inputType="textPersonName"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.47"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/event_location" />
+                    app:layout_constraintTop_toBottomOf="@+id/event_location"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <ImageView
                     android:id="@+id/clock_image"
@@ -264,19 +267,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/end_date"
                     app:layout_constraintVertical_bias="0.195" />
 
-                <TextView
-                    android:id="@+id/textView_collaborators"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <Spinner
+                    android:id="@+id/spinner_collaborators"
+                    android:layout_width="157dp"
+                    android:layout_height="32dp"
                     android:layout_marginStart="8dp"
-                    android:text="@string/textview"
-                    android:textSize="18sp"
+                    android:layout_marginTop="28dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
                     app:layout_constraintTop_toBottomOf="@+id/end_time"
-                    app:layout_constraintVertical_bias="0.044" />
+                    app:layout_constraintVertical_bias="0.018" />
 
                 <ImageView
                     android:id="@+id/reminder_image"
@@ -314,10 +316,10 @@
                     android:layout_marginStart="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.172"
+                    app:layout_constraintHorizontal_bias="0.036"
                     app:layout_constraintStart_toEndOf="@+id/reminder_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_collaborators"
-                    app:layout_constraintVertical_bias="0.375" />
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_collaborators"
+                    app:layout_constraintVertical_bias="0.257" />
 
                 <ImageView
                     android:id="@+id/color_image"
@@ -351,15 +353,6 @@
                     app:layout_constraintStart_toEndOf="@+id/color_image"
                     app:layout_constraintTop_toBottomOf="@+id/reminder_txt"
                     app:layout_constraintVertical_bias="0.392" />
-
-                <Spinner
-                    android:id="@+id/spinner_collaborators"
-                    android:layout_width="157dp"
-                    android:layout_height="32dp"
-                    android:layout_marginStart="44dp"
-                    android:layout_marginTop="32dp"
-                    app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/end_time" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

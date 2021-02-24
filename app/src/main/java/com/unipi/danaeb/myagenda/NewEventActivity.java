@@ -7,7 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -45,11 +49,13 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
+    SQLiteDatabase db;
     FloatingActionButton back_bt1, save_bt, location_bt;
     Dialog myDialog;
     EditText event_title, event_location, event_description;
     TextView start_date, start_time, end_date, end_time, collaborators, color_txt;
     Spinner reminder_sp, spinner_collaborators;
+    int GOOGLE_MAPS_ACTIVITY = 123;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -67,6 +73,10 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         ref = usersRef.child(currentUser.getUid());
+
+        db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
+
         event_title = findViewById(R.id.event_title);
         event_location = findViewById(R.id.event_location);
         event_description = findViewById(R.id.event_description);
@@ -74,7 +84,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_date = findViewById(R.id.end_date);
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
-        collaborators = findViewById(R.id.textView_collaborators);
         spinner_collaborators = findViewById(R.id.spinner_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
@@ -98,8 +107,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
-                startActivity(intent);
+                Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
+                startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
             }
         });
 
@@ -128,13 +137,25 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_time.setOnClickListener(this);
 
         // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
-        String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
+        Spinner dropdown = findViewById(R.id.spinner_collaborators); // Get the spinner from the xml.
+        ArrayList<String> items = new ArrayList<String>(); // Create a list of items for the spinner.
+        Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
+        if (cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                items.add(cursor.getString(0) + " : " + cursor.getString(1));// This adds an element to the list.
+            }
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
         dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
+
+        // Create spinner dropdown for reminder notification
+        Spinner dropdown1 = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
+        String[] items1 = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items1); // Create an adapter to describe how the items are displayed.
+        dropdown1.setAdapter(adapter1); // Set the spinners adapter to the previously created one.
     }
 
-    //Pop up window to choose date and time
+    // Pop up window to choose date and time
     @Override
     public void onClick(View v) {
         // Date picker pops up when date textboxes are clicked
@@ -317,7 +338,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             double latitude = data.getDoubleExtra("latitude",0.0);
             double longitude = data.getDoubleExtra("longitude",0.0);
             String location = data.getStringExtra("location");
-            if(location!=null && !location.isEmpty()){
+            if(location != null && !location.isEmpty()){
                 event_location.setText(location);
             }
         }
