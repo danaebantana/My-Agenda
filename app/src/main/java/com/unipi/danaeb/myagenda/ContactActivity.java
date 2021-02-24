@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,8 +19,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -73,7 +77,7 @@ public class ContactActivity extends AppCompatActivity {
         buttonNewContact = findViewById(R.id.button_newContact);
         buttonSelectedCollab = findViewById(R.id.button_selectedCollab);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
+        //db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
         listView = findViewById(R.id.listView);
         linearLayout = findViewById(R.id.linear_Layout);
         scrollView = findViewById(R.id.scrollView);
@@ -108,22 +112,34 @@ public class ContactActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                StringBuilder builder = new StringBuilder();
-                builder.append(item).append("\n");
-                builder.append("-----------------------------------\n");
-                showMessage("Contact Details: ",builder.toString());
+                Object item = listView.getItemAtPosition(position);
+                String[] obj = item.toString().split("\n");
+                String row1 = obj[0];
+                String[] names = row1.split(":");
+                String name = names[1];
+                String row2 = obj[1];
+                String[] phonenumbers = row2.split(":");
+                String phonenumber = phonenumbers[1];
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(ContactActivity.this);
+                alert.setTitle("Delete entry");
+                alert.setMessage("Are you sure you want to delete?");
+                alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                        db.execSQL("DELETE FROM Contacts WHERE name='" +name+ "'");
+                        Toast.makeText(ContactActivity.this, R.string.toast_ContactDelete , Toast.LENGTH_LONG).show();
+                    }
+                });
+                alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // close dialog
+                        dialog.cancel();
+                    }
+                });
+                alert.show();
             }
         });
-    }
-
-    public void showMessage(String title, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setCancelable(true)
-                .setTitle(title)
-                .setMessage(message)
-                .show();
     }
 
     public void selectContactList(){

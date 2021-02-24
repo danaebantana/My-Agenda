@@ -38,7 +38,7 @@ public class DayActivity extends AppCompatActivity {
     ListView listView;
     ListAdapter arrayAdapter;
     FirebaseDatabase database;
-    DatabaseReference rootRef, ref;
+    DatabaseReference rootRef, ref, eventsRef;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
@@ -50,6 +50,7 @@ public class DayActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
+        eventsRef = database.getReference("Events");
         storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -93,8 +94,7 @@ public class DayActivity extends AppCompatActivity {
                 String t = obj[0];
                 String time = obj[1];
                 String collaborators = obj[2];
-                DatabaseReference events_ref1 = ref.child("Events");
-                events_ref1.addValueEventListener(new ValueEventListener() {
+                eventsRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot zoneSnapshot1 : dataSnapshot.getChildren()) {
@@ -123,15 +123,14 @@ public class DayActivity extends AppCompatActivity {
 
     // Retrieve data from firebase
     public void retrieveData() {
-        DatabaseReference events_ref = ref.child("Events");
         listView = findViewById(R.id.listView);
         ArrayList<String> arrayList = new ArrayList<>();
-        events_ref.addValueEventListener(new ValueEventListener() {
+        eventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot zoneSnapshot : dataSnapshot.getChildren()) {
                     String key = zoneSnapshot.getKey();
-                    DatabaseReference key_ref = events_ref.child(key);
+                    DatabaseReference key_ref = eventsRef.child(key);
                     key_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {

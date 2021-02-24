@@ -1,5 +1,6 @@
 package com.unipi.danaeb.myagenda;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -40,15 +41,15 @@ import java.util.Calendar;
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseDatabase database;
-    DatabaseReference rootRef, ref;
+    DatabaseReference rootRef, ref, eventsRef;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
     FloatingActionButton back_bt3, save_bt, delete_bt, location_bt;
     Dialog myDialog;
-    EditText event_title, event_location, event_description, collaborators_emails;
+    EditText event_title, event_location, event_description;
     TextView start_date, start_time, end_date, end_time, color_txt;
-    Spinner reminder_sp;
+    Spinner reminder_sp, spinner_collaborators;
     int GOOGLE_MAPS_ACTIVITY = 123;
     Double lon, lat;
     String location_name;
@@ -65,6 +66,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
+        eventsRef = database.getReference("Events");
         storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -82,11 +84,11 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         end_date = findViewById(R.id.end_date);
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
-        collaborators_emails = findViewById(R.id.collaborators);
+        spinner_collaborators = findViewById(R.id.spinner_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
-        DatabaseReference events_ref = ref.child("Events").child(key);
+        DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -253,7 +255,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     public void saveChanges(View view) {
         String date = getIntent().getStringExtra("Date");
         String key = getIntent().getStringExtra("Key");
-        DatabaseReference events_ref = ref.child("Events").child(key);
+        DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -264,7 +266,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 events_ref.child("Start time").setValue(start_time.getText().toString());
                 events_ref.child("End date").setValue(end_date.getText().toString());
                 events_ref.child("End time").setValue(end_time.getText().toString());
-                events_ref.child("Collaborators").setValue(collaborators_emails.getText().toString());
+                events_ref.child("Collaborators").setValue(spinner_collaborators.getSelectedItem().toString());
                 events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                 events_ref.child("Color").setValue(color_txt.getText().toString());
             }
@@ -285,7 +287,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     public void deleteEvent(View view) {
         String key = getIntent().getStringExtra("Key"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
-        DatabaseReference events_ref = ref.child("Events").child(key);
+        DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
