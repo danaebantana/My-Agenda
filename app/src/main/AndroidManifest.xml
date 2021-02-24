@@ -44,7 +44,6 @@
             android:label="@string/title_activity_maps2"></activity>
         <activity android:name=".NewContactActivity"></activity>
         <activity android:name=".ContactActivity" />
-        <activity android:name=".MapsActivity" />
         <activity android:name=".NewEventActivity" />
         <activity android:name=".EditEventActivity" />
         <activity android:name=".DayActivity" />
@@ -63,9 +62,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:process=":remote" />
     </application>
 
 </manifest>

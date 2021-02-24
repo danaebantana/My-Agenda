@@ -1,6 +1,5 @@
 package com.unipi.danaeb.myagenda;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -30,7 +29,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -48,8 +46,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     FloatingActionButton back_bt3, save_bt, delete_bt, location_bt;
     Dialog myDialog;
     EditText event_title, event_location, event_description;
-    TextView start_date, start_time, end_date, end_time, color_txt;
-    Spinner reminder_sp, spinner_collaborators;
+    TextView start_date1, start_time1, end_date1, end_time1, color_txt;
+    Spinner reminder_sp, spinner_collaborators1;
     int GOOGLE_MAPS_ACTIVITY = 123;
     Double lon, lat;
     String location_name;
@@ -80,11 +78,11 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         event_title.setText(title);
         event_location = findViewById(R.id.event_location);
         event_description = findViewById(R.id.event_description);
-        start_date = findViewById(R.id.start_date);
-        end_date = findViewById(R.id.end_date);
-        start_time = findViewById(R.id.start_time);
-        end_time = findViewById(R.id.end_time);
-        spinner_collaborators = findViewById(R.id.spinner_collaborators);
+        start_date1 = findViewById(R.id.start_date1);
+        end_date1 = findViewById(R.id.end_date1);
+        start_time1 = findViewById(R.id.start_time1);
+        end_time1 = findViewById(R.id.end_time1);
+        spinner_collaborators1 = findViewById(R.id.spinner_collaborators1);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
@@ -97,13 +95,13 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 String description = dataSnapshot.child("Description").getValue().toString();
                 event_description.setText(description);
                 String start_d = dataSnapshot.child("Start date").getValue().toString();
-                start_date.setText(start_d);
+                start_date1.setText(start_d);
                 String end_d = dataSnapshot.child("End date").getValue().toString();
-                end_date.setText(end_d);
+                end_date1.setText(end_d);
                 String start_t = dataSnapshot.child("Start time").getValue().toString();
-                start_time.setText(start_t);
+                start_time1.setText(start_t);
                 String end_t = dataSnapshot.child("End time").getValue().toString();
-                end_time.setText(end_t);
+                end_time1.setText(end_t);
                 //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
                 //collaborators_emails.setText(collaborators);
                 //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
@@ -166,7 +164,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         // Date picker pops up when date textboxes are clicked
-        if ((v == start_date) || (v == end_date)) {
+        if ((v == start_date1) || (v == end_date1)) {
 
             // Get Current Date
             final Calendar c = Calendar.getInstance();
@@ -175,23 +173,22 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             mDay = c.get(Calendar.DAY_OF_MONTH);
 
             // Launch Date Picker Dialog
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year,
                                               int monthOfYear, int dayOfMonth) {
-                            if (v == start_date) {
-                                start_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                                end_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                            } else if (v == end_date) {
-                                end_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            if (v == start_date1) {
+                                start_date1.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                                end_date1.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                            } else if (v == end_date1) {
+                                end_date1.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                             }
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
         // Time picker pops up when time textboxes are clicked
-        if ((v == start_time) || (v == end_time)) {
+        if ((v == start_time1) || (v == end_time1)) {
 
             // Get Current Time
             final Calendar c = Calendar.getInstance();
@@ -199,16 +196,14 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             mMinute = c.get(Calendar.MINUTE);
 
             // Launch Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
-
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay,
                                               int minute) {
-                            if (v == start_time) {
-                                start_time.setText(hourOfDay + ":" + minute);
-                            } else if (v == end_time) {
-                                end_time.setText(hourOfDay + ":" + minute);
+                            if (v == start_time1) {
+                                start_time1.setText(hourOfDay + ":" + minute);
+                            } else if (v == end_time1) {
+                                end_time1.setText(hourOfDay + ":" + minute);
                             }
                         }
                     }, mHour, mMinute, true);
@@ -262,11 +257,11 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 events_ref.child("Title").setValue(event_title.getText().toString());
                 events_ref.child("Location").setValue(event_location.getText().toString());
                 events_ref.child("Description").setValue(event_description.getText().toString());
-                events_ref.child("Start date").setValue(start_date.getText().toString());
-                events_ref.child("Start time").setValue(start_time.getText().toString());
-                events_ref.child("End date").setValue(end_date.getText().toString());
-                events_ref.child("End time").setValue(end_time.getText().toString());
-                events_ref.child("Collaborators").setValue(spinner_collaborators.getSelectedItem().toString());
+                events_ref.child("Start date").setValue(start_date1.getText().toString());
+                events_ref.child("Start time").setValue(start_time1.getText().toString());
+                events_ref.child("End date").setValue(end_date1.getText().toString());
+                events_ref.child("End time").setValue(end_time1.getText().toString());
+                events_ref.child("Collaborators").setValue(spinner_collaborators1.getSelectedItem().toString());
                 events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
                 events_ref.child("Color").setValue(color_txt.getText().toString());
             }

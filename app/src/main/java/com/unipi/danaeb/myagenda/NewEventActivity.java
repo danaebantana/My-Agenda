@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -81,7 +80,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         end_date = findViewById(R.id.end_date);
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
-        //collaborators = findViewById(R.id.textView_collaborators);
         spinner_collaborators = findViewById(R.id.spinner_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
@@ -107,7 +105,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
+                Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
                 startActivity(intent);
             }
         });

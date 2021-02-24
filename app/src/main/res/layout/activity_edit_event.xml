@@ -169,61 +169,73 @@
                     app:layout_constraintVertical_bias="0.071" />
 
                 <TextView
-                    android:id="@+id/start_date"
+                    android:id="@+id/start_date1"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
                     android:clickable="true"
                     android:gravity="center"
+                    android:onClick="onClick"
                     android:text="@string/start_date"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.182"
+                    app:layout_constraintHorizontal_bias="0.183"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/time_txt" />
+                    app:layout_constraintTop_toBottomOf="@+id/time_txt"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/start_time"
+                    android:id="@+id/start_time1"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="24dp"
                     android:clickable="true"
                     android:gravity="center"
+                    android:onClick="onClick"
                     android:text="@string/start_time"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toEndOf="@+id/start_date"
-                    app:layout_constraintTop_toBottomOf="@+id/time_txt" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/start_date1"
+                    app:layout_constraintTop_toBottomOf="@+id/time_txt"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/end_date"
+                    android:id="@+id/end_date1"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:clickable="true"
                     android:gravity="center"
+                    android:onClick="onClick"
                     android:text="@string/end_date"
                     android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.182"
+                    app:layout_constraintHorizontal_bias="0.183"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/start_date" />
+                    app:layout_constraintTop_toBottomOf="@+id/start_date1"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/end_time"
+                    android:id="@+id/end_time1"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
                     android:clickable="true"
                     android:gravity="center"
+                    android:onClick="onClick"
                     android:text="@string/end_time"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/end_date"
-                    app:layout_constraintTop_toBottomOf="@+id/start_time"
+                    app:layout_constraintStart_toEndOf="@+id/end_date1"
+                    app:layout_constraintTop_toBottomOf="@+id/start_time1"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -261,7 +273,7 @@
                     app:layout_constraintVertical_bias="0.0" />
 
                 <Spinner
-                    android:id="@+id/spinner_collaborators"
+                    android:id="@+id/spinner_collaborators1"
                     android:layout_width="157dp"
                     android:layout_height="32dp"
                     android:layout_marginStart="8dp"
@@ -270,7 +282,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/end_time"
+                    app:layout_constraintTop_toBottomOf="@+id/end_time1"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <ImageView
@@ -305,10 +317,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginBottom="100dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/reminder_txt" />
+                    app:layout_constraintStart_toEndOf="@+id/reminder_txt"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_collaborators1"
+                    app:layout_constraintVertical_bias="0.961" />
 
                 <ImageView
                     android:id="@+id/color_image"

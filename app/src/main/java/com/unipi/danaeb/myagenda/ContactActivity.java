@@ -77,7 +77,7 @@ public class ContactActivity extends AppCompatActivity {
         buttonNewContact = findViewById(R.id.button_newContact);
         buttonSelectedCollab = findViewById(R.id.button_selectedCollab);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
-        //db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
         listView = findViewById(R.id.listView);
         linearLayout = findViewById(R.id.linear_Layout);
         scrollView = findViewById(R.id.scrollView);
