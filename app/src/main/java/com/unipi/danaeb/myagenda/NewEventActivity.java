@@ -49,7 +49,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     Dialog myDialog;
     EditText event_title, event_location, event_description;
     TextView start_date, start_time, end_date, end_time, collaborators, color_txt;
-    Spinner reminder_sp;
+    Spinner reminder_sp, spinner_collaborators;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
 
@@ -74,6 +74,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         start_time = findViewById(R.id.start_time);
         end_time = findViewById(R.id.end_time);
         collaborators = findViewById(R.id.textView_collaborators);
+        spinner_collaborators = findViewById(R.id.spinner_collaborators);
         reminder_sp = findViewById(R.id.reminder_sp);
         color_txt = findViewById(R.id.color_txt);
 
@@ -97,7 +98,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -255,6 +255,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     for(Contact c : contacts){
                         collab_ref.child(c.getName()).setValue(c.getPhoneNumber());
                     }
+                    events_ref.child("ID").setValue("Creator");
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
                 }
                 @Override
@@ -267,6 +268,10 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             intent.putExtra("Date", date);
             startActivity(intent);
         }
+    }
+
+    private void saveEventCollaborator(String key, String title, String loc, String desc, String s_date, String s_time, String e_date, String e_time, String rem, String color, String col){
+        //events_ref.child("ID").setValue("Collaborator");
     }
 
     public void addCollaborators(View view){
@@ -284,6 +289,12 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 Toast.makeText(getApplication(), R.string.toast_emptyList, Toast.LENGTH_LONG).show();
             } else {
                 //Show all selected contacts
+                ArrayList<String> items = new ArrayList<String>();
+                for(Contact c : contacts){
+                    items.add(c.getName());
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
+                spinner_collaborators.setAdapter(adapter); // Set the spinners adapter to the previously created one.
                 collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
             }
         }
