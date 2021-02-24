@@ -134,18 +134,18 @@ public class DayActivity extends AppCompatActivity {
                     key_ref.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String date = zoneSnapshot.child("Start date").getValue().toString();
+                            String date = snapshot.child("Start date").getValue().toString();
                             StringBuilder builder = new StringBuilder();
                             if (date.equals(date_txt.getText().toString())) {
-                                final String title = zoneSnapshot.child("Title").getValue().toString();
-                                final String time = zoneSnapshot.child("Start time").getValue().toString();
-                                if(zoneSnapshot.child("Collaborators").getValue().equals("-")){
+                                String title = snapshot.child("Title").getValue().toString();
+                                String time = snapshot.child("Start time").getValue().toString();
+                                if(snapshot.child("Collaborators").getValue().equals("-")){
                                     builder.append(title + "\n" + time + "\nCollaborators: -");
                                 } else {
                                     String collab = "";
-                                    long count = zoneSnapshot.getChildrenCount();
+                                    long count = snapshot.getChildrenCount();
                                     long i = 1;
-                                    for (DataSnapshot ds : zoneSnapshot.child("Collaborators").getChildren()){
+                                    for (DataSnapshot ds : snapshot.child("Collaborators").getChildren()){
                                        if(count==1 || i==1){
                                            collab = ds.getKey();
                                        } else {
@@ -159,7 +159,6 @@ public class DayActivity extends AppCompatActivity {
                             }
                             arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, arrayList);
                             listView.setAdapter(arrayAdapter);
-
                         }
 
 

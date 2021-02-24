@@ -15,12 +15,9 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -74,17 +71,17 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         ref = usersRef.child(currentUser.getUid());
-        event_title = findViewById(R.id.event_title);
-        event_location = findViewById(R.id.event_location);
-        event_description = findViewById(R.id.event_description);
-        start_date = findViewById(R.id.start_date);
-        end_date = findViewById(R.id.end_date);
-        start_time = findViewById(R.id.start_time);
-        end_time = findViewById(R.id.end_time);
+        event_title = findViewById(R.id.textView_eventTitle);
+        event_location = findViewById(R.id.textView_eventLocation);
+        event_description = findViewById(R.id.textView_eventDescription);
+        start_date = findViewById(R.id.textView_startDate);
+        end_date = findViewById(R.id.textView_endDate);
+        start_time = findViewById(R.id.textView_startTime);
+        end_time = findViewById(R.id.textView_endTime);
         //collaborators = findViewById(R.id.textView_collaborators);
-        spinner_collaborators = findViewById(R.id.spinner_collaborators);
-        reminder_sp = findViewById(R.id.reminder_sp);
-        color_txt = findViewById(R.id.color_txt);
+        spinner_collaborators = findViewById(R.id.spinner_editCollaborators);
+        reminder_sp = findViewById(R.id.spinner_editReminder);
+        color_txt = findViewById(R.id.textView_colorBox);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
@@ -103,32 +100,32 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         });
 
         // Map button
-        location_bt = findViewById(R.id.location_bt);
+        location_bt = findViewById(R.id.button_editLocation);
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
+                Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
                 startActivity(intent);
             }
         });
 
         // Set selected date to textboxes
-        start_date = findViewById(R.id.start_date);
+        start_date = findViewById(R.id.textView_startDate);
         start_date.setText(date);
-        end_date = findViewById(R.id.end_date);
+        end_date = findViewById(R.id.textView_endDate);
         end_date.setText(date);
 
         // Set current hour to textbox
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm");
         String strDate = mdformat.format(calendar.getTime());
-        start_time = findViewById(R.id.start_time);
+        start_time = findViewById(R.id.textView_startTime);
         start_time.setText(strDate);
 
-        // Add 1 hour to end_time textbox
+        // Add 1 hour to textView_endTime textbox
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         String strDate1 = mdformat.format(calendar.getTime());
-        end_time = findViewById(R.id.end_time);
+        end_time = findViewById(R.id.textView_endTime);
         end_time.setText(strDate1);
 
         start_date.setOnClickListener(this);
@@ -149,10 +146,10 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(this, 0, contacts);
         spinner_collaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
         /*ArrayList<Contact> selectedContacts = new ArrayList<Contact>();
-        spinner_collaborators.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_editCollaborators.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                String name = spinner_collaborators.getSelectedItem().toString();
+                String name = spinner_editCollaborators.getSelectedItem().toString();
                 if(!name.equals("Collaborators")){
                     Contact c =
                 }
@@ -165,7 +162,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         });*/
 
         // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
+        Spinner dropdown = findViewById(R.id.spinner_editReminder); // Get the spinner from the xml.
         String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
         dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
@@ -235,7 +232,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                color_txt = findViewById(R.id.color_txt);
+                color_txt = findViewById(R.id.textView_colorBox);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
                 int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button

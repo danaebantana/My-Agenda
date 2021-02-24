@@ -24,7 +24,7 @@
         app:srcCompat="@drawable/abc_vector_test" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/delete_bt"
+        android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -42,7 +42,7 @@
         app:tint="@null" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_bt"
+        android:id="@+id/button_saveChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -51,7 +51,7 @@
         android:focusable="auto"
         android:onClick="saveChanges"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/delete_bt"
+        app:layout_constraintEnd_toStartOf="@+id/button_delete"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -65,7 +65,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_bt">
+        app:layout_constraintTop_toBottomOf="@+id/button_saveChanges">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:layout_height="528dp">
 
                 <EditText
-                    android:id="@+id/event_title"
+                    android:id="@+id/textView_eventTitle"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -92,7 +92,7 @@
                     app:layout_constraintVertical_bias="0.033" />
 
                 <EditText
-                    android:id="@+id/event_location"
+                    android:id="@+id/textView_eventLocation"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -104,11 +104,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.172"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/event_title"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_eventTitle"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/location_bt"
+                    android:id="@+id/button_editLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -117,15 +117,15 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/event_location"
-                    app:layout_constraintTop_toBottomOf="@+id/event_title"
-                    app:layout_constraintVertical_bias="0.012"
+                    app:layout_constraintStart_toEndOf="@+id/textView_eventLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_eventTitle"
+                    app:layout_constraintVertical_bias="0.024"
                     app:rippleColor="@null"
                     app:srcCompat="@drawable/google_maps"
                     app:tint="@null" />
 
                 <EditText
-                    android:id="@+id/event_description"
+                    android:id="@+id/textView_eventDescription"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -137,7 +137,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.484"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/event_location"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_eventLocation"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <ImageView
@@ -150,7 +150,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.041"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/event_description"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_eventDescription"
                     app:layout_constraintVertical_bias="0.0"
                     app:srcCompat="@drawable/clock" />
 
@@ -165,11 +165,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/clock_image"
-                    app:layout_constraintTop_toBottomOf="@+id/event_description"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_eventDescription"
                     app:layout_constraintVertical_bias="0.071" />
 
                 <TextView
-                    android:id="@+id/start_date"
+                    android:id="@+id/textView_startDate"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -183,7 +183,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/time_txt" />
 
                 <TextView
-                    android:id="@+id/start_time"
+                    android:id="@+id/textView_startTime"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -192,11 +192,11 @@
                     android:gravity="center"
                     android:text="@string/start_time"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toEndOf="@+id/start_date"
+                    app:layout_constraintStart_toEndOf="@+id/textView_startDate"
                     app:layout_constraintTop_toBottomOf="@+id/time_txt" />
 
                 <TextView
-                    android:id="@+id/end_date"
+                    android:id="@+id/textView_endDate"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -207,10 +207,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.182"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/start_date" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView_startDate" />
 
                 <TextView
-                    android:id="@+id/end_time"
+                    android:id="@+id/textView_endTime"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
@@ -222,8 +222,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/end_date"
-                    app:layout_constraintTop_toBottomOf="@+id/start_time"
+                    app:layout_constraintStart_toEndOf="@+id/textView_endDate"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_startTime"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -245,33 +245,16 @@
                     app:layout_constraintVertical_bias="0.0"
                     app:tint="@null" />
 
-                <TextView
-                    android:id="@+id/collaborators_txt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="120dp"
-                    android:text="@string/collaborators"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/button_collaborators2"
-                    app:layout_constraintTop_toBottomOf="@+id/clock_image"
-                    app:layout_constraintVertical_bias="0.0" />
-
                 <Spinner
-                    android:id="@+id/spinner_collaborators"
+                    android:id="@+id/spinner_editCollaborators"
                     android:layout_width="157dp"
                     android:layout_height="32dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginEnd="204dp"
+                    android:layout_marginBottom="136dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/collaborators_txt"
-                    app:layout_constraintTop_toBottomOf="@+id/end_time"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView_endDate"
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <ImageView
                     android:id="@+id/reminder_image"
@@ -292,19 +275,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginBottom="84dp"
                     android:text="@string/set_reminder"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/reminder_image"
-                    app:layout_constraintTop_toBottomOf="@+id/collaborators_txt"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintStart_toEndOf="@+id/reminder_image" />
 
                 <Spinner
-                    android:id="@+id/reminder_sp"
+                    android:id="@+id/spinner_editReminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:layout_marginBottom="84dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -325,7 +307,7 @@
                     app:srcCompat="@drawable/color_palette" />
 
                 <TextView
-                    android:id="@+id/color_txt"
+                    android:id="@+id/textView_colorBox"
                     android:layout_width="330dp"
                     android:layout_height="34dp"
                     android:layout_marginStart="8dp"
@@ -341,7 +323,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/color_image"
                     app:layout_constraintTop_toBottomOf="@+id/reminder_txt"
-                    app:layout_constraintVertical_bias="0.17" />
+                    app:layout_constraintVertical_bias="0.3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

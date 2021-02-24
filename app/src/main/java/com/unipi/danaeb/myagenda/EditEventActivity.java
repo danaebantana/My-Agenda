@@ -1,10 +1,12 @@
 package com.unipi.danaeb.myagenda;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,11 +32,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -54,11 +56,15 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     Double lon, lat;
     String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private ArrayList<Contact> contacts = new ArrayList<Contact>();
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
+        db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
         String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
@@ -72,24 +78,24 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         currentUser = mAuth.getCurrentUser();
         ref = rootRef.child(currentUser.getUid());
 
-        save_bt = findViewById(R.id.save_bt);
-        delete_bt = findViewById(R.id.delete_bt);
+        save_bt = findViewById(R.id.button_saveChanges);
+        delete_bt = findViewById(R.id.button_delete);
 
         // Retrieve data from firebase and print them to textboxes
-        event_title = findViewById(R.id.event_title);
+        event_title = findViewById(R.id.textView_eventTitle);
         event_title.setText(title);
-        event_location = findViewById(R.id.event_location);
-        event_description = findViewById(R.id.event_description);
-        start_date = findViewById(R.id.start_date);
-        end_date = findViewById(R.id.end_date);
-        start_time = findViewById(R.id.start_time);
-        end_time = findViewById(R.id.end_time);
-        spinner_collaborators = findViewById(R.id.spinner_collaborators);
-        reminder_sp = findViewById(R.id.reminder_sp);
-        color_txt = findViewById(R.id.color_txt);
+        event_location = findViewById(R.id.textView_eventLocation);
+        event_description = findViewById(R.id.textView_eventDescription);
+        start_date = findViewById(R.id.textView_startDate);
+        end_date = findViewById(R.id.textView_endDate);
+        start_time = findViewById(R.id.textView_startTime);
+        end_time = findViewById(R.id.textView_endTime);
+        spinner_collaborators = findViewById(R.id.spinner_editCollaborators);
+        reminder_sp = findViewById(R.id.spinner_editReminder);
+        color_txt = findViewById(R.id.textView_colorBox);
 
         DatabaseReference events_ref = eventsRef.child(key);
-        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String location = dataSnapshot.child("Location").getValue().toString();
@@ -104,10 +110,43 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 start_time.setText(start_t);
                 String end_t = dataSnapshot.child("End time").getValue().toString();
                 end_time.setText(end_t);
+                //Load collaborator spinner
+                Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
+                //Create contact list isSelected of all contacts is false.
+                contacts.add(new Contact("Collaborators", "-"));
+                if (cursor.getCount()>0){
+                    while (cursor.moveToNext()){
+                        Contact contact = new Contact(cursor.getString(0), cursor.getString(1));
+                        contacts.add(contact);
+                    }
+                }
+                //load Contact Spinner
+                DatabaseReference collab_ref = dataSnapshot.child("Collaborators").getRef();
+                collab_ref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
+                            String eid = zoneSnapshot.getKey();
+                            String name = zoneSnapshot.child("Name").getValue().toString();
+                            String phone = zoneSnapshot.child("Phone Number").getValue().toString();
+                            for (Contact c : contacts){
+                                if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
+                                    c.setSelected(true);
+                                }
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+                SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(getApplication(), 0, contacts);
+                spinner_collaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
                 //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
                 //collaborators_emails.setText(collaborators);
-                //String reminder = zoneSnapshot.child("Reminder").getValue().toString();
-                //reminder_sp.setSelection(Integer.parseInt(reminder));
+                //String reminder = dataSnapshot.child("Reminder").getValue().toString();
+                //spinner_editReminder.setSelection(Integer.parseInt(reminder));
                 String color = dataSnapshot.child("Color").getValue().toString();
                 color_txt.setText(color);
                 if (color.equals("Purple")){
@@ -146,7 +185,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         });
 
         // Map button
-        location_bt = findViewById(R.id.location_bt);
+        location_bt = findViewById(R.id.button_editLocation);
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,7 +195,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         });
 
         // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.reminder_sp); // Get the spinner from the xml.
+        Spinner dropdown = findViewById(R.id.spinner_editReminder); // Get the spinner from the xml.
         String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
         dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
@@ -199,19 +238,17 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             mMinute = c.get(Calendar.MINUTE);
 
             // Launch Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
 
-                        @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,
-                                              int minute) {
-                            if (v == start_time) {
-                                start_time.setText(hourOfDay + ":" + minute);
-                            } else if (v == end_time) {
-                                end_time.setText(hourOfDay + ":" + minute);
-                            }
-                        }
-                    }, mHour, mMinute, true);
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    if (v == start_time) {
+                        start_time.setText(hourOfDay + ":" + minute);
+                    } else if (v == end_time) {
+                        end_time.setText(hourOfDay + ":" + minute);
+                    }
+                }
+            }, mHour, mMinute, true);
             timePickerDialog.show();
         }
     }
@@ -226,7 +263,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                color_txt = findViewById(R.id.color_txt);
+                color_txt = findViewById(R.id.textView_colorBox);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
                 int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
