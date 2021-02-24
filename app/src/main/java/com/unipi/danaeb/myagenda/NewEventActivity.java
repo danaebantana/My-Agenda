@@ -270,10 +270,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private void saveEventCollaborator(String key, String title, String loc, String desc, String s_date, String s_time, String e_date, String e_time, String rem, String color, String col){
-        //events_ref.child("ID").setValue("Collaborator");
-    }
-
     public void addCollaborators(View view){
         Intent intent = new Intent(getApplicationContext(),ContactActivity.class);
         intent.putExtra("id","Event");
