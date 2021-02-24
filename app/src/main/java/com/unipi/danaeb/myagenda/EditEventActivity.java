@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -48,6 +49,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     EditText event_title, event_location, event_description, collaborators_emails;
     TextView start_date, start_time, end_date, end_time, color_txt;
     Spinner reminder_sp;
+    int GOOGLE_MAPS_ACTIVITY = 123;
+    Double lon, lat;
+    String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     @Override
@@ -144,9 +148,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                Intent intent = new Intent(EditEventActivity.this, MapsActivity2.class);
+                startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
             }
         });
 
@@ -300,5 +303,16 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            if(requestCode==GOOGLE_MAPS_ACTIVITY){
+                lat = data.getDoubleExtra("latitude",0.0);
+                lon = data.getDoubleExtra("longitude",0.0);
+                location_name = data.getStringExtra("name");
+                event_location.setText(location_name);
+             }
     }
 }
