@@ -62,9 +62,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <receiver
-            android:name=".AlarmReceiver"
-            android:process=":remote" />
     </application>
 
 </manifest>
