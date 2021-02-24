@@ -59,7 +59,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("latitude", latitude);
                     returnIntent.putExtra("longitude", longitude);
-                    returnIntent.putExtra("name", text);
+                    returnIntent.putExtra("location", text);
                     setResult(123, returnIntent);
                     finish();
                 }
@@ -141,7 +141,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         Intent returnIntent = new Intent();
         returnIntent.putExtra("latitude",0.0);
         returnIntent.putExtra("longitude",0.0);
-        returnIntent.putExtra("name","None");
+        returnIntent.putExtra("location","None");
         setResult(123,returnIntent);
         finish();
     }

@@ -41,7 +41,7 @@ import java.util.Calendar;
 public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     FirebaseDatabase database;
-    DatabaseReference rootRef, ref;
+    DatabaseReference usersRef, eventsRef, ref;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
@@ -61,11 +61,12 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
 
         database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference("Users");
+        usersRef = database.getReference("Users");
+        eventsRef = database.getReference("Events");
         storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        ref = rootRef.child(currentUser.getUid());
+        ref = usersRef.child(currentUser.getUid());
         event_title = findViewById(R.id.event_title);
         event_location = findViewById(R.id.event_location);
         event_description = findViewById(R.id.event_description);
@@ -225,37 +226,57 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     // Save event to firebase
     public void save(View view) {
         String date = getIntent().getStringExtra("Date"); // Get selected date from day activity
-        DatabaseReference events_ref = ref.child("Events").push();
+        DatabaseReference event_ref = eventsRef.push();   //New Event
         if (event_title.getText().toString().matches("")) {
             Toast.makeText(NewEventActivity.this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
-            events_ref.addValueEventListener(new ValueEventListener() {
+            event_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    events_ref.child("Title").setValue(event_title.getText().toString());
+                    event_ref.child("Creator").setValue(currentUser.getUid());
+                    event_ref.child("Title").setValue(event_title.getText().toString());
                     if (event_location.getText().toString().matches("")) {
-                        events_ref.child("Location").setValue("-");
+                        event_ref.child("Location").setValue("-");
                     } else {
-                        events_ref.child("Location").setValue(event_location.getText().toString());
+                        event_ref.child("Location").setValue(event_location.getText().toString());
                     }
                     if (event_description.getText().toString().matches("")) {
-                        events_ref.child("Description").setValue("-");
+                        event_ref.child("Description").setValue("-");
                     } else {
-                        events_ref.child("Description").setValue(event_description.getText().toString());
+                        event_ref.child("Description").setValue(event_description.getText().toString());
                     }
-                    events_ref.child("Start date").setValue(start_date.getText().toString());
-                    events_ref.child("Start time").setValue(start_time.getText().toString());
-                    events_ref.child("End date").setValue(end_date.getText().toString());
-                    events_ref.child("End time").setValue(end_time.getText().toString());
-                    events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
-                    events_ref.child("Color").setValue(color_txt.getText().toString());
-                    // Add collaborators to firebase
-                    events_ref.child("Collaborators").setValue("-");
-                    DatabaseReference collab_ref = events_ref.child("Collaborators");
+                    event_ref.child("Start date").setValue(start_date.getText().toString());
+                    event_ref.child("Start time").setValue(start_time.getText().toString());
+                    event_ref.child("End date").setValue(end_date.getText().toString());
+                    event_ref.child("End time").setValue(end_time.getText().toString());
+                    event_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
+                    event_ref.child("Color").setValue(color_txt.getText().toString());
+                    // Add collaborators to firebase based on collaborators uid
+                    event_ref.child("Collaborators").setValue("-");
+                    DatabaseReference collab_ref = event_ref.child("Collaborators");
                     for(Contact c : contacts){
-                        collab_ref.child(c.getName()).setValue(c.getPhoneNumber());
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
+                                    String uid = zoneSnapshot.getKey();
+                                    DatabaseReference uid_ref = usersRef.child(uid);
+                                    String name = zoneSnapshot.child("Name").getValue().toString();
+                                    String phone = zoneSnapshot.child("Phone Number").getValue().toString();
+                                    if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
+                                        collab_ref.child(uid).child("Name").setValue(c.getName());
+                                        collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
+                                        collab_ref.child(uid).child("Comments").setValue("-");
+                                        collab_ref.child(uid).child("Attendance").setValue("false");
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
-                    events_ref.child("ID").setValue("Creator");
                     Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
                 }
                 @Override
@@ -263,7 +284,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
-
             Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
             intent.putExtra("Date", date);
             startActivity(intent);
@@ -292,6 +312,13 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
                 spinner_collaborators.setAdapter(adapter); // Set the spinners adapter to the previously created one.
                 collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
+            }
+        } else if(requestCode==123){   //Return from MapsActivity
+            double latitude = data.getDoubleExtra("latitude",0.0);
+            double longitude = data.getDoubleExtra("longitude",0.0);
+            String location = data.getStringExtra("location");
+            if(location!=null && !location.isEmpty()){
+                event_location.setText(location);
             }
         }
     }
