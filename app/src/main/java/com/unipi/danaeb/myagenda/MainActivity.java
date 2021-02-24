@@ -151,10 +151,10 @@ public class MainActivity extends AppCompatActivity {
             cal_alarm.add(Calendar.DATE,1);
         }
 
-        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+        //Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
-        manager.set(AlarmManager.RTC_WAKEUP,cal_alarm.getTimeInMillis(), pendingIntent);
+        //manager.set(AlarmManager.RTC_WAKEUP,cal_alarm.getTimeInMillis(), pendingIntent);
     }
 }
