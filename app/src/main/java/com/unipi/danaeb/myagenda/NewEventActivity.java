@@ -339,20 +339,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==456){
-            /*contacts = data.getParcelableArrayListExtra("contactList");
-            if(contacts == null || contacts.isEmpty()){
-                Toast.makeText(getApplication(), R.string.toast_emptyList, Toast.LENGTH_LONG).show();
-            } else {
-                //Show all selected contacts
-                ArrayList<Contact> items = new ArrayList<Contact>();
-                int i = 0;
-                for(Contact c : contacts){
-                    items.add(c);
-                }
-                SpinnerContactAdapter adapter = new SpinnerContactAdapter(this, 0, items);
-                spinner_collaborators.setAdapter(adapter); // Set the spinners adapter to the previously created one.
-                //collaborators.setText(contacts.get(0).getName() + " : " + contacts.get(0).getPhoneNumber());
-            }*/
+
         } else if(requestCode==123){   //Return from MapsActivity
             double latitude = data.getDoubleExtra("latitude",0.0);
             double longitude = data.getDoubleExtra("longitude",0.0);
