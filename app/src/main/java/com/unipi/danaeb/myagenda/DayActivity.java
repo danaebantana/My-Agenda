@@ -166,8 +166,9 @@ public class DayActivity extends AppCompatActivity {
                         }
                     }
                 }
-                arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, dayEventList);
-                listView.setAdapter(arrayAdapter);
+
+                EventsAdapter adapter = new EventsAdapter(dayEventList, DayActivity.this);
+                listView.setAdapter(adapter);
             }
 
             @Override
@@ -175,7 +176,5 @@ public class DayActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
 }
