@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff3e6"
-    tools:context=".MapsActivity2">
+    tools:context=".MapsActivity">
 
 
     <fragment
@@ -17,7 +17,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:context=".MapsActivity2" />
+        tools:context=".MapsActivity" />
 
     <Button
         android:id="@+id/saveLocatioBtn"

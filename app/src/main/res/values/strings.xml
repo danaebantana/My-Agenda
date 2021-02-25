@@ -50,7 +50,7 @@
     <string name="description">Description</string>
     <string name="collaborators">Collaborators:</string>
     <string name="collaborators_emails">Collaborators\' emails</string>
-    <string name="event_time">Event Time:</string>
+    <string name="event_time">Event Date and Time:</string>
     <string name="start_date">start_date</string>
     <string name="start_time">start_time</string>
     <string name="end_date">end_date</string>
@@ -58,7 +58,6 @@
     <string name="set_reminder">Set Reminder:</string>
     <string name="toast_EventSave">Event was saved!</string>
     <string name="toast_EventDelete">Event was deleted!</string>
-
     <string name="toast_ContactDelete">Contact was deleted successfully!</string>
 
     <string name="purple">Purple</string>

@@ -40,9 +40,12 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity2"
+            android:name=".MapsActivity"
             android:label="@string/title_activity_maps2"></activity>
-        <activity android:name=".NewContactActivity"></activity>
+        <activity
+            android:name=".NewContactActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
         <activity android:name=".ContactActivity" />
         <activity android:name=".NewEventActivity" />
         <activity android:name=".EditEventActivity" />

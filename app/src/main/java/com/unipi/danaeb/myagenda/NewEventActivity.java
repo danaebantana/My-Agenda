@@ -33,8 +33,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,19 +41,20 @@ import java.util.Calendar;
 
 public class NewEventActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FirebaseDatabase database;
-    DatabaseReference usersRef, eventsRef, ref;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef, eventsRef;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    private StorageReference storageReference;
-    FloatingActionButton back_bt1, save_bt, location_bt;
-    Dialog myDialog;
-    EditText event_title, event_location, event_description;
-    TextView start_date, start_time, end_date, end_time, collaborators, color_txt;
-    Spinner reminder_sp, spinner_collaborators;
+    private FirebaseUser currentUser;
+
+    private EditText event_title, event_location, event_description;
+    private TextView start_date, start_time, end_date, end_time, colorPicker;
+    private FloatingActionButton button_back, button_save, button_location;
+    private Spinner spinner_reminder, spinner_collaborators;
+
+    private Dialog myDialog;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
-    SQLiteDatabase db;
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,29 +66,33 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("Users");
         eventsRef = database.getReference("Events");
-        storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        ref = usersRef.child(currentUser.getUid());
-        event_title = findViewById(R.id.textView_eventTitle);
-        event_location = findViewById(R.id.textView_eventLocation);
-        event_description = findViewById(R.id.textView_eventDescription);
+
+        event_title = findViewById(R.id.editText_eventTitle);
+        event_location = findViewById(R.id.editText_eventLocation);
+        event_description = findViewById(R.id.editText_eventDescription);
+
         start_date = findViewById(R.id.textView_startDate);
         end_date = findViewById(R.id.textView_endDate);
         start_time = findViewById(R.id.textView_startTime);
         end_time = findViewById(R.id.textView_endTime);
-        //collaborators = findViewById(R.id.textView_collaborators);
-        spinner_collaborators = findViewById(R.id.spinner_editCollaborators);
-        reminder_sp = findViewById(R.id.spinner_editReminder);
-        color_txt = findViewById(R.id.textView_colorBox);
-        db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
-        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
+        colorPicker = findViewById(R.id.textView_colorPicker);
+
+        button_back = findViewById(R.id.button_back3);
+        button_location = findViewById(R.id.button_getLocation);
+        button_save = findViewById(R.id.button_saveChanges);
+
+        spinner_collaborators = findViewById(R.id.spinner_addCollaborators);
+        spinner_reminder = findViewById(R.id.spinner_pickReminder);
 
         myDialog = new Dialog(this);
 
+        db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
+
         // Back button
-        back_bt1 = findViewById(R.id.back_bt3);
-        back_bt1.setOnClickListener(new View.OnClickListener() {
+        button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
@@ -100,12 +103,11 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         });
 
         // Map button
-        location_bt = findViewById(R.id.button_editLocation);
-        location_bt.setOnClickListener(new View.OnClickListener() {
+        button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewEventActivity.this, MapsActivity2.class);
-                startActivity(intent);
+                Intent intent = new Intent(NewEventActivity.this, MapsActivity.class);
+                startActivityForResult(intent,123);
             }
         });
 
@@ -133,8 +135,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         start_time.setOnClickListener(this);
         end_time.setOnClickListener(this);
 
+        //Create contact list from SQLite database and load it in spinner_collaborators
         Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
-        //Create contact list
         contacts.add(new Contact("Collaborators", "-"));
         if (cursor.getCount()>0){
             while (cursor.moveToNext()){
@@ -142,30 +144,13 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                 contacts.add(contact);
             }
         }
-        //load Contact Spinner
         SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(this, 0, contacts);
         spinner_collaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
-        /*ArrayList<Contact> selectedContacts = new ArrayList<Contact>();
-        spinner_editCollaborators.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                String name = spinner_editCollaborators.getSelectedItem().toString();
-                if(!name.equals("Collaborators")){
-                    Contact c =
-                }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });*/
-
-        // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.spinner_editReminder); // Get the spinner from the xml.
+        // Create reminder list and load it in spinner_reminder
         String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
-        dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
+        spinner_reminder.setAdapter(adapter); // Set the spinners adapter to the previously created one.
     }
 
     //Pop up window to choose date and time
@@ -181,11 +166,9 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             mDay = c.get(Calendar.DAY_OF_MONTH);
 
             // Launch Date Picker Dialog
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                         @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
+                        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                             if (v == start_date) {
                                 start_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                                 end_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
@@ -205,12 +188,9 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             mMinute = c.get(Calendar.MINUTE);
 
             // Launch Time Picker Dialog
-            TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                    new TimePickerDialog.OnTimeSetListener() {
-
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
-                        public void onTimeSet(TimePicker view, int hourOfDay,
-                                              int minute) {
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             if (v == start_time) {
                                 start_time.setText(hourOfDay + ":" + minute);
                             } else if (v == end_time) {
@@ -232,26 +212,25 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                color_txt = findViewById(R.id.textView_colorBox);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
                 int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
                 RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
                 String selection = (String) btn.getText();
                 if (selection.equals("Purple")){
-                    color_txt.setBackgroundResource(R.color.Purple);
+                    colorPicker.setBackgroundResource(R.color.Purple);
                 } else if (selection.equals("Red")){
-                    color_txt.setBackgroundResource(R.color.Red);
+                    colorPicker.setBackgroundResource(R.color.Red);
                 } else if (selection.equals("Green")){
-                    color_txt.setBackgroundResource(R.color.Green);
+                    colorPicker.setBackgroundResource(R.color.Green);
                 } else if (selection.equals("Teal")){
-                    color_txt.setBackgroundResource(R.color.Teal);
+                    colorPicker.setBackgroundResource(R.color.Teal);
                 } else if (selection.equals("Black")){
-                    color_txt.setBackgroundResource(R.color.Black);
+                    colorPicker.setBackgroundResource(R.color.Black);
                 } else if (selection.equals("White")){
-                    color_txt.setBackgroundResource(R.color.White);
+                    colorPicker.setBackgroundResource(R.color.White);
                 }
-                color_txt.setText(selection);
+                colorPicker.setText(selection);
                 myDialog.dismiss();
             }
         });
@@ -283,11 +262,14 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     event_ref.child("Start time").setValue(start_time.getText().toString());
                     event_ref.child("End date").setValue(end_date.getText().toString());
                     event_ref.child("End time").setValue(end_time.getText().toString());
-                    event_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
-                    event_ref.child("Color").setValue(color_txt.getText().toString());
+                    event_ref.child("Reminder").setValue(spinner_reminder.getSelectedItem().toString());
+                    event_ref.child("Color").setValue(colorPicker.getText().toString());
                     // Add collaborators to firebase based on collaborators uid
                     event_ref.child("Collaborators").setValue("-");
-                    DatabaseReference collab_ref = event_ref.child("Collaborators");
+                    DatabaseReference collab_ref = event_ref.child("Collaborators").getRef();
+                    for(Contact c : contacts){
+                        Toast.makeText(getApplicationContext(), c.getName(), Toast.LENGTH_LONG).show();
+                    }
                     for(Contact c : contacts){
                         if(c.isSelected()){
                             usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -295,9 +277,9 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
                                         String uid = zoneSnapshot.getKey();
-                                        DatabaseReference uid_ref = usersRef.child(uid);
                                         String name = zoneSnapshot.child("Name").getValue().toString();
                                         String phone = zoneSnapshot.child("Phone Number").getValue().toString();
+                                        usersRef.child(uid);
                                         if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
                                             collab_ref.child(uid).child("Name").setValue(c.getName());
                                             collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
@@ -320,24 +302,16 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
-            Intent intent = new Intent(NewEventActivity.this, DayActivity.class);
+            Intent intent = new Intent(this, DayActivity.class);
             intent.putExtra("Date", date);
             startActivity(intent);
         }
     }
 
-    public void addCollaborators(View view){
-        Intent intent = new Intent(getApplicationContext(),ContactActivity.class);
-        intent.putExtra("id","Event");
-        startActivityForResult(intent,456);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==456){
-
-        } else if(requestCode==123){   //Return from MapsActivity
+        if(requestCode==123){   //Return from MapsActivity
             double latitude = data.getDoubleExtra("latitude",0.0);
             double longitude = data.getDoubleExtra("longitude",0.0);
             String location = data.getStringExtra("location");
@@ -346,4 +320,5 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
+
 }

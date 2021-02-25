@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         navigationBar();
-        ref.addValueEventListener(new ValueEventListener() {
+        /*ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot zoneSnapshot : snapshot.getChildren()){
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     public void navigationBar(){
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // SMS notification
-    public void start(String e_date, String e_time) throws ParseException {
+    /*public void start(String e_date, String e_time) throws ParseException {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
         Date date = (Date) format.parse(e_date);
@@ -156,5 +156,5 @@ public class MainActivity extends AppCompatActivity {
         //PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
 
         //manager.set(AlarmManager.RTC_WAKEUP,cal_alarm.getTimeInMillis(), pendingIntent);
-    }
+    }*/
 }

@@ -82,17 +82,17 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         delete_bt = findViewById(R.id.button_delete);
 
         // Retrieve data from firebase and print them to textboxes
-        event_title = findViewById(R.id.textView_eventTitle);
+        event_title = findViewById(R.id.editText_eventTitle);
         event_title.setText(title);
-        event_location = findViewById(R.id.textView_eventLocation);
-        event_description = findViewById(R.id.textView_eventDescription);
+        event_location = findViewById(R.id.editText_eventLocation);
+        event_description = findViewById(R.id.editText_eventDescription);
         start_date = findViewById(R.id.textView_startDate);
         end_date = findViewById(R.id.textView_endDate);
         start_time = findViewById(R.id.textView_startTime);
         end_time = findViewById(R.id.textView_endTime);
-        spinner_collaborators = findViewById(R.id.spinner_editCollaborators);
-        reminder_sp = findViewById(R.id.spinner_editReminder);
-        color_txt = findViewById(R.id.textView_colorBox);
+        spinner_collaborators = findViewById(R.id.spinner_addCollaborators);
+        reminder_sp = findViewById(R.id.spinner_pickReminder);
+        color_txt = findViewById(R.id.textView_colorPicker);
 
         DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addValueEventListener(new ValueEventListener() {
@@ -146,7 +146,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
                 //collaborators_emails.setText(collaborators);
                 //String reminder = dataSnapshot.child("Reminder").getValue().toString();
-                //spinner_editReminder.setSelection(Integer.parseInt(reminder));
+                //spinner_pickReminder.setSelection(Integer.parseInt(reminder));
                 String color = dataSnapshot.child("Color").getValue().toString();
                 color_txt.setText(color);
                 if (color.equals("Purple")){
@@ -173,7 +173,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         myDialog = new Dialog(this);
 
         // Back button
-        back_bt3 = findViewById(R.id.back_bt3);
+        back_bt3 = findViewById(R.id.button_back3);
         back_bt3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,17 +185,17 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         });
 
         // Map button
-        location_bt = findViewById(R.id.button_editLocation);
+        location_bt = findViewById(R.id.button_getLocation);
         location_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditEventActivity.this, MapsActivity2.class);
+                Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
                 startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
             }
         });
 
         // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.spinner_editReminder); // Get the spinner from the xml.
+        Spinner dropdown = findViewById(R.id.spinner_pickReminder); // Get the spinner from the xml.
         String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
         dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
@@ -263,7 +263,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                color_txt = findViewById(R.id.textView_colorBox);
+                color_txt = findViewById(R.id.textView_colorPicker);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
                 int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
@@ -353,5 +353,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 location_name = data.getStringExtra("name");
                 event_location.setText(location_name);
              }
+    }
+
+    public void addCollaborators(View view){
+
     }
 }

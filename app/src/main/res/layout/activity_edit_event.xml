@@ -8,7 +8,7 @@
     tools:context=".EditEventActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/back_bt3"
+        android:id="@+id/button_back3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -35,7 +35,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.996"
-        app:layout_constraintStart_toEndOf="@+id/back_bt3"
+        app:layout_constraintStart_toEndOf="@+id/button_back3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.021"
         app:srcCompat="@drawable/delete"
@@ -77,7 +77,7 @@
                 android:layout_height="528dp">
 
                 <EditText
-                    android:id="@+id/textView_eventTitle"
+                    android:id="@+id/editText_eventTitle"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -92,7 +92,7 @@
                     app:layout_constraintVertical_bias="0.033" />
 
                 <EditText
-                    android:id="@+id/textView_eventLocation"
+                    android:id="@+id/editText_eventLocation"
                     android:layout_width="320dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -104,11 +104,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.172"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_eventTitle"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_eventTitle"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_editLocation"
+                    android:id="@+id/button_getLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -117,15 +117,15 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/textView_eventLocation"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_eventTitle"
+                    app:layout_constraintStart_toEndOf="@+id/editText_eventLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_eventTitle"
                     app:layout_constraintVertical_bias="0.024"
                     app:rippleColor="@null"
                     app:srcCompat="@drawable/google_maps"
                     app:tint="@null" />
 
                 <EditText
-                    android:id="@+id/textView_eventDescription"
+                    android:id="@+id/editText_eventDescription"
                     android:layout_width="380dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -137,11 +137,11 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.484"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_eventLocation"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_eventLocation"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <ImageView
-                    android:id="@+id/clock_image"
+                    android:id="@+id/imageView_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
@@ -150,12 +150,12 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.041"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_eventDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_eventDescription"
                     app:layout_constraintVertical_bias="0.0"
                     app:srcCompat="@drawable/clock" />
 
                 <TextView
-                    android:id="@+id/time_txt"
+                    android:id="@+id/textView_dateAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -164,8 +164,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/clock_image"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_eventDescription"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_clock"
+                    app:layout_constraintTop_toBottomOf="@+id/editText_eventDescription"
                     app:layout_constraintVertical_bias="0.071" />
 
                 <TextView
@@ -180,7 +180,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.182"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/time_txt" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTime" />
 
                 <TextView
                     android:id="@+id/textView_startTime"
@@ -193,7 +193,7 @@
                     android:text="@string/start_time"
                     android:textSize="18sp"
                     app:layout_constraintStart_toEndOf="@+id/textView_startDate"
-                    app:layout_constraintTop_toBottomOf="@+id/time_txt" />
+                    app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTime" />
 
                 <TextView
                     android:id="@+id/textView_endDate"
@@ -241,15 +241,15 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/clock_image"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_clock"
                     app:layout_constraintVertical_bias="0.0"
                     app:tint="@null" />
 
                 <Spinner
-                    android:id="@+id/spinner_editCollaborators"
-                    android:layout_width="157dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="204dp"
+                    android:id="@+id/spinner_addCollaborators"
+                    android:layout_width="305dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="48dp"
                     android:layout_marginBottom="136dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -257,7 +257,7 @@
                     app:layout_constraintVertical_bias="1.0" />
 
                 <ImageView
-                    android:id="@+id/reminder_image"
+                    android:id="@+id/imageView_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="164dp"
@@ -266,12 +266,12 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.041"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/clock_image"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_clock"
                     app:layout_constraintVertical_bias="0.0"
                     app:srcCompat="@drawable/add_reminder" />
 
                 <TextView
-                    android:id="@+id/reminder_txt"
+                    android:id="@+id/textView_reminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -279,10 +279,10 @@
                     android:text="@string/set_reminder"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/reminder_image" />
+                    app:layout_constraintStart_toEndOf="@+id/imageView_reminder" />
 
                 <Spinner
-                    android:id="@+id/spinner_editReminder"
+                    android:id="@+id/spinner_pickReminder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -290,10 +290,10 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/reminder_txt" />
+                    app:layout_constraintStart_toEndOf="@+id/textView_reminder" />
 
                 <ImageView
-                    android:id="@+id/color_image"
+                    android:id="@+id/imageView_colorPicker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -302,12 +302,12 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.041"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/reminder_image"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView_reminder"
                     app:layout_constraintVertical_bias="0.0"
                     app:srcCompat="@drawable/color_palette" />
 
                 <TextView
-                    android:id="@+id/textView_colorBox"
+                    android:id="@+id/textView_colorPicker"
                     android:layout_width="330dp"
                     android:layout_height="34dp"
                     android:layout_marginStart="8dp"
@@ -321,8 +321,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/color_image"
-                    app:layout_constraintTop_toBottomOf="@+id/reminder_txt"
+                    app:layout_constraintStart_toEndOf="@+id/imageView_colorPicker"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_reminder"
                     app:layout_constraintVertical_bias="0.3" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

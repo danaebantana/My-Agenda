@@ -16,7 +16,7 @@
     <string name="log_out">Αποσυνδεση</string>
     <string name="todo">TODO</string>
     <string name="set_reminder">Υπενθύμιση:</string>
-    <string name="event_time">Ώρα εκδήλωσης:</string>
+    <string name="event_time">Ημέρα και Ώρα εκδήλωσης:</string>
     <string name="description">Περιγραφή</string>
     <string name="location">Τοποθεσία</string>
     <string name="purple">Μωβ</string>
@@ -57,4 +57,7 @@
     <string name="toast_checkBoxes">Δεν έχετε επιλέξει επαφή. Είτε επιλέξτε επαφές είτε πηγαίνετε πίσω στη σελίδα της δημιουργίας εκδήλωσης.</string>
     <string name="toast_emptyList">Κίνδυνος: Άδεια λίστα!</string>
     <string name="toast_EventDelete">Η εκδήλωση διαγράφηκε!</string>
+    <string name="toast_ContactDelete">Η επαφή διαγράφηκε επιτυχώς!</string>
+    <string name="textview">Τεξτβιου</string>
+    <string name="title_activity_maps2">Χάρτης</string>
 </resources>
