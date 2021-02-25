@@ -36,7 +36,7 @@ import java.util.ArrayList;
 public class DayActivity extends AppCompatActivity {
 
     FloatingActionButton newEvent_bt, back_bt2;
-    TextView date_txt, creatorName_txt;
+    TextView date_txt;
     ListView listView;
     ListAdapter arrayAdapter;
     FirebaseDatabase database;
@@ -44,8 +44,6 @@ public class DayActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private StorageReference storageReference;
-    ArrayList<User> userList = new ArrayList<User>();
-    String creatorsName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +122,6 @@ public class DayActivity extends AppCompatActivity {
         });
     }
 
-    //rootRef = database.getReference("Users");
-    //eventsRef = database.getReference("Events");
     // Retrieve data from firebase
     public void retrieveData() {
         String user_uid = currentUser.getUid();
