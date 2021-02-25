@@ -60,4 +60,5 @@
     <string name="toast_ContactDelete">Η επαφή διαγράφηκε επιτυχώς!</string>
     <string name="textview">Τεξτβιου</string>
     <string name="title_activity_maps2">Χάρτης</string>
+    <string name="toast_smsSent">Οι συνεργάτες ενημερώθηκαν!</string>
 </resources>

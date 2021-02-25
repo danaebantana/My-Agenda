@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -49,14 +47,8 @@ public class EventsAdapter extends BaseAdapter implements ListAdapter {
         TextView listItemText = view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
-        //Handle button and add onClickListener
+        //Handle button
         FloatingActionButton notify_bt = view.findViewById(R.id.notify_bt);
-        notify_bt.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "HEEEELP", Toast.LENGTH_SHORT).show();
-            }
-        });
         return view;
     }
 }

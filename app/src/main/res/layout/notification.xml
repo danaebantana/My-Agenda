@@ -28,6 +28,7 @@
         android:layout_marginRight="8dp"
         android:clickable="true"
         android:focusable="false"
+        android:onClick="onBellClick"
         app:srcCompat="@drawable/bell"
         app:tint="@null" />
 

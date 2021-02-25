@@ -1,16 +1,23 @@
 package com.unipi.danaeb.myagenda;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -166,9 +173,8 @@ public class DayActivity extends AppCompatActivity {
                         }
                     }
                 }
-
-                EventsAdapter adapter = new EventsAdapter(dayEventList, DayActivity.this);
-                listView.setAdapter(adapter);
+                arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, dayEventList);
+                listView.setAdapter(arrayAdapter);
             }
 
             @Override
@@ -176,5 +182,62 @@ public class DayActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    // Send SMS
+    public void onBellClick(View v) {
+        // First get permission to send SMS
+        if (ActivityCompat.checkSelfPermission(DayActivity.this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(DayActivity.this, new String[]{Manifest.permission.SEND_SMS}, 5434);
+            return;
+        }
+        View parentRow = (View) v.getParent();
+        ListView listView = (ListView) parentRow.getParent();
+        final int position = listView.getPositionForView(parentRow);
+        Object item = listView.getItemAtPosition(position);
+        String[] obj = item.toString().split("\n");
+        String SMS = obj[0] + " " + obj[1] + " " + date_txt.getText().toString();
+        String row3 = obj[2];
+        String[] row3_split = row3.split(":");
+        String collabs = row3_split[1];
+        String[] split_collabs = collabs.split("\\,");
+        AlertDialog.Builder alert = new AlertDialog.Builder(DayActivity.this);
+        alert.setTitle("Send reminder SMS to collaborators.");
+        alert.setMessage("Are you sure you want to send SMS?");
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                String[] innerData = new String[split_collabs.length];
+                for(int i=0;i<split_collabs.length;i++){
+                    innerData[i] = split_collabs[i];
+                    String id = innerData[i].substring(1);;
+                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {   //foreach event
+                                if (dataSnapshot.child("Name").getValue().equals(id)) {
+                                    String phoneNumber = dataSnapshot.child("Phone Number").getValue().toString();
+                                    SmsManager manager = SmsManager.getDefault();
+                                    manager.sendTextMessage(phoneNumber, null, "You have a reminder: " + SMS, null, null);
+                                    Toast.makeText(DayActivity.this, R.string.toast_smsSent , Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // close dialog
+                dialog.cancel();
+            }
+        });
+        alert.show();
     }
 }

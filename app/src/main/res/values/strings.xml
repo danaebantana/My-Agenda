@@ -43,6 +43,7 @@
     <string name="toast_noUserFound">There was no user found with the given credentials or user already exists as a contact.</string>
     <string name="toast_checkBoxes">No selected radio button. You can either select contacts or go back to the events page.</string>
     <string name="toast_emptyList">Warning: Empty list!</string>
+    <string name="toast_smsSent">Collaborators were notified!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>
