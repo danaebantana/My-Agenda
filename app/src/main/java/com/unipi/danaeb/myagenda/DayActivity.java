@@ -171,12 +171,13 @@ public class DayActivity extends AppCompatActivity {
                                     builder.append(title + "\n" + time + "\nCollaborators: " + collab);
                                 }
                             }
+                            dayEventList.add(builder.toString());
                         }
-                        dayEventList.add(builder.toString());
                     }
                 }
-                arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, dayEventList);
-                listView.setAdapter(arrayAdapter);
+
+                EventsAdapter adapter = new EventsAdapter(dayEventList, DayActivity.this);
+                listView.setAdapter(adapter);
             }
 
             @Override
@@ -184,7 +185,5 @@ public class DayActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
 }
