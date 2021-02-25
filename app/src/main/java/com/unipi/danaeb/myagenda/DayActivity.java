@@ -2,22 +2,15 @@ package com.unipi.danaeb.myagenda;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.telephony.SmsManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.sql.Ref;
 import java.util.ArrayList;
 
 public class DayActivity extends AppCompatActivity {
@@ -62,7 +54,7 @@ public class DayActivity extends AppCompatActivity {
         date_txt = findViewById(R.id.date_txt);
         date_txt.setText(date);
 
-        listView = findViewById(R.id.listView);
+        listView = findViewById(R.id.listView_contacts);
         retrieveData();
 
         // Back button
@@ -126,7 +118,6 @@ public class DayActivity extends AppCompatActivity {
     public void retrieveData() {
         String user_uid = currentUser.getUid();
         ArrayList<String> dayEventList = new ArrayList<>();
-
         eventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -171,8 +162,8 @@ public class DayActivity extends AppCompatActivity {
                                     builder.append(title + "\n" + time + "\nCollaborators: " + collab);
                                 }
                             }
+                            dayEventList.add(builder.toString());
                         }
-                        dayEventList.add(builder.toString());
                     }
                 }
                 arrayAdapter = new ArrayAdapter<>(DayActivity.this, android.R.layout.simple_list_item_1, dayEventList);

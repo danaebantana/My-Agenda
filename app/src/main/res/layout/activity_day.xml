@@ -54,7 +54,7 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/listView_contacts"
         android:layout_width="408dp"
         android:layout_height="440dp"
         android:clickable="true"
