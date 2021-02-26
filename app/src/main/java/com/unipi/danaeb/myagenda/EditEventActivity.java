@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -20,11 +19,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,12 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.Calendar;
-
 
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -46,14 +39,12 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private DatabaseReference rootRef, eventsRef;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
     private FloatingActionButton button_back, button_save, button_delete, button_location;
     private EditText editEvent_title, editEvent_location, editEvent_description;
     private TextView start_date, start_time, end_date, end_time, colorPicker;
     private Spinner spinner_editReminder, spinner_editCollaborators;
     private Dialog myDialog;
     private SQLiteDatabase db;
-
     private int GOOGLE_MAPS_ACTIVITY = 123;
     private Double lon, lat;
     private String location_name;
@@ -75,9 +66,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         button_save = findViewById(R.id.button_saveEditEvent);
         button_delete = findViewById(R.id.button_deleteEvent);
         button_location = findViewById(R.id.button_editLocation);
-        editEvent_title = findViewById(R.id.editText_eventTitle);
-        editEvent_location = findViewById(R.id.editText_eventLocation);
-        editEvent_description = findViewById(R.id.editText_eventDescription);
+        editEvent_title = findViewById(R.id.editText_editTitle);
+        editEvent_location = findViewById(R.id.editText_editLocation);
+        editEvent_description = findViewById(R.id.editText_editDescription);
         start_date = findViewById(R.id.textView_editStartDate);
         end_date = findViewById(R.id.textView_editEndDate);
         start_time = findViewById(R.id.textView_editStartTime);
@@ -93,13 +84,13 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
         String key = getIntent().getStringExtra("Key"); // Get key from day activity
 
+
+        editEvent_title.setText(title);
         // Retrieve data from firebase and print them to textboxes
         DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String title = dataSnapshot.child("Title").getValue().toString();
-                editEvent_title.setText(title);
                 String location = dataSnapshot.child("Location").getValue().toString();
                 editEvent_location.setText(location);
                 String description = dataSnapshot.child("Description").getValue().toString();

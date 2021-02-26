@@ -8,7 +8,7 @@
     tools:context=".DayActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/back_bt2"
+        android:id="@+id/button_back1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -24,7 +24,7 @@
         app:tint="@null" />
 
     <TextView
-        android:id="@+id/date_txt"
+        android:id="@+id/textView_date"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:fontFamily="serif-monospace"
@@ -33,12 +33,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.392"
-        app:layout_constraintStart_toEndOf="@+id/back_bt2"
+        app:layout_constraintStart_toEndOf="@+id/button_back1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.049" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/newEvent_bt"
+        android:id="@+id/button_newEvent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
@@ -49,20 +49,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.954"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.973"
+        app:layout_constraintTop_toBottomOf="@+id/listView_events"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ListView
-        android:id="@+id/listView_contacts"
-        android:layout_width="408dp"
-        android:layout_height="440dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
+        android:id="@+id/listView_events"
+        android:layout_width="413dp"
+        android:layout_height="442dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_txt"
-        app:layout_constraintVertical_bias="0.145" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // SMS notification
+    // SMS listViewEvent_item
     /*public void start(String e_date, String e_time) throws ParseException {
         AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");

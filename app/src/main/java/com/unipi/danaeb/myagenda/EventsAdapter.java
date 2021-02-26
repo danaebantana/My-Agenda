@@ -40,7 +40,7 @@ public class EventsAdapter extends BaseAdapter implements ListAdapter {
         View view = convertView;
         if (view == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = inflater.inflate(R.layout.notification, null);
+            view = inflater.inflate(R.layout.listview_event_item, null);
         }
 
         //Handle TextView and display string from your list
@@ -48,7 +48,7 @@ public class EventsAdapter extends BaseAdapter implements ListAdapter {
         listItemText.setText(list.get(position));
 
         //Handle button
-        FloatingActionButton notify_bt = view.findViewById(R.id.notify_bt);
+        FloatingActionButton notify_bt = view.findViewById(R.id.button_notify);
         return view;
     }
 }

@@ -12,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,15 +32,15 @@ import java.util.ArrayList;
 
 public class DayActivity extends AppCompatActivity {
 
-    FloatingActionButton newEvent_bt, back_bt2;
-    TextView date_txt;
-    ListView listView;
-    ListAdapter arrayAdapter;
-    FirebaseDatabase database;
-    DatabaseReference usersRef, ref, eventsRef;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef, eventsRef;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    private StorageReference storageReference;
+    private FirebaseUser currentUser;
+    private FloatingActionButton button_newEvent, button_back;
+    private TextView date_txt;
+    private ListView listView;
+    private ListAdapter arrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,21 +50,20 @@ public class DayActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("Users");
         eventsRef = database.getReference("Events");
-        storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        ref = usersRef.child(currentUser.getUid());
+        button_back = findViewById(R.id.button_back1);
+        button_newEvent = findViewById(R.id.button_newEvent);
 
         String date = getIntent().getStringExtra("Date"); // Get selected date from main activity or edit activity
-        date_txt = findViewById(R.id.date_txt);
+        date_txt = findViewById(R.id.textView_date);
         date_txt.setText(date);
 
-        listView = findViewById(R.id.listView_contacts);
+        listView = findViewById(R.id.listView_events);
         retrieveData();
 
         // Back button
-        back_bt2 = findViewById(R.id.back_bt2);
-        back_bt2.setOnClickListener(new View.OnClickListener() {
+        button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DayActivity.this, MainActivity.class);
@@ -75,48 +72,13 @@ public class DayActivity extends AppCompatActivity {
             }
         });
 
-        // Add new event button
-        newEvent_bt = findViewById(R.id.newEvent_bt);
-        newEvent_bt.setOnClickListener(new View.OnClickListener() {
+        // New event button
+        button_newEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DayActivity.this, NewEventActivity.class);
                 intent.putExtra("Date", date);
                 startActivity(intent);
-            }
-        });
-
-        // Click item on listview listener
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object item = listView.getItemAtPosition(position);
-                String[] obj = item.toString().split("\n");
-                String t = obj[0];
-                String time = obj[1];
-                String collaborators = obj[2];
-                eventsRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot zoneSnapshot1 : dataSnapshot.getChildren()) {
-                            if (zoneSnapshot1.child("Title").getValue().toString().equals(t) && zoneSnapshot1.child("Start date").getValue().toString().equals(date_txt.getText().toString())
-                                    &&  zoneSnapshot1.child("Start time").getValue().toString().equals(time)) {
-                                String key = zoneSnapshot1.getKey();
-                                Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
-                                intent.putExtra("Title", t);
-                                intent.putExtra("Date", date);
-                                intent.putExtra("Time", time);
-                                intent.putExtra("Key", key);
-                                startActivity(intent);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
             }
         });
     }
@@ -183,6 +145,50 @@ public class DayActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    //Edit Event
+    public void onEditClick(View view){
+        View parentView = (View) view.getParent();
+        ListView listView = (ListView) parentView.getParent();
+        int position = listView.getPositionForView(parentView);
+        Object item = listView.getItemAtPosition(position);
+        String uuid = currentUser.getUid();
+        String date = date_txt.getText().toString();
+
+        String[] obj = item.toString().split("\n");
+        String title = obj[0];
+        String time = obj[1];
+        eventsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {  //foreach event
+                    if (snapshot.child("Title").getValue().toString().equals(title) && snapshot.child("Start date").getValue().toString().equals(date)
+                            &&  snapshot.child("Start time").getValue().toString().equals(time)) {
+                        Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
+                        String key = snapshot.getKey(); //Key of Event
+                        String id;
+                        //Check if currentUser the creator or collaborator of event.
+                        if(snapshot.child("Creator").getValue().toString().equals(uuid)){
+                            id = "Creator";
+                        } else {
+                            id = "Collaborator";
+                        }
+                        intent.putExtra("Title", title);
+                        intent.putExtra("Date", date);
+                        intent.putExtra("Time", time);
+                        intent.putExtra("ID", id);
+                        intent.putExtra("Key", key);
+                        startActivity(intent);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     // Send SMS
