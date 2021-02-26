@@ -10,7 +10,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -31,17 +34,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.Callable;
 
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseDatabase database;
-    private DatabaseReference rootRef, eventsRef;
+    private DatabaseReference usersRef, eventsRef;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FloatingActionButton button_back, button_save, button_delete, button_location;
-    private EditText editEvent_title, editEvent_location, editEvent_description;
+    private EditText editEvent_title, editEvent_location, editEvent_description, event_comments;
     private TextView start_date, start_time, end_date, end_time, colorPicker;
+    private CheckBox attend;
     private Spinner spinner_editReminder, spinner_editCollaborators;
     private Dialog myDialog;
     private SQLiteDatabase db;
@@ -50,6 +56,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
+    private String title, date, key, id;
 
 
     @Override
@@ -58,7 +65,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_edit_event);
 
         database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference("Users");
+        usersRef = database.getReference("Users");
         eventsRef = database.getReference("Events");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -69,21 +76,28 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         editEvent_title = findViewById(R.id.editText_editTitle);
         editEvent_location = findViewById(R.id.editText_editLocation);
         editEvent_description = findViewById(R.id.editText_editDescription);
+        event_comments = findViewById(R.id.editTextMultiline_comments);
         start_date = findViewById(R.id.textView_editStartDate);
         end_date = findViewById(R.id.textView_editEndDate);
         start_time = findViewById(R.id.textView_editStartTime);
         end_time = findViewById(R.id.textView_editEndTime);
         colorPicker = findViewById(R.id.textView_editColorPicker);
+        attend = findViewById(R.id.checkBox_attendance);
         spinner_editCollaborators = findViewById(R.id.spinner_editCollaborators);
         spinner_editReminder = findViewById(R.id.spinner_editReminder);
         myDialog = new Dialog(this);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
-        String title = getIntent().getStringExtra("Title"); // Get selected title from day activity
-        String date = getIntent().getStringExtra("Date"); // Get date from day activity
-        String key = getIntent().getStringExtra("Key"); // Get key from day activity
+        title = getIntent().getStringExtra("Title"); // Get selected title from day activity
+        date = getIntent().getStringExtra("Date"); // Get date from day activity
+        key = getIntent().getStringExtra("Key"); // Get key of event from day activity
+        id = getIntent().getStringExtra("ID");   //Get ID of user from day activity. ('Creator' or 'Collaborator').
 
+        // Create reminder list and load it in spinner_editReminder
+        ArrayList<String> items = new ArrayList<String>(Arrays.asList(new String[] {"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
+        spinner_editReminder.setAdapter(adapter); // Set the spinners adapter to the previously created one.
 
         editEvent_title.setText(title);
         // Retrieve data from firebase and print them to textboxes
@@ -137,7 +151,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(getApplication(), 0, contacts);
                 spinner_editCollaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
 
-                //spinner_editRemider load selected value.
+                // Set selected reminder value to spinner
+                spinner_editReminder.setSelection(items.indexOf(dataSnapshot.child("Reminder").getValue().toString()));
 
                 String color = dataSnapshot.child("Color").getValue().toString();
                 colorPicker.setText(color);
@@ -162,7 +177,24 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        //Get uid of contacts and add them to contacts list.
+        for(Contact c : contacts){
+            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){   //foreach user
+                        if(c.getName().equals(dataSnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(dataSnapshot.child("Phone Number").getValue().toString())){
+                            c.setUid(dataSnapshot.getKey());
+                        }
+                    }
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
 
         // Back button
         button_back.setOnClickListener(new View.OnClickListener() {
@@ -184,6 +216,25 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
+        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
+        //if user 'Creator' he can edit the event. Otherwise collaborators can only comment and attend the event.
+        if(id.equals("Creator")){
+            event_comments.setEnabled(false);
+            attend.setEnabled(false);
+        } else if(id.equals("Collaborator")){
+            editEvent_title.setEnabled(false);
+            editEvent_location.setEnabled(false);
+            editEvent_description.setEnabled(false);
+            start_date.setClickable(false);
+            start_time.setClickable(false);
+            end_date.setClickable(false);
+            end_time.setClickable(false);
+            spinner_editCollaborators.setEnabled(false);
+            spinner_editReminder.setEnabled(false);
+            colorPicker.setClickable(false);
+            button_delete.setClickable(false);
+            button_location.setClickable(false);
+        }
     }
 
     //Pop up window to choose date and time
@@ -274,30 +325,76 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
     // Edit event to firebase
     public void saveEditedEvent(View view) {
-        String date = getIntent().getStringExtra("Date");
-        String key = getIntent().getStringExtra("Key");
-        DatabaseReference events_ref = eventsRef.child(key);
-        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                events_ref.child("Title").setValue(editEvent_title.getText().toString());
-                events_ref.child("Location").setValue(editEvent_location.getText().toString());
-                events_ref.child("Description").setValue(editEvent_description.getText().toString());
-                events_ref.child("Start date").setValue(start_date.getText().toString());
-                events_ref.child("Start time").setValue(start_time.getText().toString());
-                events_ref.child("End date").setValue(end_date.getText().toString());
-                events_ref.child("End time").setValue(end_time.getText().toString());
-                //events_ref.child("Collaborators").setValue(spinner_editCollaborators.getSelectedItem().toString());
-                //edit Collaborators.
-                events_ref.child("Reminder").setValue(spinner_editReminder.getSelectedItem().toString());
-                events_ref.child("Color").setValue(colorPicker.getText().toString());
+        if(id.equals("Creator")){
+            DatabaseReference event_ref = eventsRef.child(key);
+            event_ref.child("Title").setValue(editEvent_title.getText().toString());
+            event_ref.child("Location").setValue(editEvent_location.getText().toString());
+            event_ref.child("Description").setValue(editEvent_description.getText().toString());
+            event_ref.child("Start date").setValue(start_date.getText().toString());
+            event_ref.child("Start time").setValue(start_time.getText().toString());
+            event_ref.child("End date").setValue(end_date.getText().toString());
+            event_ref.child("End time").setValue(end_time.getText().toString());
+            event_ref.child("Reminder").setValue(spinner_editReminder.getSelectedItem().toString());
+            event_ref.child("Color").setValue(colorPicker.getText().toString());
+
+            DatabaseReference collab_ref = event_ref.child("Collaborators").getRef();
+            for(Contact c: contacts){
+                if(c.isSelected()){
+                    collab_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //check if user already exists in firebase
+                            boolean flag = false;
+                            for(DataSnapshot datasnapshot : snapshot.getChildren()){   //foreach collaborator
+                                if(c.getName().equals(datasnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(datasnapshot.child("Phone Number").getValue().toString())) {
+                                    flag = true;
+                                }
+                            }
+                            if(!flag){  //collaborator does not exist in firebase -> add.
+                                String uid = c.getUid();
+                                collab_ref.child(uid);
+                                collab_ref.child(uid).child("Name").setValue(c.getName());
+                                collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
+                                collab_ref.child(uid).child("Comments").setValue("-");
+                                collab_ref.child(uid).child("Attendance").setValue("false");
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                } else {
+                    collab_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            //check if user already exists in firebase
+                            boolean flag = false;
+                            for(DataSnapshot datasnapshot : snapshot.getChildren()){   //foreach event
+                                if(c.getName().equals(datasnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(datasnapshot.child("Phone Number").getValue().toString())) {
+                                    flag = true;
+                                }
+                            }
+                            if(flag){  //collaborator exist in firebase -> remove.
+                                String uid = c.getUid();
+                                Toast.makeText(getApplication(), uid, Toast.LENGTH_LONG).show();
+                                //DatabaseReference user_ref = collab_ref.child(uid).getRef();
+                                //user_ref.removeValue();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+        }
 
-            }
-        });
+
         Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
         intent.putExtra("Date", date);

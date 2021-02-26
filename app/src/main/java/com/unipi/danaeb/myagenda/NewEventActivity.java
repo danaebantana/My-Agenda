@@ -268,9 +268,6 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     event_ref.child("Collaborators").setValue("-");
                     DatabaseReference collab_ref = event_ref.child("Collaborators").getRef();
                     for(Contact c : contacts){
-                        Toast.makeText(getApplicationContext(), c.getName(), Toast.LENGTH_LONG).show();
-                    }
-                    for(Contact c : contacts){
                         if(c.isSelected()){
                             usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override

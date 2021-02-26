@@ -13,299 +13,363 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent">
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.973">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="601dp">
+            <TextView
+                android:id="@+id/textView_editColorPicker"
+                android:layout_width="328dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:background="#FFFFFF"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="ShowPopup"
+                android:text="@string/white"
+                android:textAlignment="center"
+                android:textStyle="bold|italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.281"
+                app:layout_constraintStart_toEndOf="@+id/imageView_editColorPicker"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_editReminder" />
 
-                <TextView
-                    android:id="@+id/textView_editColorPicker"
-                    android:layout_width="328dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#FFFFFF"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="ShowPopup"
-                    android:text="@string/white"
-                    android:textAlignment="center"
-                    android:textStyle="bold|italic"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.281"
-                    app:layout_constraintStart_toEndOf="@+id/imageView_editColorPicker"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_editReminder" />
+            <Spinner
+                android:id="@+id/spinner_editReminder"
+                android:layout_width="192dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/Black"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView_editReminder"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_editCollaborators" />
 
-                <Spinner
-                    android:id="@+id/spinner_editReminder"
-                    android:layout_width="192dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="16dp"
-                    android:textColor="@color/Black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView_editReminder"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_editCollaborators" />
+            <TextView
+                android:id="@+id/textView_editReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="28dp"
+                android:text="@string/set_reminder"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView_editReminder"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_editCollaborators" />
 
-                <TextView
-                    android:id="@+id/textView_editReminder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="28dp"
-                    android:text="@string/set_reminder"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toEndOf="@+id/imageView_editReminder"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_editCollaborators" />
+            <Spinner
+                android:id="@+id/spinner_editCollaborators"
+                android:layout_width="328dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="start"
+                android:textColor="@color/Black"
+                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.45"
+                app:layout_constraintStart_toEndOf="@+id/imageView_editCollab"
+                app:layout_constraintTop_toBottomOf="@+id/textView_editEndTime" />
 
-                <Spinner
-                    android:id="@+id/spinner_editCollaborators"
-                    android:layout_width="328dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="12dp"
-                    android:gravity="start"
-                    android:textColor="@color/Black"
-                    android:textSize="20sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.45"
-                    app:layout_constraintStart_toEndOf="@+id/imageView_editCollab"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_editEndTime" />
+            <TextView
+                android:id="@+id/textView_editEndTime"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/end_time"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toEndOf="@+id/textView_editEndDate"
+                app:layout_constraintTop_toBottomOf="@+id/textView_editStartTime" />
 
-                <TextView
-                    android:id="@+id/textView_editEndTime"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="@string/end_time"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.509"
-                    app:layout_constraintStart_toEndOf="@+id/textView_editEndDate"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_editStartTime" />
+            <TextView
+                android:id="@+id/textView_editEndDate"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/end_date"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_editStartDate" />
 
-                <TextView
-                    android:id="@+id/textView_editEndDate"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="@string/end_date"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_editStartDate" />
+            <TextView
+                android:id="@+id/textView_editStartTime"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/start_time"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintStart_toEndOf="@+id/textView_editStartDate"
+                app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTimeLabel" />
 
-                <TextView
-                    android:id="@+id/textView_editStartTime"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="@string/start_time"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.509"
-                    app:layout_constraintStart_toEndOf="@+id/textView_editStartDate"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTimeLabel" />
+            <TextView
+                android:id="@+id/textView_editStartDate"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:onClick="onClick"
+                android:text="@string/start_date"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTimeLabel" />
 
-                <TextView
-                    android:id="@+id/textView_editStartDate"
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="60dp"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:onClick="onClick"
-                    android:text="@string/start_date"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_dateAndTimeLabel" />
+            <ImageView
+                android:id="@+id/imageView_editReminder"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_editCollab"
+                app:srcCompat="@drawable/add_reminder" />
 
-                <ImageView
-                    android:id="@+id/imageView_editReminder"
-                    android:layout_width="35dp"
-                    android:layout_height="39dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView_editCollab"
-                    app:srcCompat="@drawable/add_reminder" />
+            <ImageView
+                android:id="@+id/imageView_editColorPicker"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_editReminder"
+                app:srcCompat="@drawable/color_palette" />
 
-                <ImageView
-                    android:id="@+id/imageView_editColorPicker"
-                    android:layout_width="35dp"
-                    android:layout_height="39dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView_editReminder"
-                    app:srcCompat="@drawable/color_palette" />
+            <ImageView
+                android:id="@+id/imageView_comments"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_editColorPicker"
+                app:srcCompat="@drawable/comment" />
 
-                <ImageView
-                    android:id="@+id/imageView_editCollab"
-                    android:layout_width="35dp"
-                    android:layout_height="39dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="100dp"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView_editClock"
-                    app:srcCompat="@drawable/group_add" />
+            <ImageView
+                android:id="@+id/imageView_attendance"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="264dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMultiline_comments"
+                app:srcCompat="@drawable/attendance" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_editLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.166"
-                    app:layout_constraintStart_toEndOf="@+id/editText_editLocation"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_editTitle"
-                    app:srcCompat="@drawable/google_maps"
-                    app:tint="@null" />
+            <ImageView
+                android:id="@+id/imageView_editCollab"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="100dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_editClock"
+                app:srcCompat="@drawable/group_add" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_deleteEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/todo"
-                    android:onClick="deleteEvent"
-                    app:layout_constraintStart_toEndOf="@+id/textView_editEvent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/delete"
-                    app:tint="@null" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_editLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:contentDescription="@string/todo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.166"
+                app:layout_constraintStart_toEndOf="@+id/editText_editLocation"
+                app:layout_constraintTop_toBottomOf="@+id/editText_editTitle"
+                app:srcCompat="@drawable/google_maps"
+                app:tint="@null" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_saveEditEvent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/todo"
-                    android:onClick="saveEditedEvent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toEndOf="@+id/button_deleteEvent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/check"
-                    app:tint="@null" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_deleteEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:contentDescription="@string/todo"
+                android:onClick="deleteEvent"
+                app:layout_constraintStart_toEndOf="@+id/textView_editEvent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/delete"
+                app:tint="@null" />
 
-                <TextView
-                    android:id="@+id/textView_editEvent"
-                    android:layout_width="183dp"
-                    android:layout_height="38dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="32dp"
-                    android:fontFamily="@font/architects_daughter"
-                    android:text="@string/edit_event"
-                    android:textColor="#8BC34A"
-                    android:textSize="24sp"
-                    android:textStyle="bold|italic"
-                    app:layout_constraintStart_toEndOf="@+id/button_back2"
-                    app:layout_constraintTop_toTopOf="parent" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_saveEditEvent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:clickable="true"
+                android:contentDescription="@string/todo"
+                android:onClick="saveEditedEvent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/button_deleteEvent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/check"
+                app:tint="@null" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/button_back2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:clickable="true"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:rippleColor="#FFFFFF"
-                    app:srcCompat="@drawable/abc_vector_test"
-                    app:tint="@null" />
+            <TextView
+                android:id="@+id/textView_editEvent"
+                android:layout_width="183dp"
+                android:layout_height="38dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/architects_daughter"
+                android:text="@string/edit_event"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic"
+                app:layout_constraintStart_toEndOf="@+id/button_back2"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
-                    android:id="@+id/editText_editTitle"
-                    android:layout_width="380dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:ems="10"
-                    android:hint="@string/title"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.516"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView_editEvent" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_back2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rippleColor="#FFFFFF"
+                app:srcCompat="@drawable/abc_vector_test"
+                app:tint="@null" />
 
-                <EditText
-                    android:id="@+id/editText_editLocation"
-                    android:layout_width="321dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    android:ems="10"
-                    android:hint="@string/location"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_editTitle" />
+            <EditText
+                android:id="@+id/editText_editTitle"
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ems="10"
+                android:hint="@string/title"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.516"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_editEvent" />
 
-                <EditText
-                    android:id="@+id/editText_editDescription"
-                    android:layout_width="380dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:ems="10"
-                    android:hint="@string/description"
-                    android:importantForAutofill="no"
-                    android:inputType="textPersonName"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_editLocation" />
+            <EditText
+                android:id="@+id/editText_editLocation"
+                android:layout_width="321dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:ems="10"
+                android:hint="@string/location"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_editTitle" />
 
-                <ImageView
-                    android:id="@+id/imageView_editClock"
-                    android:layout_width="35dp"
-                    android:layout_height="39dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:contentDescription="@string/todo"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_editDescription"
-                    app:srcCompat="@drawable/clock" />
+            <EditText
+                android:id="@+id/editText_editDescription"
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ems="10"
+                android:hint="@string/description"
+                android:importantForAutofill="no"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_editLocation" />
 
-                <TextView
-                    android:id="@+id/textView_dateAndTimeLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="36dp"
-                    android:text="@string/event_time"
-                    android:textSize="18sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.046"
-                    app:layout_constraintStart_toEndOf="@+id/imageView_editClock"
-                    app:layout_constraintTop_toBottomOf="@+id/editText_editDescription" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/imageView_editClock"
+                android:layout_width="35dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:contentDescription="@string/todo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/editText_editDescription"
+                app:srcCompat="@drawable/clock" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/textView_dateAndTimeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:text="@string/event_time"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.046"
+                app:layout_constraintStart_toEndOf="@+id/imageView_editClock"
+                app:layout_constraintTop_toBottomOf="@+id/editText_editDescription" />
+
+            <TextView
+                android:id="@+id/textView_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="59dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/comment"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView_editColorPicker" />
+
+            <TextView
+                android:id="@+id/textView_attendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="27dp"
+                android:text="@string/attendance"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/imageView_attendance"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMultiline_comments" />
+
+            <EditText
+                android:id="@+id/editTextMultiline_comments"
+                android:layout_width="360dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView_comment" />
+
+            <CheckBox
+                android:id="@+id/checkBox_attendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toEndOf="@+id/textView_attendance"
+                app:layout_constraintTop_toBottomOf="@+id/editTextMultiline_comments" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,6 +30,8 @@
     <string name="contacts">Contacts</string>
     <string name="new_contact">New Contact</string>
     <string name="contact_list">Contact List</string>
+    <string name="comment">Comment:</string>
+    <string name="attendance">Attend:</string>
 
     <string name="toast_FillBoxes">You must fill out all the boxes</string>
     <string name="toast_LoginSuccessful">Login successful!</string>
