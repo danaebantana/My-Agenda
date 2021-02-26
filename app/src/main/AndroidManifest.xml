@@ -46,9 +46,15 @@
             android:name=".NewContactActivity"
             android:windowSoftInputMode="stateHidden|adjustPan">
         </activity>
+        <activity
+            android:name=".NewEventActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
+        <activity
+            android:name=".EditEventActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan">
+        </activity>
         <activity android:name=".ContactActivity" />
-        <activity android:name=".NewEventActivity" />
-        <activity android:name=".EditEventActivity" />
         <activity android:name=".DayActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ProfileActivity" />
