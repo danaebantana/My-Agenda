@@ -61,4 +61,5 @@
     <string name="textview">Τεξτβιου</string>
     <string name="title_activity_maps2">Χάρτης</string>
     <string name="toast_smsSent">Οι συνεργάτες ενημερώθηκαν!</string>
+    <string name="edit_event">Επεξεργασία εκδήλωσης:</string>
 </resources>

@@ -42,27 +42,50 @@ import java.util.Calendar;
 
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
-    FirebaseDatabase database;
-    DatabaseReference rootRef, ref, eventsRef;
+    private FirebaseDatabase database;
+    private DatabaseReference rootRef, eventsRef;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    private StorageReference storageReference;
-    FloatingActionButton back_bt3, save_bt, delete_bt, location_bt;
-    Dialog myDialog;
-    EditText event_title, event_location, event_description;
-    TextView start_date, start_time, end_date, end_time, color_txt;
-    Spinner reminder_sp, spinner_collaborators;
-    int GOOGLE_MAPS_ACTIVITY = 123;
-    Double lon, lat;
-    String location_name;
+    private FirebaseUser currentUser;
+
+    private FloatingActionButton button_back, button_save, button_delete, button_location;
+    private EditText editEvent_title, editEvent_location, editEvent_description;
+    private TextView start_date, start_time, end_date, end_time, colorPicker;
+    private Spinner spinner_editReminder, spinner_editCollaborators;
+    private Dialog myDialog;
+    private SQLiteDatabase db;
+
+    private int GOOGLE_MAPS_ACTIVITY = 123;
+    private Double lon, lat;
+    private String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
-    SQLiteDatabase db;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
+
+        database = FirebaseDatabase.getInstance();
+        rootRef = database.getReference("Users");
+        eventsRef = database.getReference("Events");
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        button_back = findViewById(R.id.button_back2);
+        button_save = findViewById(R.id.button_saveEditEvent);
+        button_delete = findViewById(R.id.button_deleteEvent);
+        button_location = findViewById(R.id.button_editLocation);
+        editEvent_title = findViewById(R.id.editText_eventTitle);
+        editEvent_location = findViewById(R.id.editText_eventLocation);
+        editEvent_description = findViewById(R.id.editText_eventDescription);
+        start_date = findViewById(R.id.textView_editStartDate);
+        end_date = findViewById(R.id.textView_editEndDate);
+        start_time = findViewById(R.id.textView_editStartTime);
+        end_time = findViewById(R.id.textView_editEndTime);
+        colorPicker = findViewById(R.id.textView_editColorPicker);
+        spinner_editCollaborators = findViewById(R.id.spinner_editCollaborators);
+        spinner_editReminder = findViewById(R.id.spinner_editReminder);
+        myDialog = new Dialog(this);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
@@ -70,38 +93,17 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         String date = getIntent().getStringExtra("Date"); // Get date from day activity
         String key = getIntent().getStringExtra("Key"); // Get key from day activity
 
-        database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference("Users");
-        eventsRef = database.getReference("Events");
-        storageReference = FirebaseStorage.getInstance().getReference();
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        ref = rootRef.child(currentUser.getUid());
-
-        save_bt = findViewById(R.id.button_saveChanges);
-        delete_bt = findViewById(R.id.button_delete);
-
         // Retrieve data from firebase and print them to textboxes
-        event_title = findViewById(R.id.editText_eventTitle);
-        event_title.setText(title);
-        event_location = findViewById(R.id.editText_eventLocation);
-        event_description = findViewById(R.id.editText_eventDescription);
-        start_date = findViewById(R.id.textView_startDate);
-        end_date = findViewById(R.id.textView_endDate);
-        start_time = findViewById(R.id.textView_startTime);
-        end_time = findViewById(R.id.textView_endTime);
-        spinner_collaborators = findViewById(R.id.spinner_addCollaborators);
-        reminder_sp = findViewById(R.id.spinner_pickReminder);
-        color_txt = findViewById(R.id.textView_colorPicker);
-
         DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String title = dataSnapshot.child("Title").getValue().toString();
+                editEvent_title.setText(title);
                 String location = dataSnapshot.child("Location").getValue().toString();
-                event_location.setText(location);
+                editEvent_location.setText(location);
                 String description = dataSnapshot.child("Description").getValue().toString();
-                event_description.setText(description);
+                editEvent_description.setText(description);
                 String start_d = dataSnapshot.child("Start date").getValue().toString();
                 start_date.setText(start_d);
                 String end_d = dataSnapshot.child("End date").getValue().toString();
@@ -142,25 +144,24 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     }
                 });
                 SpinnerContactAdapter contactAdapter = new SpinnerContactAdapter(getApplication(), 0, contacts);
-                spinner_collaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
-                //String collaborators = zoneSnapshot.child("Collaborators").getValue().toString();
-                //collaborators_emails.setText(collaborators);
-                //String reminder = dataSnapshot.child("Reminder").getValue().toString();
-                //spinner_pickReminder.setSelection(Integer.parseInt(reminder));
+                spinner_editCollaborators.setAdapter(contactAdapter); // Set the spinners adapter to the previously created one.
+
+                //spinner_editRemider load selected value.
+
                 String color = dataSnapshot.child("Color").getValue().toString();
-                color_txt.setText(color);
+                colorPicker.setText(color);
                 if (color.equals("Purple")){
-                    color_txt.setBackgroundResource(R.color.Purple);
+                    colorPicker.setBackgroundResource(R.color.Purple);
                 } else if (color.equals("Red")){
-                    color_txt.setBackgroundResource(R.color.Red);
+                    colorPicker.setBackgroundResource(R.color.Red);
                 } else if (color.equals("Green")){
-                    color_txt.setBackgroundResource(R.color.Green);
+                    colorPicker.setBackgroundResource(R.color.Green);
                 } else if (color.equals("Teal")){
-                    color_txt.setBackgroundResource(R.color.Teal);
+                    colorPicker.setBackgroundResource(R.color.Teal);
                 } else if (color.equals("Black")){
-                    color_txt.setBackgroundResource(R.color.Black);
+                    colorPicker.setBackgroundResource(R.color.Black);
                 } else if (color.equals("White")){
-                    color_txt.setBackgroundResource(R.color.White);
+                    colorPicker.setBackgroundResource(R.color.White);
                 }
             }
 
@@ -170,11 +171,10 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        myDialog = new Dialog(this);
+
 
         // Back button
-        back_bt3 = findViewById(R.id.button_back3);
-        back_bt3.setOnClickListener(new View.OnClickListener() {
+        button_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
@@ -185,8 +185,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         });
 
         // Map button
-        location_bt = findViewById(R.id.button_getLocation);
-        location_bt.setOnClickListener(new View.OnClickListener() {
+        button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
@@ -194,11 +193,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        // Create spinner dropdown for reminder notification
-        Spinner dropdown = findViewById(R.id.spinner_pickReminder); // Get the spinner from the xml.
-        String[] items = new String[]{"15 minutes before", "30 minutes before", "1 hour before", "1 day before"}; // Create a list of items for the spinner.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items); // Create an adapter to describe how the items are displayed.
-        dropdown.setAdapter(adapter); // Set the spinners adapter to the previously created one.
     }
 
     //Pop up window to choose date and time
@@ -263,49 +257,49 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                color_txt = findViewById(R.id.textView_colorPicker);
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
                 int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
                 RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
                 String selection = (String) btn.getText();
                 if (selection.equals("Purple")){
-                    color_txt.setBackgroundResource(R.color.Purple);
+                    colorPicker.setBackgroundResource(R.color.Purple);
                 } else if (selection.equals("Red")){
-                    color_txt.setBackgroundResource(R.color.Red);
+                    colorPicker.setBackgroundResource(R.color.Red);
                 } else if (selection.equals("Green")){
-                    color_txt.setBackgroundResource(R.color.Green);
+                    colorPicker.setBackgroundResource(R.color.Green);
                 } else if (selection.equals("Teal")){
-                    color_txt.setBackgroundResource(R.color.Teal);
+                    colorPicker.setBackgroundResource(R.color.Teal);
                 } else if (selection.equals("Black")){
-                    color_txt.setBackgroundResource(R.color.Black);
+                    colorPicker.setBackgroundResource(R.color.Black);
                 } else if (selection.equals("White")){
-                    color_txt.setBackgroundResource(R.color.White);
+                    colorPicker.setBackgroundResource(R.color.White);
                 }
-                color_txt.setText(selection);
+                colorPicker.setText(selection);
                 myDialog.dismiss();
             }
         });
     }
 
     // Edit event to firebase
-    public void saveChanges(View view) {
+    public void saveEditedEvent(View view) {
         String date = getIntent().getStringExtra("Date");
         String key = getIntent().getStringExtra("Key");
         DatabaseReference events_ref = eventsRef.child(key);
         events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                events_ref.child("Title").setValue(event_title.getText().toString());
-                events_ref.child("Location").setValue(event_location.getText().toString());
-                events_ref.child("Description").setValue(event_description.getText().toString());
+                events_ref.child("Title").setValue(editEvent_title.getText().toString());
+                events_ref.child("Location").setValue(editEvent_location.getText().toString());
+                events_ref.child("Description").setValue(editEvent_description.getText().toString());
                 events_ref.child("Start date").setValue(start_date.getText().toString());
                 events_ref.child("Start time").setValue(start_time.getText().toString());
                 events_ref.child("End date").setValue(end_date.getText().toString());
                 events_ref.child("End time").setValue(end_time.getText().toString());
-                events_ref.child("Collaborators").setValue(spinner_collaborators.getSelectedItem().toString());
-                events_ref.child("Reminder").setValue(reminder_sp.getSelectedItem().toString());
-                events_ref.child("Color").setValue(color_txt.getText().toString());
+                //events_ref.child("Collaborators").setValue(spinner_editCollaborators.getSelectedItem().toString());
+                //edit Collaborators.
+                events_ref.child("Reminder").setValue(spinner_editReminder.getSelectedItem().toString());
+                events_ref.child("Color").setValue(colorPicker.getText().toString());
             }
 
             @Override
@@ -313,7 +307,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
-
         Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
         intent.putExtra("Date", date);
@@ -351,11 +344,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 lat = data.getDoubleExtra("latitude",0.0);
                 lon = data.getDoubleExtra("longitude",0.0);
                 location_name = data.getStringExtra("name");
-                event_location.setText(location_name);
+                editEvent_location.setText(location_name);
              }
-    }
-
-    public void addCollaborators(View view){
-
     }
 }
