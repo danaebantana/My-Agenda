@@ -41,7 +41,7 @@ import java.util.concurrent.Callable;
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseDatabase database;
-    private DatabaseReference usersRef, eventsRef;
+    private DatabaseReference usersRef, eventsRef, event_ref;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private FloatingActionButton button_back, button_save, button_delete, button_location;
@@ -102,7 +102,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         editEvent_title.setText(title);
         // Retrieve data from firebase and print them to textboxes
         DatabaseReference events_ref = eventsRef.child(key);
-        events_ref.addValueEventListener(new ValueEventListener() {
+        events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String location = dataSnapshot.child("Location").getValue().toString();
@@ -129,7 +129,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 }
                 //load Contact Spinner
                 DatabaseReference collab_ref = dataSnapshot.child("Collaborators").getRef();
-                collab_ref.addValueEventListener(new ValueEventListener() {
+                collab_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
@@ -169,6 +169,24 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 } else if (color.equals("White")){
                     colorPicker.setBackgroundResource(R.color.White);
                 }
+
+                if(id.equals("Collaborator")){
+                    String uid = currentUser.getUid();
+                    String isChecked = dataSnapshot.child("Collaborators").child(uid).child("Attendance").getValue().toString();
+                    //Attendance checkbox
+                    if(isChecked.equals("true")){
+                        attend.setChecked(true);
+                    } else {
+                        attend.setChecked(false);
+                    }
+                    //Comments
+                    String comment = dataSnapshot.child("Collaborators").child(uid).child("Comments").getValue().toString();
+                    if(!comment.equals("") && !comment.equals(null)){
+                        event_comments.setText(comment);
+                    } else {
+                        event_comments.setText("-");
+                    }
+                }
             }
 
             @Override
@@ -176,25 +194,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
             }
         });
-
-        //Get uid of contacts and add them to contacts list.
-        for(Contact c : contacts){
-            usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren()){   //foreach user
-                        if(c.getName().equals(dataSnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(dataSnapshot.child("Phone Number").getValue().toString())){
-                            c.setUid(dataSnapshot.getKey());
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
 
         // Back button
         button_back.setOnClickListener(new View.OnClickListener() {
@@ -216,7 +215,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
         });
 
-        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
         //if user 'Creator' he can edit the event. Otherwise collaborators can only comment and attend the event.
         if(id.equals("Creator")){
             event_comments.setEnabled(false);
@@ -326,7 +324,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     // Edit event to firebase
     public void saveEditedEvent(View view) {
         if(id.equals("Creator")){
-            DatabaseReference event_ref = eventsRef.child(key);
+            event_ref = eventsRef.child(key).getRef();
             event_ref.child("Title").setValue(editEvent_title.getText().toString());
             event_ref.child("Location").setValue(editEvent_location.getText().toString());
             event_ref.child("Description").setValue(editEvent_description.getText().toString());
@@ -351,12 +349,26 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                                 }
                             }
                             if(!flag){  //collaborator does not exist in firebase -> add.
-                                String uid = c.getUid();
-                                collab_ref.child(uid);
-                                collab_ref.child(uid).child("Name").setValue(c.getName());
-                                collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
-                                collab_ref.child(uid).child("Comments").setValue("-");
-                                collab_ref.child(uid).child("Attendance").setValue("false");
+                                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                                        for(DataSnapshot zoneSnapshot : datasnapshot.getChildren()){    //foreach user
+                                            if(c.getName().equals(zoneSnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(zoneSnapshot.child("Phone Number").getValue().toString())){
+                                                String uid = zoneSnapshot.getKey();
+                                                collab_ref.child(uid);
+                                                collab_ref.child(uid).child("Name").setValue(c.getName());
+                                                collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
+                                                collab_ref.child(uid).child("Comments").setValue("-");
+                                                collab_ref.child(uid).child("Attendance").setValue("false");
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                             }
                         }
 
@@ -371,16 +383,16 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             //check if user already exists in firebase
                             boolean flag = false;
+                            String uid = "";
                             for(DataSnapshot datasnapshot : snapshot.getChildren()){   //foreach event
                                 if(c.getName().equals(datasnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(datasnapshot.child("Phone Number").getValue().toString())) {
                                     flag = true;
+                                    uid = datasnapshot.getKey();
                                 }
                             }
                             if(flag){  //collaborator exist in firebase -> remove.
-                                String uid = c.getUid();
-                                Toast.makeText(getApplication(), uid, Toast.LENGTH_LONG).show();
-                                //DatabaseReference user_ref = collab_ref.child(uid).getRef();
-                                //user_ref.removeValue();
+                                DatabaseReference user_ref = collab_ref.child(uid).getRef();
+                                user_ref.removeValue();
                             }
                         }
 
@@ -392,11 +404,26 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 }
             }
 
+        } else if(id.equals("Collaborator")) {
+            event_ref = eventsRef.child(key).getRef();
+            String uid = currentUser.getUid();
+            //Attendance checkbox
+            if(attend.isChecked()){
+                event_ref.child("Collaborators").child(uid).child("Attendance").setValue("true");
+            } else {
+                event_ref.child("Collaborators").child(uid).child("Attendance").setValue("false");
+            }
+            //Comments
+            event_ref.child("Collaborators").child(uid).child("Comments").setValue(event_comments.getText().toString());
+            /*if(!event_comments.getText().equals("") && !event_comments.getText().equals(null)){
+
+            } else {
+                event_ref.child("Collaborators").child(uid).child("Comments").setValue("-");
+            }*/
         }
 
-
         Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+        Intent intent = new Intent(this, DayActivity.class);
         intent.putExtra("Date", date);
         startActivity(intent);
     }
