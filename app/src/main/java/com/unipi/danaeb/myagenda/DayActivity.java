@@ -39,8 +39,6 @@ public class DayActivity extends AppCompatActivity {
     private FloatingActionButton button_newEvent, button_back;
     private TextView date_txt;
     private ListView listView;
-    private ListAdapter arrayAdapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +91,7 @@ public class DayActivity extends AppCompatActivity {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){   //foreach event
                     //If dataSnapshot "Creator" is the current user.
                     StringBuilder builder = new StringBuilder();
-                    if(dataSnapshot.child("Creator").getValue().equals(user_uid) && dataSnapshot.child("Start date").getValue().equals(date_txt.getText().toString())){
+                    if(dataSnapshot.child("Creator").child("Uid").getValue().equals(user_uid) && dataSnapshot.child("Start date").getValue().equals(date_txt.getText().toString())){
                         String title = dataSnapshot.child("Title").getValue().toString();
                         String time = dataSnapshot.child("Start time").getValue().toString();
                         if(dataSnapshot.child("Collaborators").getValue().equals("-")){
@@ -120,7 +118,7 @@ public class DayActivity extends AppCompatActivity {
                         if(dataSnapshot.child("Collaborators").getValue().equals("-")){
                             continue;
                         } else {
-                            String collab = dataSnapshot.child("Creator").getValue().toString();
+                            String collab = dataSnapshot.child("Creator").child("Name").getValue().toString();
                             for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){
                                 if(!ds.getKey().equals(user_uid)){
                                     collab = ds.child("Name").getValue().toString() + ", " + collab;
@@ -169,7 +167,7 @@ public class DayActivity extends AppCompatActivity {
                         String key = snapshot.getKey(); //Key of Event
                         String id;
                         //Check if currentUser the creator or collaborator of event.
-                        if(snapshot.child("Creator").getValue().toString().equals(uuid)){
+                        if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){
                             id = "Creator";
                         } else {
                             id = "Collaborator";

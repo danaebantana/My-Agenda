@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.contacts:
                         intent = new Intent(getApplicationContext(),ContactActivity.class);
-                        intent.putExtra("id","Contacts");
                         startActivity(intent);
                         break;
                     case R.id.logOut:

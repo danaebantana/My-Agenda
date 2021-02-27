@@ -246,7 +246,23 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
             event_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    event_ref.child("Creator").setValue(currentUser.getUid());
+                    event_ref.child("Creator").child("Uid").setValue(currentUser.getUid());
+                    String uid = currentUser.getUid();
+                    usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                            for(DataSnapshot zoneSnapshot : datasnapshot.getChildren()){    //foreach user
+                                if(zoneSnapshot.getKey().equals(uid)){
+                                    event_ref.child("Creator").child("Name").setValue(zoneSnapshot.child("Name").getValue().toString());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                     event_ref.child("Title").setValue(event_title.getText().toString());
                     if (event_location.getText().toString().matches("")) {
                         event_ref.child("Location").setValue("-");
@@ -271,8 +287,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                         if(c.isSelected()){
                             usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for (DataSnapshot zoneSnapshot : snapshot.getChildren()) {
+                                public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                                    for (DataSnapshot zoneSnapshot : datasnapshot.getChildren()) {
                                         String uid = zoneSnapshot.getKey();
                                         String name = zoneSnapshot.child("Name").getValue().toString();
                                         String phone = zoneSnapshot.child("Phone Number").getValue().toString();
