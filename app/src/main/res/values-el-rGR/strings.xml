@@ -66,5 +66,6 @@
     <string name="attendance">Συμμετοχή:</string>
     <string name="toast_userExists">Υπάρχει ήδη χρήστης με το ίδιο όνομα και τηλέφωνο! Παρακαλώ, ελέγξτε οτι δεν είστε ήδη χρήστης!</string>
     <string name="toast_dataUpdated">Τα δεδομένα έχουν επικυρωθεί επιτυχώς!</string>
+    <string name="toast_needProfileData">Πρέπει να συμπληρώσετε τα προσωπικά σας στοιχεία πριν προσθέσετε μία εκδήλωση!</string>
 
 </resources>

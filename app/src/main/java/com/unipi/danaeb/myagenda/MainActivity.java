@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     FirebaseDatabase database;
-    DatabaseReference ref;
+    DatabaseReference ref, usersRef;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -53,37 +53,39 @@ public class MainActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("Events");
+        usersRef = database.getReference("Users");
 
         CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                String curDate = dayOfMonth + "/" + (month + 1) + "/" + year;
-                Intent intent = new Intent(getApplicationContext(), DayActivity.class);
-                intent.putExtra("Date", curDate);
-                startActivity(intent);
+                //check if user has given his profile details.
+                usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {  //foreach user
+                            if(dataSnapshot.getKey().equals(currentUser.getUid())){
+                                if(dataSnapshot.child("Name").exists()){
+                                    String curDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                                    Intent intent = new Intent(getApplicationContext(), DayActivity.class);
+                                    intent.putExtra("Date", curDate);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplication(),R.string.toast_needProfileData, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
         });
         navigationBar();
-        /*ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot zoneSnapshot : snapshot.getChildren()){
-                    String e_date = zoneSnapshot.child("Start date").getValue().toString();
-                    String e_time = zoneSnapshot.child("Start time").getValue().toString();
-                    try {
-                        start(e_date, e_time);
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     public void navigationBar(){
@@ -129,31 +131,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    // SMS listViewEvent_item
-    /*public void start(String e_date, String e_time) throws ParseException {
-        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = (Date) format.parse(e_date);
-        String[] timeArray = e_time.split(":");
-        int HH = Integer.parseInt(timeArray[0]);
-        int mm = Integer.parseInt(timeArray[1]);
-        Date dat = new Date();
-        Calendar cal_alarm = Calendar.getInstance();
-        Calendar cal_now = Calendar.getInstance();
-        cal_now.setTime(dat);
-        cal_alarm.setTime(date);
-        cal_alarm.set(Calendar.HOUR_OF_DAY, HH);
-        cal_alarm.set(Calendar.MINUTE, mm);
-        cal_alarm.set(Calendar.SECOND,0);
-        if(cal_alarm.before(cal_now)){
-            cal_alarm.add(Calendar.DATE,1);
-        }
-
-        //Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-
-        //manager.set(AlarmManager.RTC_WAKEUP,cal_alarm.getTimeInMillis(), pendingIntent);
-    }*/
 }
