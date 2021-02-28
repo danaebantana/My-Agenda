@@ -64,4 +64,7 @@
     <string name="edit_event">Επεξεργασία εκδήλωσης:</string>
     <string name="comment">Σχόλιο:</string>
     <string name="attendance">Συμμετοχή:</string>
+    <string name="toast_userExists">Υπάρχει ήδη χρήστης με το ίδιο όνομα και τηλέφωνο! Παρακαλώ, ελέγξτε οτι δεν είστε ήδη χρήστης!</string>
+    <string name="toast_dataUpdated">Τα δεδομένα έχουν επικυρωθεί επιτυχώς!</string>
+
 </resources>

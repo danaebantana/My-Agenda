@@ -47,6 +47,8 @@
     <string name="toast_checkBoxes">No selected radio button. You can either select contacts or go back to the events page.</string>
     <string name="toast_emptyList">Warning: Empty list!</string>
     <string name="toast_smsSent">Collaborators were notified!</string>
+    <string name="toast_userExists">User already exists with the same name and phone number! Please, check if already a user!</string>
+    <string name="toast_dataUpdated">Data has been successfully updated!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>

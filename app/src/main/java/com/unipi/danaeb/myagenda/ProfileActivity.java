@@ -6,24 +6,18 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,16 +32,15 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 
 public class ProfileActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
-    DatabaseReference rootRef, ref;
+    DatabaseReference usersRef, ref;
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
     EditText name, address, profession, phoneNumber;
@@ -65,11 +58,11 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         navigationBar();
         database = FirebaseDatabase.getInstance();
-        rootRef = database.getReference("Users");
+        usersRef = database.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        ref = rootRef.child(currentUser.getUid());
+        ref = usersRef.child(currentUser.getUid());
         name = findViewById(R.id.editText_name);
         address = findViewById(R.id.editText_address);
         profession = findViewById(R.id.editText_profession);
@@ -117,12 +110,40 @@ public class ProfileActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     //first login of user.
-                    if (!snapshot.exists()) {
-                        ref.child("Name").setValue(name.getText().toString());
-                        ref.child("Address").setValue(address.getText().toString());
-                        ref.child("Profession").setValue(profession.getText().toString());
-                        ref.child("Phone Number").setValue(phoneNumber.getText().toString());
-                        ref.child("Email").setValue(currentUser.getEmail());
+                    if (snapshot.getValue().toString().equals(currentUser.getEmail())) {
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+                                boolean flag = false;
+                                //check if there is already a user with the same name and phone number.
+                                for (DataSnapshot zoneSnapshot : datasnapshot.getChildren()){  //foreach user
+                                    if (zoneSnapshot.child("Name").exists()){
+                                        String nameOfUser = zoneSnapshot.child("Name").getValue().toString();
+                                        String phoneNumberOfUser = zoneSnapshot.child("Phone Number").getValue().toString();
+                                        if(nameOfUser.equals(name.getText().toString()) && phoneNumberOfUser.equals(phoneNumber.getText().toString())){
+                                            flag = true;
+                                        }
+                                    }
+                                }
+                                if(flag){
+                                    Toast.makeText(getApplication(), R.string.toast_userExists, Toast.LENGTH_LONG).show();
+                                } else {
+                                    ref.child("Name").setValue(name.getText().toString());
+                                    ref.child("Address").setValue(address.getText().toString());
+                                    ref.child("Profession").setValue(profession.getText().toString());
+                                    ref.child("Phone Number").setValue(phoneNumber.getText().toString());
+                                    ref.child("Email").setValue(currentUser.getEmail());
+                                    Toast.makeText(getApplicationContext(), R.string.toast_ProfileSave, Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
                     else { //update data.
                         ref.child("Name").setValue(name.getText().toString());
@@ -130,10 +151,10 @@ public class ProfileActivity extends AppCompatActivity {
                         ref.child("Profession").setValue(profession.getText().toString());
                         ref.child("Phone Number").setValue(phoneNumber.getText().toString());
                         ref.child("Email").setValue(currentUser.getEmail());
+                        Toast.makeText(getApplicationContext(), R.string.toast_dataUpdated, Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
                     }
-                    Toast.makeText(getApplicationContext(), R.string.toast_ProfileSave, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
