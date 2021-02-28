@@ -105,7 +105,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void save(View view){
         if (name.getText().equals("") || address.getText().equals("") || profession.getText().equals("") || phoneNumber.getText().equals("")){
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
-        } else{
+        } else {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
