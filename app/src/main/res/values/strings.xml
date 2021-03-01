@@ -52,7 +52,8 @@
     <string name="toast_needProfileData">You have to fill your profile data before adding an event!</string>
     <string name="toast_noCollToInform">You have no collaborators on this event to send a reminder SMS!</string>
     <string name="toast_noCorrespondingNumber">You do not have a contact with the name: </string>
-    <string name="toast_smsReminder">"You have a reminder: " </string>
+    <string name="toast_smsReminder">You have a reminder: </string>
+    <string name="toast_onlyCreator">You have to be the creator of the event to send a reminder SMS!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>

@@ -68,8 +68,9 @@
     <string name="toast_dataUpdated">Τα δεδομένα έχουν επικυρωθεί επιτυχώς!</string>
     <string name="toast_needProfileData">Πρέπει να συμπληρώσετε τα προσωπικά σας στοιχεία πριν προσθέσετε μία εκδήλωση!</string>
     <string name="toast_noCollToInform">Για αυτή την εκδήλωση δεν υπάρχουν συνεργάτες να ειδοποιήσεις με SMS!</string>
-    <string name="toast_noCorrespondingNumber">"Δεν έχεις επαφή με όνομα: "</string>
-    <string name="toast_smsReminder">"Έχεις μία υπενθύμιση: " </string>
+    <string name="toast_noCorrespondingNumber">Δεν έχεις επαφή με όνομα: </string>
     <string name="my_agenda">Η Ατζέντα Μου</string>
+    <string name="toast_onlyCreator">Πρέπει να είστε ο δημιουργός της εκδήλωσης για να στείλετε υπενθύμιση!</string>
+    <string name="toast_smsReminder">Έχεις μία υπενθύμιση: </string>
 
 </resources>

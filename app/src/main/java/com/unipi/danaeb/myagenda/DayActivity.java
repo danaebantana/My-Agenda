@@ -259,7 +259,6 @@ public class DayActivity extends AppCompatActivity {
         });
     }
 
-    // Send SMS
     public void onBellClick(View v) {
         // First get permission to send SMS
         if (ActivityCompat.checkSelfPermission(DayActivity.this, android.Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -268,57 +267,58 @@ public class DayActivity extends AppCompatActivity {
         }
         View parentRow = (View) v.getParent();
         ListView listView = (ListView) parentRow.getParent();
-        final int position = listView.getPositionForView(parentRow);
+        int position = listView.getPositionForView(parentRow);
         Object item = listView.getItemAtPosition(position);
+        String uuid = currentUser.getUid();
+        String date = date_txt.getText().toString();
+        String selectedEventUid = eventUid.get(position);   //get the uid of the selected event.
+
         String[] obj = item.toString().split("\n");
         String SMS = obj[0] + " " + obj[1] + " " + date_txt.getText().toString();
-        //Check for collaborators
-        String[] collaborators = obj[2].split(":");
-        ArrayList<String> listOfCollaboratorsNames = new ArrayList<String>();
-        ArrayList<String> listOfCollaboratorsPhoneNumbers = new ArrayList<String>();
-        if(collaborators[1].substring(1).equals("-")){  //No collaborators
-            Toast.makeText(this, R.string.toast_noCollToInform, Toast.LENGTH_LONG).show();
-        } else {
-            for(int i=3; i<obj.length; i++){
-                String[] collaborator = obj[i].split(":");
-                if(collaborator[0].equals("My Comments") || collaborator[0].equals("Attending")){
-                    break;
-                }
-                listOfCollaboratorsNames.add(collaborator[0]);
-                Cursor cursor = db.rawQuery("SELECT * FROM Contacts WHERE name=?", new String[]{collaborator[0]});
-                if (cursor.getCount()>0){  //Contact name found. Cursor will always return 1 or 0 objects.
-                    while (cursor.moveToNext()){
-                        listOfCollaboratorsPhoneNumbers.add(cursor.getString(1));  //Get phoneNumbers
-                    }
-                } else{
-                    listOfCollaboratorsPhoneNumbers.add("-");  //Get phoneNumbers
+
+        eventsRef.child(selectedEventUid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){  //User 'Creator' of the event.
+                    AlertDialog.Builder alert = new AlertDialog.Builder(DayActivity.this);
+                    alert.setTitle("Send reminder SMS to collaborators.");
+                    alert.setMessage("Are you sure you want to send SMS?");
+                    alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            boolean flag = false;
+                            for(DataSnapshot dataSnapshot : snapshot.child("Collaborators").getChildren()){  //foreach collaborator.
+                                String name = dataSnapshot.child("Name").getValue().toString();
+                                String phoneNumber = dataSnapshot.child("Phone Number").getValue().toString();
+                                Cursor cursor = db.rawQuery("SELECT * FROM Contacts WHERE name=? AND phonenumber=?", new String[]{name, phoneNumber}); //Check if collaborator is a contact.
+                                if (cursor.getCount()>0){  //Contact found. Cursor will always return 1 or 0 objects.
+                                    SmsManager manager = SmsManager.getDefault();
+                                    manager.sendTextMessage(phoneNumber, null, "You have a reminder: " + SMS, null, null);
+                                    flag = true;
+                                } else{
+                                    Toast.makeText(getApplicationContext(), "You do not have a contact with the name: " + name, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                            if (flag){
+                                Toast.makeText(DayActivity.this, R.string.toast_smsSent , Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                    alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // close dialog
+                            dialog.cancel();
+                        }
+                    });
+                    alert.show();
+                } else {
+                    Toast.makeText(getApplication(), R.string.toast_onlyCreator, Toast.LENGTH_LONG).show();
                 }
             }
-        }
-        AlertDialog.Builder alert = new AlertDialog.Builder(DayActivity.this);
-        alert.setTitle("Send reminder SMS to collaborators.");
-        alert.setMessage("Are you sure you want to send SMS?");
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                int i=0;
-                for (String phoneNumber : listOfCollaboratorsPhoneNumbers){
-                    if(phoneNumber.equals("-")){
-                        Toast.makeText(getApplicationContext(), R.string.toast_noCorrespondingNumber + listOfCollaboratorsNames.get(i), Toast.LENGTH_LONG).show();
-                    } else {
-                        SmsManager manager = SmsManager.getDefault();
-                        manager.sendTextMessage(phoneNumber, null, R.string.toast_smsReminder + SMS, null, null);
-                    }
-                    i++;
-                }
-                Toast.makeText(DayActivity.this, R.string.toast_smsSent , Toast.LENGTH_LONG).show();
-            }
-        });
-        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // close dialog
-                dialog.cancel();
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-        alert.show();
     }
 }
