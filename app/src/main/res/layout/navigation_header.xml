@@ -17,16 +17,16 @@
         android:layout_marginTop="10dp"
         android:background="#FFFFFF"
         android:contentDescription="@string/todo"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/calendarnavigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/calendarnavigation"
-        tools:srcCompat="@drawable/calendarnavigation" />
+        app:srcCompat="@mipmap/calendarnavigation"
+        tools:srcCompat="@mipmap/calendarnavigation" />
 
     <TextView
         android:layout_width="123dp"
         android:layout_height="0dp"
-        android:layout_marginStart="1dp"
+        android:layout_marginStart="2dp"
         android:layout_marginTop="105dp"
         android:text="@string/my_agenda"
         android:textColor="@color/Black"
