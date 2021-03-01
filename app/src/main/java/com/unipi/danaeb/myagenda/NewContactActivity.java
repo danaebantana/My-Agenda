@@ -103,7 +103,6 @@ public class NewContactActivity extends AppCompatActivity {
     private boolean checkIfAlreadyInDatabase(String n, String pn){
         boolean flag = true;
         Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
-        ArrayList<String> listData = new ArrayList<>();
         if (cursor.getCount()>0){
             while (cursor.moveToNext()){
                 String name = cursor.getString(0);

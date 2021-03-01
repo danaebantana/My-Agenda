@@ -81,4 +81,13 @@
     <string name="textview">TextView</string>
     <string name="title_activity_maps2">Map</string>
     <string name="my_agenda">My Agenda</string>
+
+    <string name="Collaborators">Collaborators</string>
+    <string name="Attending">Attending</string>
+    <string name="select">SELECT</string>
+    <string name="_0_0">0.0</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="location_name">Name:</string>
+    <string name="l_name">Name</string>
 </resources>

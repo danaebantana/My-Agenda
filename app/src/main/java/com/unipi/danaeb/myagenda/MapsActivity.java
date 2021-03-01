@@ -3,14 +3,20 @@ package com.unipi.danaeb.myagenda;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +30,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -32,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     TextView lat , lon;
     EditText name;
     private FusedLocationProviderClient locationProviderClient;
-
+    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +54,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationGPS();
 
+        db = openOrCreateDatabase("LocationsDB", Context.MODE_PRIVATE,null);
+        db.execSQL("CREATE TABLE IF NOT EXISTS Locations(name TEXT, lat DOUBLE, long DOUBLE)");
+
+        //Create locations list from SQLite database and load it in location_spinner
+        Spinner location_spinner = (Spinner) findViewById(R.id.location_spinner);
+        Cursor cursor = db.rawQuery("SELECT * FROM Locations",null);
+        StringBuilder builder = new StringBuilder();
+        ArrayList<String> locations = new ArrayList<String>(Arrays.asList(new String[] {}));
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                builder.append(cursor.getString(0)).append(": ").append(cursor.getDouble(1)).append(", ").append(cursor.getDouble(2));
+                locations.add(builder.toString());
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations); // Create an adapter to describe how the items are displayed.
+        location_spinner.setAdapter(adapter);  // Set the spinners adapter to the previously created one.
+
+        location_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Object item = location_spinner.getItemAtPosition(position);
+                String[] obj = item.toString().split(":");
+                String text = obj[0];
+                name.setText(text);
+                String latitude = obj[1].substring(1);
+                lat.setText(latitude);
+                String longitude = obj[1].substring(2);
+                lon.setText(longitude);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+
+        });
+
         selectBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +98,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (text.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please add name for location", Toast.LENGTH_LONG).show();
                 } else {
-                    double longitude = Double.valueOf(lon.getText().toString());
                     double latitude = Double.valueOf(lat.getText().toString());
+                    double longitude = Double.valueOf(lon.getText().toString());
+                    if (!checkIfAlreadyInDatabase(text, latitude, longitude)) {
+                        db.execSQL("INSERT INTO Locations VALUES('" + text + "','" + latitude + "', '" + longitude +"')");
+                    }
                     Intent returnIntent = new Intent();
                     returnIntent.putExtra("latitude", latitude);
                     returnIntent.putExtra("longitude", longitude);
@@ -61,7 +110,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     setResult(123, returnIntent);
                     finish();
                 }
-
             }
         });
     }
@@ -75,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -127,8 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     curr_lon = 0.0;
                 }
                 // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                 mapFragment.getMapAsync(MapsActivity.this);
             }
         });
@@ -142,5 +190,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         returnIntent.putExtra("location","None");
         setResult(123,returnIntent);
         finish();
+    }
+
+    //If the given location is already in the database then the function returns true. Otherwise it returns false.
+    private boolean checkIfAlreadyInDatabase(String n, Double lat, Double lon) {
+        boolean flag = false;
+        Cursor cursor = db.rawQuery("SELECT * FROM Locations",null);
+        if (cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
+                String name = cursor.getString(0);
+                Double latitude = cursor.getDouble(1);
+                Double longitude = cursor.getDouble(2);
+                if(n.equals(name) && lat.equals(latitude) && lon.equals(longitude)) {
+                    flag = true;
+                }
+            }
+        }
+        return flag;
     }
 }

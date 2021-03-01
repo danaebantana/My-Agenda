@@ -73,5 +73,13 @@
     <string name="toast_onlyCreator">Πρέπει να είστε ο δημιουργός της εκδήλωσης για να στείλετε υπενθύμιση!</string>
     <string name="toast_smsReminder">Έχεις μία υπενθύμιση: </string>
     <string name="attending">"Παρεβρίσκονται: "</string>
+    <string name="Collaborators">Συνεργάτες</string>
+    <string name="Attending">Θα παραβρεθούν</string>
+    <string name="select">ΕΠΙΛΟΓΗ</string>
+    <string name="_0_0">0.0</string>
+    <string name="longitude">Μήκος:</string>
+    <string name="latitude">Πλάτος:</string>
+    <string name="location_name">Όνομα:</string>
+    <string name="l_name">Όνομα</string>
 
 </resources>

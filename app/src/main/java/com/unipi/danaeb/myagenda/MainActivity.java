@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                                 int numOfDays = 0;
                                 long date = calendarView.getDate();
                                 String m = (String) android.text.format.DateFormat.format("MM", date);  //Get month
-                                String y = (String) android.text.format.DateFormat.format("yyyy", date);  //Get month
+                                String y = (String) android.text.format.DateFormat.format("yyyy", date);  //Get year
                                 int year = Integer.parseInt(y);
                                 int month = 0;
                                 if(m.equals("02")){  //days=28
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                                     numOfDays = 31;
                                     month = Integer.parseInt(m);
                                 }
-                                else if(m.equals("04") || m.equals("06") || m.equals("09")) {                //days=30
+                                else if(m.equals("04") || m.equals("06") || m.equals("09")) { //days=30
                                     numOfDays = 30;
                                     month = Integer.parseInt(m.substring(1));
                                 } else if(m.equals("11")){

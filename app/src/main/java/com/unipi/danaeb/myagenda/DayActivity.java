@@ -177,14 +177,14 @@ public class DayActivity extends AppCompatActivity {
                 for (Event event : dayEventList){
                     StringBuilder builder = new StringBuilder();
                     if(event.getCollaborators().get(0).equals("-")){   //event has no collaborators.
-                        builder.append(event.getTitle() + "\n" + event.getTime() + "\nCollaborators: -");
+                        builder.append(event.getTitle() + "\n" + event.getTime() + "\n" + R.string.Collaborators + ": -");
                     } else {
-                        builder.append(event.getTitle() + "\n" + event.getTime() + "\nCollaborators:  \n");
+                        builder.append(event.getTitle() + "\n" + event.getTime() + "\n" + R.string.Collaborators + ":  \n");
                         int numOfCollb = event.getCollaborators().size();
                         for(int i=0; i<numOfCollb; i++){
                             builder.append(event.getCollaborators().get(i) + ": " + event.getComments().get(i) + "\n");
                         }
-                        builder.append("Attending: ");
+                        builder.append(+ R.string.Attending + ": ");
                         int numOfAttendees = event.getAttendance().size();
                         boolean flag = false;
                         for(int i=0; i<numOfAttendees; i++){

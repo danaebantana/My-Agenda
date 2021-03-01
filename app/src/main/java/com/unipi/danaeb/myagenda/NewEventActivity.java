@@ -179,6 +179,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
+
         // Time picker pops up when time textboxes are clicked
         if ((v == start_time) || (v == end_time)) {
 

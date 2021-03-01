@@ -263,6 +263,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         }
+
         // Time picker pops up when time textboxes are clicked
         if ((v == start_time) || (v == end_time)) {
 
