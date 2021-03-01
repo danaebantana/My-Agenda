@@ -403,7 +403,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     });
                 }
             }
-
         } else if(id.equals("Collaborator")) {
             event_ref = eventsRef.child(key).getRef();
             String uid = currentUser.getUid();
@@ -415,15 +414,10 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             }
             //Comments
             event_ref.child("Collaborators").child(uid).child("Comments").setValue(event_comments.getText().toString());
-            /*if(!event_comments.getText().equals("") && !event_comments.getText().equals(null)){
-
-            } else {
-                event_ref.child("Collaborators").child(uid).child("Comments").setValue("-");
-            }*/
         }
-
-        Toast.makeText(getApplicationContext(), R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, DayActivity.class);
+        Toast.makeText(this, R.string.toast_EventSave, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("Date", date);
         startActivity(intent);
     }

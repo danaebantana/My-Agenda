@@ -315,7 +315,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
-            Intent intent = new Intent(this, DayActivity.class);
+            Intent intent = new Intent(NewEventActivity.this, MainActivity.class);
             intent.putExtra("Date", date);
             startActivity(intent);
         }

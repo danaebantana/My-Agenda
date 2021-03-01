@@ -72,5 +72,6 @@
     <string name="my_agenda">Η Ατζέντα Μου</string>
     <string name="toast_onlyCreator">Πρέπει να είστε ο δημιουργός της εκδήλωσης για να στείλετε υπενθύμιση!</string>
     <string name="toast_smsReminder">Έχεις μία υπενθύμιση: </string>
+    <string name="attending">"Παρεβρίσκονται: "</string>
 
 </resources>
