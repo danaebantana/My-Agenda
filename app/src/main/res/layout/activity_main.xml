@@ -13,18 +13,28 @@
         android:id="@+id/constraint_Layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#fff3e6">
+        android:background="@drawable/background">
 
         <CalendarView
             android:id="@+id/calendarView"
-            android:layout_width="414dp"
-            android:layout_height="wrap_content"
+            android:layout_width="392dp"
+            android:layout_height="334dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.666"
+            app:layout_constraintHorizontal_bias="0.473"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintVertical_bias="0.253" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="294dp"
+            android:layout_height="87dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.498" />
+            app:srcCompat="@drawable/logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -34,9 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#fff3e6"
+        android:background="@color/White"
         app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/navigation_menu">
-    </com.google.android.material.navigation.NavigationView>
+        app:menu="@menu/navigation_menu"></com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

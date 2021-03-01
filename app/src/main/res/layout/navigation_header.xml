@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="160dp"
-    android:background="#fff3e6"
+    android:background="@color/White"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
@@ -15,18 +15,20 @@
         android:layout_height="88dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="10dp"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/todo"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher"
-        tools:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/calendarnavigation"
+        tools:srcCompat="@drawable/calendarnavigation" />
 
     <TextView
         android:layout_width="123dp"
         android:layout_height="0dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="105dp"
-        android:text="My Agenda"
+        android:text="@string/my_agenda"
         android:textColor="@color/Black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

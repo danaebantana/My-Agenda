@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:panelFullBackground="@color/white">
 
     <item android:id="@+id/home"
         android:icon="@mipmap/home"
-        android:title="@string/home"/>
+        android:title="@string/home"
+        android:itemBackground="@color/white"/>
 
     <item android:id="@+id/profile"
         android:icon="@mipmap/profile"
-        android:title="@string/profile" />
+        android:title="@string/profile"
+        android:itemBackground="@color/white"/>
 
     <item android:id="@+id/contacts"
         android:icon="@mipmap/contacts"
-        android:title="@string/contacts" />
+        android:title="@string/contacts"
+        android:itemBackground="@color/white"/>
 
     <item android:id="@+id/logOut"
         android:icon="@mipmap/exit"
-        android:title="@string/log_out" />
+        android:title="@string/log_out"
+        android:itemBackground="@color/white"/>
 
 </menu>

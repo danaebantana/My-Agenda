@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Event {
 
-    private String title, time;
+    private String title, time, uid;
     private ArrayList<String> collaborators, comments, attendance;
 
     public Event() { }
@@ -28,4 +28,8 @@ public class Event {
     public ArrayList<String> getAttendance() { return attendance; }
 
     public void setAttendance(ArrayList<String> attendance) { this.attendance = attendance; }
+
+    public String getUid() { return uid; }
+
+    public void setUid(String uid) { this.uid = uid; }
 }

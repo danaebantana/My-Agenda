@@ -65,8 +65,8 @@ public class ContactActivity extends AppCompatActivity {
         ArrayList<String> listData = new ArrayList<>();
         if (cursor.getCount()>0){
             while (cursor.moveToNext()){
-                listData.add("Name: " + cursor.getString(0) + "\n" +
-                        "Phone Number: " + cursor.getString(1));
+                listData.add(cursor.getString(0) + "\n"
+                        + cursor.getString(1));
             }
             ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
             listView.setAdapter(adapter);
@@ -77,20 +77,15 @@ public class ContactActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = listView.getItemAtPosition(position);
                 String[] obj = item.toString().split("\n");
-                String row1 = obj[0];
-                String row2 = obj[1];
-
-                String[] names = row1.split(":");
-                String name = names[1].substring(1);
-                String[] phonenumbers = row2.split(":");
-                String phonenumber = phonenumbers[1].substring(1);
+                String name = obj[0];
+                String phoneNumber = obj[1];
 
                 AlertDialog.Builder alert = new AlertDialog.Builder(ContactActivity.this);
                 alert.setTitle("Delete entry");
                 alert.setMessage("Are you sure you want to delete?");
                 alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        db.delete("Contacts","name=? AND phonenumber=?",new String[]{name,phonenumber});
+                        db.delete("Contacts","name=? AND phonenumber=?",new String[]{name,phoneNumber});
                         Toast.makeText(ContactActivity.this, R.string.toast_ContactDelete , Toast.LENGTH_LONG).show();
                         viewContactList(); //Reload contact data after deletion.
                     }

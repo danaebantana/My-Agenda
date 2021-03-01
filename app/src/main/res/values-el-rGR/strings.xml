@@ -70,5 +70,6 @@
     <string name="toast_noCollToInform">Για αυτή την εκδήλωση δεν υπάρχουν συνεργάτες να ειδοποιήσεις με SMS!</string>
     <string name="toast_noCorrespondingNumber">"Δεν έχεις επαφή με όνομα: "</string>
     <string name="toast_smsReminder">"Έχεις μία υπενθύμιση: " </string>
+    <string name="my_agenda">Η Ατζέντα Μου</string>
 
 </resources>

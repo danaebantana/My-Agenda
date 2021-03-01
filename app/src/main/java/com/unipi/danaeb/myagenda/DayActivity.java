@@ -45,7 +45,7 @@ public class DayActivity extends AppCompatActivity {
     private TextView date_txt;
     private ListView listView;
     private SQLiteDatabase db;
-    ArrayList<Event> dayEventList = new ArrayList<Event>();
+    ArrayList<String> eventUid = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +94,7 @@ public class DayActivity extends AppCompatActivity {
     // Retrieve data from firebase
     public void retrieveData() {
         String user_uid = currentUser.getUid();
-        //ArrayList<String> dayEventList = new ArrayList<>();
-        //ArrayList<Event> dayEventList = new ArrayList<Event>();
+        ArrayList<Event> dayEventList = new ArrayList<Event>();
         ArrayList<String> stringEventList = new ArrayList<String>();
         eventsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -110,6 +109,7 @@ public class DayActivity extends AppCompatActivity {
                         currentUserName = dataSnapshot.child("Creator").child("Name").getValue().toString();
                         event.setTitle(title);
                         event.setTime(time);
+                        event.setUid(dataSnapshot.getKey());
                         ArrayList<String> collab = new ArrayList<String>();
                         ArrayList<String> comments = new ArrayList<String>();
                         ArrayList<String> attending = new ArrayList<String>();
@@ -142,6 +142,7 @@ public class DayActivity extends AppCompatActivity {
                                 flag = true;
                                 event.setTitle(title);
                                 event.setTime(time);
+                                event.setUid(dataSnapshot.getKey());
                                 currentUserName = ds.child("Name").getValue().toString();
                                 collab.add(dataSnapshot.child("Creator").child("Name").getValue().toString());
                                 comments.add("-");
@@ -199,6 +200,7 @@ public class DayActivity extends AppCompatActivity {
                             builder.append("-");
                         }
                     }
+                    eventUid.add(event.getUid());
                     stringEventList.add(builder.toString());
                 }
                 EventsAdapter eventsAdapter = new EventsAdapter(stringEventList, DayActivity.this);
@@ -221,6 +223,7 @@ public class DayActivity extends AppCompatActivity {
         Object item = listView.getItemAtPosition(position);
         String uuid = currentUser.getUid();
         String date = date_txt.getText().toString();
+        String selectedEventUid = eventUid.get(position);   //get the uid of the selected event.
 
         String[] obj = item.toString().split("\n");
         String title = obj[0];
@@ -229,10 +232,9 @@ public class DayActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {  //foreach event
-                    if (snapshot.child("Title").getValue().toString().equals(title) && snapshot.child("Start date").getValue().toString().equals(date)
-                            &&  snapshot.child("Start time").getValue().toString().equals(time)) {
+                    if (snapshot.getKey().equals(selectedEventUid)) {
                         Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
-                        String key = snapshot.getKey(); //Key of Event
+                        String key =  selectedEventUid; //Key of Event
                         String id;
                         //Check if currentUser the creator or collaborator of event.
                         if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){
