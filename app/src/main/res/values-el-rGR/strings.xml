@@ -81,5 +81,6 @@
     <string name="latitude">Πλάτος:</string>
     <string name="location_name">Όνομα:</string>
     <string name="l_name">Όνομα</string>
+    <string name="Welcome">Καλώς ήρθες</string>
 
 </resources>

@@ -90,4 +90,6 @@
     <string name="latitude">Latitude:</string>
     <string name="location_name">Name:</string>
     <string name="l_name">Name</string>
+
+    <string name="Welcome">Welcome</string>
 </resources>

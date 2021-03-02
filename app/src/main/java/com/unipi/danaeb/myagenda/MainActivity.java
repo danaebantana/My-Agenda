@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -41,8 +42,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView recognize;
     private static final int REC_RESULT = 653;
     private CalendarView calendarView;
+    private TTS MyTts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         ref = database.getReference("Events");
         usersRef = database.getReference("Users");
         recognize = findViewById(R.id.imageView_recognize);
+
+        speak();
 
         calendarView = (CalendarView) findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -96,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         navigationBar();
+    }
+
+    // Welcome
+    public void speak() {
+        MyTts = new TTS(MainActivity.this);
+        MyTts.speak("Welcome");
     }
 
     //Function to activate voice recognition.
@@ -211,5 +222,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onInit(int status) {
+
     }
 }
