@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         usersRef = database.getReference("Users");
         recognize = findViewById(R.id.imageView_recognize);
 
-        speak();
-
         calendarView = (CalendarView) findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -101,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
         });
         navigationBar();
+        speak();
     }
 
     // Welcome
