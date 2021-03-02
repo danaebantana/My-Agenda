@@ -53,6 +53,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
     private Dialog myDialog;
     private int mYear, mMonth, mDay, mHour, mMinute;
+    private double latitude, longitude;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
     private SQLiteDatabase db;
 
@@ -267,8 +268,12 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     event_ref.child("Title").setValue(event_title.getText().toString());
                     if (event_location.getText().toString().matches("")) {
                         event_ref.child("Location").setValue("-");
+                        event_ref.child("Latitude").setValue(0.0);
+                        event_ref.child("Longitude").setValue(0.0);
                     } else {
                         event_ref.child("Location").setValue(event_location.getText().toString());
+                        event_ref.child("Latitude").setValue(latitude);
+                        event_ref.child("Longitude").setValue(longitude);
                     }
                     if (event_description.getText().toString().matches("")) {
                         event_ref.child("Description").setValue("-");
@@ -326,13 +331,12 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==123){   //Return from MapsActivity
-            double latitude = data.getDoubleExtra("latitude",0.0);
-            double longitude = data.getDoubleExtra("longitude",0.0);
+            latitude = data.getDoubleExtra("latitude",0.0);
+            longitude = data.getDoubleExtra("longitude",0.0);
             String location = data.getStringExtra("location");
             if(location!=null && !location.isEmpty()){
                 event_location.setText(location);
             }
         }
     }
-
 }
