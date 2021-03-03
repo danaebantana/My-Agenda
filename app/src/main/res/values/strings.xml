@@ -59,6 +59,8 @@
     <string name="toast_EventSave">Event was saved!</string>
     <string name="toast_EventDelete">Event was deleted!</string>
     <string name="toast_ContactDelete">Contact was deleted successfully!</string>
+    <string name="toast_LocationSave">Location was successfully saved!</string>
+    <string name="toast_LocationDelete">Location was successfully deleted!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>

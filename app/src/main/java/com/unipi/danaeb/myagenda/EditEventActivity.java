@@ -72,7 +72,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
         button_back = findViewById(R.id.button_back2);
         button_save = findViewById(R.id.button_saveEditEvent);
-        button_delete = findViewById(R.id.button_deleteEvent);
+        button_delete = findViewById(R.id.button_deleteL);
         button_location = findViewById(R.id.button_editLocation);
         editEvent_title = findViewById(R.id.editText_editTitle);
         editEvent_location = findViewById(R.id.editText_editLocation);

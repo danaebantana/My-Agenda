@@ -19,20 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
 
-    <Spinner
-        android:id="@+id/location_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/saveLocatioBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.606"
-        app:layout_constraintStart_toEndOf="@+id/latTextView"
-        app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/lat_txt"
         android:layout_width="wrap_content"
@@ -87,6 +73,20 @@
         app:layout_constraintTop_toBottomOf="@+id/latTextView"
         app:layout_constraintVertical_bias="0.075" />
 
+    <Spinner
+        android:id="@+id/location_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/saveLocatioBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintStart_toEndOf="@+id/latTextView"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/name_txt"
         android:layout_width="wrap_content"
@@ -117,17 +117,53 @@
         app:layout_constraintStart_toEndOf="@+id/name_txt"
         app:layout_constraintTop_toBottomOf="@+id/longTextView" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_saveL"
+        android:layout_width="40dp"
+        android:layout_height="43dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        android:onClick="saveLocation"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_deleteL"
+        app:layout_constraintStart_toEndOf="@+id/editTextName"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.941"
+        app:srcCompat="@drawable/heart"
+        app:tint="@null" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_deleteL"
+        android:layout_width="40dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:clickable="true"
+        android:contentDescription="@string/todo"
+        android:onClick="deleteLocation"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/saveLocatioBtn"
+        app:layout_constraintStart_toEndOf="@+id/button_saveL"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.941"
+        app:srcCompat="@drawable/delete"
+        app:tint="@null" />
+
     <Button
         android:id="@+id/saveLocatioBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
         android:text="@string/select"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintHorizontal_bias="0.838"
         app:layout_constraintStart_toEndOf="@+id/editTextName"
         app:layout_constraintTop_toBottomOf="@+id/map"
         app:layout_constraintVertical_bias="1.0" />

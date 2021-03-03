@@ -26,14 +26,17 @@ import java.util.ArrayList;
 
 public class ContactActivity extends AppCompatActivity {
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+
+    private SQLiteDatabase db;
+
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
-    private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
+
     private FloatingActionButton button_newContact;
     private ListView listView;
-    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +55,7 @@ public class ContactActivity extends AppCompatActivity {
         button_newContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),NewContactActivity.class);
+                Intent intent = new Intent(getApplicationContext(), NewContactActivity.class);
                 startActivity(intent);
             }
         });

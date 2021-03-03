@@ -1,9 +1,12 @@
 package com.unipi.danaeb.myagenda;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -36,21 +39,30 @@ import java.util.Arrays;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    Double curr_lon, curr_lat = 0.0;
-    Button selectBtn;
-    TextView lat , lon;
-    EditText name;
     private FusedLocationProviderClient locationProviderClient;
+
     private SQLiteDatabase db;
+
+    private Button selectBtn;
+    private TextView lat , lon;
+    private EditText name;
+    private Spinner location_spinner;
+
+    private Double curr_lon, curr_lat = 0.0, latitude, longitude;
+    private String text;
+    private ArrayList<String> locations;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
         lat = findViewById((R.id.latTextView));
         lon = findViewById(R.id.longTextView);
         selectBtn = findViewById(R.id.saveLocatioBtn);
         name = findViewById(R.id.editTextName);
+
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationGPS();
 
@@ -58,17 +70,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         db.execSQL("CREATE TABLE IF NOT EXISTS Locations(name TEXT, lat DOUBLE, long DOUBLE)");
 
         //Create locations list from SQLite database and load it in location_spinner
-        Spinner location_spinner = (Spinner) findViewById(R.id.location_spinner);
+        location_spinner = findViewById(R.id.location_spinner);
         Cursor cursor = db.rawQuery("SELECT * FROM Locations",null);
-        StringBuilder builder = new StringBuilder();
-        ArrayList<String> locations = new ArrayList<String>(Arrays.asList(new String[] {}));
+        locations = new ArrayList<String>(Arrays.asList(new String[] {}));
         if (cursor.getCount() > 0) {
             while (cursor.moveToNext()) {
+                StringBuilder builder = new StringBuilder();
                 builder.append(cursor.getString(0)).append(": ").append(cursor.getDouble(1)).append(", ").append(cursor.getDouble(2));
                 locations.add(builder.toString());
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations); // Create an adapter to describe how the items are displayed.
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, locations); // Create an adapter to describe how the items are displayed.
         location_spinner.setAdapter(adapter);  // Set the spinners adapter to the previously created one.
 
         location_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -78,9 +90,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String[] obj = item.toString().split(":");
                 String text = obj[0];
                 name.setText(text);
-                String latitude = obj[1].substring(1);
+                String[] obj1 = obj[1].split(",");
+                String latitude = obj1[0];
                 lat.setText(latitude);
-                String longitude = obj[1].substring(2);
+                String longitude = obj1[1];
                 lon.setText(longitude);
             }
 
@@ -98,8 +111,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (text.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please add name for location", Toast.LENGTH_LONG).show();
                 } else {
-                    double latitude = Double.valueOf(lat.getText().toString());
-                    double longitude = Double.valueOf(lon.getText().toString());
+                    latitude = Double.valueOf(lat.getText().toString());
+                    longitude = Double.valueOf(lon.getText().toString());
                     if (!checkIfAlreadyInDatabase(text, latitude, longitude)) {
                         db.execSQL("INSERT INTO Locations VALUES('" + text + "','" + latitude + "', '" + longitude +"')");
                     }
@@ -112,6 +125,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+    }
+
+    // Save location to database and print in spinner
+    public void saveLocation(View view) {
+        Spinner location_spinner = findViewById(R.id.location_spinner);
+        text = name.getText().toString();
+        if (text.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please add name for location", Toast.LENGTH_LONG).show();
+        } else {
+            latitude = Double.valueOf(lat.getText().toString());
+            longitude = Double.valueOf(lon.getText().toString());
+            if (!checkIfAlreadyInDatabase(text, latitude, longitude)) {
+                db.execSQL("INSERT INTO Locations VALUES('" + text + "','" + latitude + "', '" + longitude + "')");
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        builder.append(text).append(": ").append(latitude).append(", ").append(longitude);
+        adapter.add(builder.toString());
+        adapter.notifyDataSetChanged();
+        location_spinner.setSelection(adapter.getPosition(builder.toString()));
+        Toast.makeText(MapsActivity.this, R.string.toast_LocationSave, Toast.LENGTH_LONG).show();
+    }
+
+    // Delete location from database and spinner
+    public void deleteLocation(View view) {
+        text = name.getText().toString();
+        latitude = Double.valueOf(lat.getText().toString());
+        longitude = Double.valueOf(lon.getText().toString());
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
+        alert.setTitle("Delete entry");
+        alert.setMessage("Are you sure you want to delete this location?");
+        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                db.delete("Locations","name=? AND latitude=? AND longitude=?",new String[]{text, String.valueOf(latitude), String.valueOf(longitude)});
+                StringBuilder builder = new StringBuilder();
+                builder.append(text).append(": ").append(latitude).append(", ").append(longitude);
+                adapter.remove(builder.toString());
+                adapter.notifyDataSetChanged();
+                Toast.makeText(MapsActivity.this, R.string.toast_LocationDelete , Toast.LENGTH_LONG).show();
+            }
+        });
+        alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // close dialog
+                dialog.cancel();
+            }
+        });
+        alert.show();
     }
 
     /**
@@ -148,6 +210,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lon.setText(String.valueOf(latLng.longitude));
                 //Clear the previously clicked position
                 mMap.clear();
+                // Clear edittext name and spinner
+                name.setText("");
                 //Zoom the Marker
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                 //Add marker on map
