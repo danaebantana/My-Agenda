@@ -123,7 +123,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
                 // Create contact list isSelected of all contacts is false.
                 contacts.add(new Contact("Collaborators", "-"));
-                if (cursor.getCount()>0){
+                if (cursor.getCount()>0) {
                     while (cursor.moveToNext()){
                         Contact contact = new Contact(cursor.getString(0), cursor.getString(1));
                         contacts.add(contact);
@@ -138,8 +138,8 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                             String eid = zoneSnapshot.getKey();
                             String name = zoneSnapshot.child("Name").getValue().toString();
                             String phone = zoneSnapshot.child("Phone Number").getValue().toString();
-                            for (Contact c : contacts){
-                                if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
+                            for (Contact c : contacts) {
+                                if (name.equals(c.getName()) && phone.equals(c.getPhoneNumber())) {
                                     c.setSelected(true);
                                 }
                             }
@@ -172,18 +172,18 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     colorPicker.setBackgroundResource(R.color.White);
                 }
 
-                if(id.equals("Collaborator")){
+                if (id.equals("Collaborator")) {
                     String uid = currentUser.getUid();
                     String isChecked = dataSnapshot.child("Collaborators").child(uid).child("Attendance").getValue().toString();
                     // Attendance checkbox
-                    if(isChecked.equals("true")){
+                    if (isChecked.equals("true")) {
                         attend.setChecked(true);
                     } else {
                         attend.setChecked(false);
                     }
                     // Comments
                     String comment = dataSnapshot.child("Collaborators").child(uid).child("Comments").getValue().toString();
-                    if(!comment.equals("") && !comment.equals(null)){
+                    if (!comment.equals("") && !comment.equals(null)) {
                         event_comments.setText(comment);
                     } else {
                         event_comments.setText("-");
@@ -218,10 +218,10 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         });
 
         // If user 'Creator' he can edit the event. Otherwise collaborators can only comment and attend the event.
-        if(id.equals("Creator")){
+        if (id.equals("Creator")) {
             event_comments.setEnabled(false);
             attend.setEnabled(false);
-        } else if(id.equals("Collaborator")){
+        } else if (id.equals("Collaborator")) {
             editEvent_title.setEnabled(false);
             editEvent_location.setEnabled(false);
             editEvent_description.setEnabled(false);
@@ -305,17 +305,17 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 int radioId = radioGroup.indexOfChild(radioButton); // get the index of the selected radio button
                 RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
                 String selection = (String) btn.getText();
-                if (selection.equals("Purple")){
+                if (selection.equals("Purple")) {
                     colorPicker.setBackgroundResource(R.color.Purple);
-                } else if (selection.equals("Red")){
+                } else if (selection.equals("Red")) {
                     colorPicker.setBackgroundResource(R.color.Red);
-                } else if (selection.equals("Green")){
+                } else if (selection.equals("Green")) {
                     colorPicker.setBackgroundResource(R.color.Green);
-                } else if (selection.equals("Teal")){
+                } else if (selection.equals("Teal")) {
                     colorPicker.setBackgroundResource(R.color.Teal);
-                } else if (selection.equals("Black")){
+                } else if (selection.equals("Black")) {
                     colorPicker.setBackgroundResource(R.color.Black);
-                } else if (selection.equals("White")){
+                } else if (selection.equals("White")) {
                     colorPicker.setBackgroundResource(R.color.White);
                 }
                 colorPicker.setText(selection);

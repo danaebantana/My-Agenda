@@ -82,5 +82,7 @@
     <string name="location_name">Όνομα:</string>
     <string name="l_name">Όνομα</string>
     <string name="Welcome">Καλώς ήρθες</string>
+    <string name="toast_LocationSave">Η τοποθεσία αποθηκεύτηκε επιτυχώς!</string>
+    <string name="toast_LocationDelete">Η τοποθεσία διαγράφηκε επιτυχώς!</string>
 
 </resources>
