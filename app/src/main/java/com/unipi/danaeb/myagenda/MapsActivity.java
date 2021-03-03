@@ -159,7 +159,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         alert.setMessage("Are you sure you want to delete this location?");
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                db.delete("Locations","name=? AND latitude=? AND longitude=?",new String[]{text, String.valueOf(latitude), String.valueOf(longitude)});
+                db.delete("Locations","name=? AND lat=? AND long=?",new String[]{text, String.valueOf(latitude), String.valueOf(longitude)});
                 StringBuilder builder = new StringBuilder();
                 builder.append(text).append(": ").append(latitude).append(", ").append(longitude);
                 adapter.remove(builder.toString());
