@@ -59,7 +59,8 @@
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_contactName" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_contactName"
+        android:autofillHints="" />
 
     <TextView
         android:id="@+id/textView_contactPhoneNumber"
@@ -83,5 +84,6 @@
         android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_contactPhoneNumber" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_contactPhoneNumber"
+        android:autofillHints="" />
 </androidx.constraintlayout.widget.ConstraintLayout>

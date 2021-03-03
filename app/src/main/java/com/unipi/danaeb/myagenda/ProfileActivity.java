@@ -39,15 +39,16 @@ import java.io.IOException;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    FirebaseDatabase database;
-    DatabaseReference usersRef, ref;
+    private FirebaseDatabase database;
+    private DatabaseReference usersRef, ref;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    EditText name, address, profession, phoneNumber;
-    FloatingActionButton save;
-    ImageView profilePic;
-    public Uri imageUri;
+    private FirebaseUser currentUser;
     private StorageReference storageReference;
+
+    private EditText name, address, profession, phoneNumber;
+    private FloatingActionButton save;
+    private ImageView profilePic;
+    public Uri imageUri;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
@@ -57,19 +58,23 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         navigationBar();
+
         database = FirebaseDatabase.getInstance();
         usersRef = database.getReference("Users");
         storageReference = FirebaseStorage.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         ref = usersRef.child(currentUser.getUid());
+
         name = findViewById(R.id.editText_name);
         address = findViewById(R.id.editText_address);
         profession = findViewById(R.id.editText_profession);
         phoneNumber = findViewById(R.id.editText_phoneNumber);
         save = findViewById(R.id.button_save);
         profilePic = findViewById(R.id.imageView_profilePic);
+
         checkForUserInfo();
+
         profilePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,11 +84,12 @@ public class ProfileActivity extends AppCompatActivity {
         viewProfilePic();
     }
 
-    private void checkForUserInfo(){
+    // Check if user exists
+    private void checkForUserInfo() {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot snapshot) {
-            //User info exists.
+            // User info exists.
             try {
                 if (snapshot.exists()) {
                     name.setText(snapshot.child("Name").getValue().toString());
@@ -102,8 +108,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void save(View view){
-        if (name.getText().equals("") || address.getText().equals("") || profession.getText().equals("") || phoneNumber.getText().equals("")){
+    // Save user to firebase
+    public void save(View view) {
+        if (name.getText().equals("") || address.getText().equals("") || profession.getText().equals("") || phoneNumber.getText().equals("")) {
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -115,17 +122,17 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot datasnapshot) {
                                 boolean flag = false;
-                                //check if there is already a user with the same name and phone number.
+                                // check if there is already a user with the same name and phone number.
                                 for (DataSnapshot zoneSnapshot : datasnapshot.getChildren()){  //foreach user
-                                    if (zoneSnapshot.child("Name").exists()){
+                                    if (zoneSnapshot.child("Name").exists()) {
                                         String nameOfUser = zoneSnapshot.child("Name").getValue().toString();
                                         String phoneNumberOfUser = zoneSnapshot.child("Phone Number").getValue().toString();
-                                        if(nameOfUser.equals(name.getText().toString()) && phoneNumberOfUser.equals(phoneNumber.getText().toString())){
+                                        if (nameOfUser.equals(name.getText().toString()) && phoneNumberOfUser.equals(phoneNumber.getText().toString())) {
                                             flag = true;
                                         }
                                     }
                                 }
-                                if(flag){
+                                if (flag) {
                                     Toast.makeText(getApplication(), R.string.toast_userExists, Toast.LENGTH_LONG).show();
                                 } else {
                                     ref.child("Name").setValue(name.getText().toString());
@@ -145,7 +152,7 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         });
                     }
-                    else { //update data.
+                    else { // update data.
                         ref.child("Name").setValue(name.getText().toString());
                         ref.child("Address").setValue(address.getText().toString());
                         ref.child("Profession").setValue(profession.getText().toString());
@@ -164,7 +171,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void choosePicture(){
+    // Add picture to user
+    public void choosePicture() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -181,10 +189,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private void uploadPicture(){
-
+    private void uploadPicture() {
         StorageReference storageRef = storageReference.child("images/" + currentUser.getUid());
-
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -207,7 +213,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    public void viewProfilePic(){
+    public void viewProfilePic() {
         try {
             File localFile = File.createTempFile("temp","jpg");
             StorageReference imageRef = storageReference.child("images/"+currentUser.getUid());
@@ -226,8 +232,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void navigationBar(){
-        //Navigation Bar
+    // Navigation Bar
+    public void navigationBar() {
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayoutProfile);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -262,9 +268,10 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        if(toggle.onOptionsItemSelected(item)){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);

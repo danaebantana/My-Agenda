@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class EventsAdapter extends BaseAdapter implements ListAdapter {
@@ -43,11 +42,11 @@ public class EventsAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.listview_event_item, null);
         }
 
-        //Handle TextView and display string from your list
+        // Handle TextView and display string from your list
         TextView listItemText = view.findViewById(R.id.list_item_string);
         listItemText.setText(list.get(position));
 
-        //Handle button
+        // Handle button
         FloatingActionButton notify_bt = view.findViewById(R.id.button_notify);
         return view;
     }

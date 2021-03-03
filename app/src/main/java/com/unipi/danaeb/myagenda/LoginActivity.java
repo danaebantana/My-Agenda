@@ -22,16 +22,19 @@ import com.google.firebase.auth.FirebaseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
-    EditText email, password;
-    Button signIn;
-    TextView registerHere;
+    private FirebaseUser currentUser;
+
+    private EditText email, password;
+    private Button signIn;
+    private TextView registerHere;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAuth = FirebaseAuth.getInstance();
+
         email = findViewById(R.id.editText_email);
         password = findViewById(R.id.editText_password);
         signIn = findViewById(R.id.button_login);
@@ -39,16 +42,16 @@ public class LoginActivity extends AppCompatActivity {
         registerHere.setPaintFlags(registerHere.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         currentUser = mAuth.getCurrentUser();
 
-        //If user did not sign out, they go straight to the MainActivity. Else they need to sign in.
-        if(currentUser!=null){
+        // If user did not sign out, they go straight to the MainActivity. Else they need to sign in.
+        if (currentUser!=null) {
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(intent);
         }
     }
 
-    //sign in user using email and password.
+    // Sign in user using email and password.
     public void login(View view){
-        if (TextUtils.isEmpty(email.getText()) || TextUtils.isEmpty(password.getText())){  //Check if textboxes are filled out.
+        if (TextUtils.isEmpty(email.getText()) || TextUtils.isEmpty(password.getText())) {  // Check if textboxes are filled out.
             Toast.makeText(this, R.string.toast_FillBoxes, Toast.LENGTH_LONG).show();
         } else {
             mAuth.signInWithEmailAndPassword(

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">My Agenda</string>
+    <string name="my_agenda">My Agenda</string>
     <string name="log_out">Log Out</string>
+    <string name="Welcome">Welcome</string>
 
     <string name="add_new_event">Add new event:</string>
     <string name="edit_event">Edit event:</string>
@@ -54,6 +56,9 @@
     <string name="toast_noCorrespondingNumber">You do not have a contact with the name: </string>
     <string name="toast_smsReminder">You have a reminder: </string>
     <string name="toast_onlyCreator">You have to be the creator of the event to send a reminder SMS!</string>
+    <string name="toast_EventSave">Event was saved!</string>
+    <string name="toast_EventDelete">Event was deleted!</string>
+    <string name="toast_ContactDelete">Contact was deleted successfully!</string>
 
     <string name="todo">TODO</string>
     <string name="title">Title</string>
@@ -67,10 +72,18 @@
     <string name="end_date">end_date</string>
     <string name="end_time">end_time</string>
     <string name="set_reminder">Set Reminder:</string>
-    <string name="toast_EventSave">Event was saved!</string>
-    <string name="toast_EventDelete">Event was deleted!</string>
-    <string name="toast_ContactDelete">Contact was deleted successfully!</string>
+    <string name="Collaborators">Collaborators</string>
     <string name="attending">Attending: </string>
+    <string name="Attending">Attending</string>
+
+    <string name="textview">TextView</string>
+    <string name="title_activity_maps2">Map</string>
+    <string name="_0_0">0.0</string>
+    <string name="longitude">Longitude:</string>
+    <string name="latitude">Latitude:</string>
+    <string name="location_name">Name:</string>
+    <string name="l_name">Name</string>
+    <string name="select">SELECT</string>
 
     <string name="purple">Purple</string>
     <string name="red">Red</string>
@@ -78,18 +91,5 @@
     <string name="teal">Teal</string>
     <string name="black">Black</string>
     <string name="white">White</string>
-    <string name="textview">TextView</string>
-    <string name="title_activity_maps2">Map</string>
-    <string name="my_agenda">My Agenda</string>
 
-    <string name="Collaborators">Collaborators</string>
-    <string name="Attending">Attending</string>
-    <string name="select">SELECT</string>
-    <string name="_0_0">0.0</string>
-    <string name="longitude">Longitude:</string>
-    <string name="latitude">Latitude:</string>
-    <string name="location_name">Name:</string>
-    <string name="l_name">Name</string>
-
-    <string name="Welcome">Welcome</string>
 </resources>

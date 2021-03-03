@@ -3,7 +3,6 @@ package com.unipi.danaeb.myagenda;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
@@ -24,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +31,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,16 +43,17 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
 
+    private SQLiteDatabase db;
+
     private EditText event_title, event_location, event_description;
     private TextView start_date, start_time, end_date, end_time, colorPicker;
     private FloatingActionButton button_back, button_save, button_location;
     private Spinner spinner_reminder, spinner_collaborators;
-
     private Dialog myDialog;
+
     private int mYear, mMonth, mDay, mHour, mMinute;
     private double latitude, longitude;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
-    private SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +71,14 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         event_title = findViewById(R.id.editText_eventTitle);
         event_location = findViewById(R.id.editText_eventLocation);
         event_description = findViewById(R.id.editText_eventDescription);
-
         start_date = findViewById(R.id.textView_startDate);
         end_date = findViewById(R.id.textView_endDate);
         start_time = findViewById(R.id.textView_startTime);
         end_time = findViewById(R.id.textView_endTime);
         colorPicker = findViewById(R.id.textView_colorPicker);
-
         button_back = findViewById(R.id.button_back3);
         button_location = findViewById(R.id.button_getLocation);
         button_save = findViewById(R.id.button_saveChanges);
-
         spinner_collaborators = findViewById(R.id.spinner_addCollaborators);
         spinner_reminder = findViewById(R.id.spinner_pickReminder);
 
@@ -113,22 +108,18 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         });
 
         // Set selected date to textboxes
-        start_date = findViewById(R.id.textView_startDate);
         start_date.setText(date);
-        end_date = findViewById(R.id.textView_endDate);
         end_date.setText(date);
 
         // Set current hour to textbox
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat mdformat = new SimpleDateFormat("HH:mm");
         String strDate = mdformat.format(calendar.getTime());
-        start_time = findViewById(R.id.textView_startTime);
         start_time.setText(strDate);
 
         // Add 1 hour to textView_endTime textbox
         calendar.add(Calendar.HOUR_OF_DAY, 1);
         String strDate1 = mdformat.format(calendar.getTime());
-        end_time = findViewById(R.id.textView_endTime);
         end_time.setText(strDate1);
 
         start_date.setOnClickListener(this);
@@ -289,8 +280,8 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                     // Add collaborators to firebase based on collaborators uid
                     event_ref.child("Collaborators").setValue("-");
                     DatabaseReference collab_ref = event_ref.child("Collaborators").getRef();
-                    for(Contact c : contacts){
-                        if(c.isSelected()){
+                    for (Contact c : contacts) {
+                        if (c.isSelected()) {
                             usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -299,7 +290,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
                                         String name = zoneSnapshot.child("Name").getValue().toString();
                                         String phone = zoneSnapshot.child("Phone Number").getValue().toString();
                                         usersRef.child(uid);
-                                        if(name.equals(c.getName()) && phone.equals(c.getPhoneNumber())){
+                                        if (name.equals(c.getName()) && phone.equals(c.getPhoneNumber())) {
                                             collab_ref.child(uid).child("Name").setValue(c.getName());
                                             collab_ref.child(uid).child("Phone Number").setValue(c.getPhoneNumber());
                                             collab_ref.child(uid).child("Comments").setValue("-");
@@ -321,6 +312,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
 
                 }
             });
+
             Intent intent = new Intent(NewEventActivity.this, MainActivity.class);
             intent.putExtra("Date", date);
             startActivity(intent);
@@ -330,11 +322,11 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==123){   //Return from MapsActivity
+        if (requestCode==123) {   // Return from MapsActivity
             latitude = data.getDoubleExtra("latitude",0.0);
             longitude = data.getDoubleExtra("longitude",0.0);
             String location = data.getStringExtra("location");
-            if(location!=null && !location.isEmpty()){
+            if (location!=null && !location.isEmpty()) {
                 event_location.setText(location);
             }
         }

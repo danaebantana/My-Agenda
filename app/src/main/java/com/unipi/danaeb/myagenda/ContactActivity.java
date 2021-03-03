@@ -60,6 +60,7 @@ public class ContactActivity extends AppCompatActivity {
         viewContactList();
     }
 
+    // Print all contacts from database to a listview
     private void viewContactList(){
         Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
         ArrayList<String> listData = new ArrayList<>();
@@ -101,8 +102,8 @@ public class ContactActivity extends AppCompatActivity {
         });
     }
 
+    // Navigation Bar
     public void navigationBar(){
-        //Navigation Bar
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayoutContact);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -137,6 +138,7 @@ public class ContactActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(toggle.onOptionsItemSelected(item)){

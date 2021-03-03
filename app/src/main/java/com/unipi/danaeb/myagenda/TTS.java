@@ -2,10 +2,9 @@ package com.unipi.danaeb.myagenda;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
-
 import java.util.Locale;
 
-//Class for TextToSpeech
+// Class for TextToSpeech
 public class TTS {
     private TextToSpeech tts;
     private TextToSpeech.OnInitListener initListener=

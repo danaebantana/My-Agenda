@@ -48,38 +48,44 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    FirebaseDatabase database;
-    DatabaseReference ref, usersRef;
+    private FirebaseDatabase database;
+    private DatabaseReference ref, usersRef;
+
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private NavigationView navigationView;
     private ImageView recognize;
+
     private static final int REC_RESULT = 653;
+
     private CalendarView calendarView;
+
     private TTS MyTts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("Events");
         usersRef = database.getReference("Users");
+
         recognize = findViewById(R.id.imageView_recognize);
 
-        calendarView = (CalendarView) findViewById(R.id.calendarView);
+        calendarView = findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                //check if user has given his profile details.
+                // Check if user has given his profile details.
                 usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {  //foreach user
-                            if(dataSnapshot.getKey().equals(currentUser.getUid())){
-                                if(dataSnapshot.child("Name").exists()){
+                            if (dataSnapshot.getKey().equals(currentUser.getUid())) {
+                                if (dataSnapshot.child("Name").exists()) {
                                     String curDate = dayOfMonth + "/" + (month + 1) + "/" + year;
                                     Intent intent = new Intent(getApplicationContext(), DayActivity.class);
                                     intent.putExtra("Date", curDate);
@@ -98,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
                 });
             }
         });
+
         navigationBar();
         speak();
     }
@@ -108,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         MyTts.speak("Welcome");
     }
 
-    //Function to activate voice recognition.
+    // Function to activate voice recognition.
     public void recognize(View view){
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -117,47 +124,47 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         startActivityForResult(intent,REC_RESULT);
     }
 
-    //When Recognize image button is pressed this function is responsible to collect the data and see if it matches the two phrases.
+    // When Recognize image button is pressed this function is responsible to collect the data and see if it matches the two phrases.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {  //foreach user
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {  // foreach user
                     if(dataSnapshot.getKey().equals(currentUser.getUid())){
-                        if(dataSnapshot.child("Name").exists()){    //User has given his profile details.
+                        if(dataSnapshot.child("Name").exists()){    // User has given his profile details.
                             if (requestCode==REC_RESULT && resultCode==RESULT_OK){
-                                ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);  //recognize only the numbers of the messages.
+                                ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);  // recognize only the numbers of the messages.
                                 int numOfDays = 0;
                                 long date = calendarView.getDate();
-                                String m = (String) android.text.format.DateFormat.format("MM", date);  //Get month
-                                String y = (String) android.text.format.DateFormat.format("yyyy", date);  //Get year
+                                String m = (String) android.text.format.DateFormat.format("MM", date);  // Get month
+                                String y = (String) android.text.format.DateFormat.format("yyyy", date);  // Get year
                                 int year = Integer.parseInt(y);
                                 int month = 0;
-                                if(m.equals("02")){  //days=28
+                                if (m.equals("02")) {  // days=28
                                     if (year%4!=0 || year%400!=0){
                                         numOfDays = 28;
                                     } else {
                                         numOfDays = 29;
                                     }
                                     month = 2;
-                                } else if(m.equals("01") || m.equals("03") || m.equals("05") || m.equals("07") || m.equals("08")){  //days=31
+                                } else if (m.equals("01") || m.equals("03") || m.equals("05") || m.equals("07") || m.equals("08")) {  // days=31
                                     numOfDays = 31;
                                     month = Integer.parseInt(m.substring(1));
-                                } else if (m.equals("10") || m.equals("12")){
+                                } else if (m.equals("10") || m.equals("12")) {
                                     numOfDays = 31;
                                     month = Integer.parseInt(m);
                                 }
-                                else if(m.equals("04") || m.equals("06") || m.equals("09")) { //days=30
+                                else if (m.equals("04") || m.equals("06") || m.equals("09")) { // days=30
                                     numOfDays = 30;
                                     month = Integer.parseInt(m.substring(1));
-                                } else if(m.equals("11")){
+                                } else if (m.equals("11")) {
                                     numOfDays = 30;
                                     month = Integer.parseInt(m);
                                 }
-                                for(int i = 1; i <= numOfDays; i++){
-                                    if(matches.contains(String.valueOf(i))){
+                                for (int i = 1; i <= numOfDays; i++) {
+                                    if (matches.contains(String.valueOf(i))) {
                                         String curDate = i + "/" + month + "/" + year;
                                         Intent intent = new Intent(getApplicationContext(), DayActivity.class);
                                         intent.putExtra("Date", curDate);
@@ -179,8 +186,8 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         });
     }
 
-    public void navigationBar(){
-        //Navigation Bar
+    // Navigation Bar
+    public void navigationBar() {
         drawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
         toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
@@ -191,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Intent intent;
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.home:
                         intent = new Intent(getApplicationContext(),MainActivity.class);
                         startActivity(intent);
@@ -215,6 +222,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         if(toggle.onOptionsItemSelected(item)){

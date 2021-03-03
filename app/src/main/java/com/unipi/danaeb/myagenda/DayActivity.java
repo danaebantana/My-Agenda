@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,12 +14,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,9 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -41,11 +34,14 @@ public class DayActivity extends AppCompatActivity {
     private DatabaseReference usersRef, eventsRef;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
     private FloatingActionButton button_newEvent, button_back;
     private TextView date_txt;
     private ListView listView;
+
     private SQLiteDatabase db;
-    ArrayList<String> eventUid = new ArrayList<String>();
+
+    private ArrayList<String> eventUid = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +53,7 @@ public class DayActivity extends AppCompatActivity {
         eventsRef = database.getReference("Events");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+
         button_back = findViewById(R.id.button_back1);
         button_newEvent = findViewById(R.id.button_newEvent);
 
@@ -91,7 +88,7 @@ public class DayActivity extends AppCompatActivity {
         });
     }
 
-    // Retrieve data from firebase
+    // Retrieve events for specific day from firebase
     public void retrieveData() {
         String user_uid = currentUser.getUid();
         ArrayList<Event> dayEventList = new ArrayList<Event>();
@@ -101,7 +98,7 @@ public class DayActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String currentUserName = "";
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){   //foreach event
-                    //If the current user is the 'Creator' of this event.
+                    // If the current user is the 'Creator' of this event.
                     if(dataSnapshot.child("Creator").child("Uid").getValue().equals(user_uid) && dataSnapshot.child("Start date").getValue().equals(date_txt.getText().toString())){
                         Event event = new Event();
                         String title = dataSnapshot.child("Title").getValue().toString();
@@ -128,7 +125,7 @@ public class DayActivity extends AppCompatActivity {
                         }
                         dayEventList.add(event);
                     }
-                    //If the current user is not the 'Creator' of the event, we search if the current user is a collaborator so we can view the event.
+                    // If the current user is not the 'Creator' of the event, we search if the current user is a collaborator so we can view the event.
                     else if(dataSnapshot.child("Start date").getValue().equals(date_txt.getText().toString()) && !dataSnapshot.child("Collaborators").getValue().equals("-")) {
                         Event event = new Event();
                         String title = dataSnapshot.child("Title").getValue().toString();
@@ -137,7 +134,7 @@ public class DayActivity extends AppCompatActivity {
                         ArrayList<String> comments = new ArrayList<String>();
                         ArrayList<String> attending = new ArrayList<String>();
                         boolean flag = false;
-                        for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){    //Check if current user is a collaborator of this event.
+                        for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){    // Check if current user is a collaborator of this event.
                             if(ds.getKey().equals(user_uid)){
                                 flag = true;
                                 event.setTitle(title);
@@ -149,15 +146,15 @@ public class DayActivity extends AppCompatActivity {
                                 attending.add("true");
                             }
                         }
-                        if(flag){  //Current user is a collaborator
-                            for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){   //Get other collaborators if they exist.
+                        if(flag){  // Current user is a collaborator
+                            for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){   // Get other collaborators if they exist.
                                 if(!ds.getKey().equals(user_uid)){
                                     collab.add(ds.child("Name").getValue().toString());
                                     comments.add(ds.child("Comments").getValue().toString());
                                     attending.add(ds.child("Attendance").getValue().toString());
                                 }
                             }
-                            for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){   //Add current user's comments and attendance.
+                            for (DataSnapshot ds : dataSnapshot.child("Collaborators").getChildren()){   // Add current user's comments and attendance.
                                 if(ds.getKey().equals(user_uid)){
                                     collab.add("My Comments");
                                     comments.add(ds.child("Comments").getValue().toString());
@@ -171,9 +168,9 @@ public class DayActivity extends AppCompatActivity {
                         }
                     }
                 }
-                //sort events based on time of event.
+                // Sort events based on time of event.
                 Collections.sort(dayEventList, (e1, e2) -> e1.getTime().compareTo(e2.getTime()));
-                //We transform each event into a string to be printed.
+                // We transform each event into a string to be printed.
                 for (Event event : dayEventList){
                     StringBuilder builder = new StringBuilder();
                     if(event.getCollaborators().get(0).equals("-")){   //event has no collaborators.
@@ -215,7 +212,7 @@ public class DayActivity extends AppCompatActivity {
 
     }
 
-    //Edit Event
+    // Edit Event
     public void onEditClick(View view){
         View parentView = (View) view.getParent();
         ListView listView = (ListView) parentView.getParent();
@@ -223,7 +220,7 @@ public class DayActivity extends AppCompatActivity {
         Object item = listView.getItemAtPosition(position);
         String uuid = currentUser.getUid();
         String date = date_txt.getText().toString();
-        String selectedEventUid = eventUid.get(position);   //get the uid of the selected event.
+        String selectedEventUid = eventUid.get(position);   // Get the uid of the selected event.
 
         String[] obj = item.toString().split("\n");
         String title = obj[0];
@@ -231,12 +228,12 @@ public class DayActivity extends AppCompatActivity {
         eventsRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {  //foreach event
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {  // foreach event
                     if (snapshot.getKey().equals(selectedEventUid)) {
                         Intent intent = new Intent(DayActivity.this, EditEventActivity.class);
-                        String key =  selectedEventUid; //Key of Event
+                        String key =  selectedEventUid; // Key of Event
                         String id;
-                        //Check if currentUser the creator or collaborator of event.
+                        // Check if currentUser the creator or collaborator of event.
                         if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){
                             id = "Creator";
                         } else {
@@ -271,7 +268,7 @@ public class DayActivity extends AppCompatActivity {
         Object item = listView.getItemAtPosition(position);
         String uuid = currentUser.getUid();
         String date = date_txt.getText().toString();
-        String selectedEventUid = eventUid.get(position);   //get the uid of the selected event.
+        String selectedEventUid = eventUid.get(position);   // Get the uid of the selected event.
 
         String[] obj = item.toString().split("\n");
         String SMS = obj[0] + " " + obj[1] + " " + date_txt.getText().toString();
@@ -279,18 +276,18 @@ public class DayActivity extends AppCompatActivity {
         eventsRef.child(selectedEventUid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){  //User 'Creator' of the event.
+                if(snapshot.child("Creator").child("Uid").getValue().toString().equals(uuid)){  // User 'Creator' of the event.
                     AlertDialog.Builder alert = new AlertDialog.Builder(DayActivity.this);
                     alert.setTitle("Send reminder SMS to collaborators.");
                     alert.setMessage("Are you sure you want to send SMS?");
                     alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             boolean flag = false;
-                            for(DataSnapshot dataSnapshot : snapshot.child("Collaborators").getChildren()){  //foreach collaborator.
+                            for(DataSnapshot dataSnapshot : snapshot.child("Collaborators").getChildren()){  // foreach collaborator.
                                 String name = dataSnapshot.child("Name").getValue().toString();
                                 String phoneNumber = dataSnapshot.child("Phone Number").getValue().toString();
-                                Cursor cursor = db.rawQuery("SELECT * FROM Contacts WHERE name=? AND phonenumber=?", new String[]{name, phoneNumber}); //Check if collaborator is a contact.
-                                if (cursor.getCount()>0){  //Contact found. Cursor will always return 1 or 0 objects.
+                                Cursor cursor = db.rawQuery("SELECT * FROM Contacts WHERE name=? AND phonenumber=?", new String[]{name, phoneNumber}); // Check if collaborator is a contact.
+                                if (cursor.getCount()>0){  // Contact found. Cursor will always return 1 or 0 objects.
                                     SmsManager manager = SmsManager.getDefault();
                                     manager.sendTextMessage(phoneNumber, null, "You have a reminder: " + SMS, null, null);
                                     flag = true;

@@ -26,6 +26,7 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference rootRef;
     private FirebaseUser currentUser;
+
     private EditText email, password1, password2;
     private Button signUp;
     private FloatingActionButton back_bt;
@@ -34,9 +35,11 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+
         database = FirebaseDatabase.getInstance();
         rootRef = database.getReference("Users");
         mAuth = FirebaseAuth.getInstance();
+
         email = findViewById(R.id.editText_emailAddress);
         password1 = findViewById(R.id.editText_password1);
         password2 = findViewById(R.id.editText_password2);

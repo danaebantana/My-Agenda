@@ -8,9 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class SpinnerContactAdapter extends ArrayAdapter<Contact> {
     private Context mContext;
