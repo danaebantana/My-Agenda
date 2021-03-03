@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -35,6 +36,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.concurrent.Callable;
 
 public class EditEventActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,22 +44,20 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private DatabaseReference usersRef, eventsRef, event_ref;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
     private FloatingActionButton button_back, button_save, button_delete, button_location;
     private EditText editEvent_title, editEvent_location, editEvent_description, event_comments;
     private TextView start_date, start_time, end_date, end_time, colorPicker;
     private CheckBox attend;
     private Spinner spinner_editReminder, spinner_editCollaborators;
     private Dialog myDialog;
-
     private SQLiteDatabase db;
-
     private int GOOGLE_MAPS_ACTIVITY = 123;
-    private int mYear, mMonth, mDay, mHour, mMinute;
     private Double lon, lat;
-    private String location_name, title, date, key, id;
-
+    private String location_name;
+    private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
+    private String title, date, key, id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         eventsRef = database.getReference("Events");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
         button_back = findViewById(R.id.button_back2);
         button_save = findViewById(R.id.button_saveEditEvent);
         button_delete = findViewById(R.id.button_deleteL);
@@ -86,7 +85,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         attend = findViewById(R.id.checkBox_attendance);
         spinner_editCollaborators = findViewById(R.id.spinner_editCollaborators);
         spinner_editReminder = findViewById(R.id.spinner_editReminder);
-
         myDialog = new Dialog(this);
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
@@ -119,9 +117,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 start_time.setText(start_t);
                 String end_t = dataSnapshot.child("End time").getValue().toString();
                 end_time.setText(end_t);
-                // Load collaborator spinner
+                //Load collaborator spinner
                 Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
-                // Create contact list isSelected of all contacts is false.
+                //Create contact list isSelected of all contacts is false.
                 contacts.add(new Contact("Collaborators", "-"));
                 if (cursor.getCount()>0) {
                     while (cursor.moveToNext()){
@@ -129,7 +127,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                         contacts.add(contact);
                     }
                 }
-                // Load Contact Spinner
+                //load Contact Spinner
                 DatabaseReference collab_ref = dataSnapshot.child("Collaborators").getRef();
                 collab_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -175,13 +173,13 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 if (id.equals("Collaborator")) {
                     String uid = currentUser.getUid();
                     String isChecked = dataSnapshot.child("Collaborators").child(uid).child("Attendance").getValue().toString();
-                    // Attendance checkbox
+                    //Attendance checkbox
                     if (isChecked.equals("true")) {
                         attend.setChecked(true);
                     } else {
                         attend.setChecked(false);
                     }
-                    // Comments
+                    //Comments
                     String comment = dataSnapshot.child("Collaborators").child(uid).child("Comments").getValue().toString();
                     if (!comment.equals("") && !comment.equals(null)) {
                         event_comments.setText(comment);
@@ -212,12 +210,31 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         button_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
-                startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
+                DatabaseReference events_ref = eventsRef.child(key);
+                events_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                  @Override
+                  public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                      String lat = dataSnapshot.child("Latitude").getValue().toString();
+                      String lon = dataSnapshot.child("Longitude").getValue().toString();
+                      String location = dataSnapshot.child("Location").getValue().toString();
+                      Intent intent = new Intent(EditEventActivity.this, MapsActivity.class);
+                      intent.putExtra("latitude",Double.valueOf(lat));
+                      intent.putExtra("longitude",Double.valueOf(lon));
+                      intent.putExtra("location",location);
+                      startActivityForResult(intent,GOOGLE_MAPS_ACTIVITY);
+                  }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
             }
         });
 
-        // If user 'Creator' he can edit the event. Otherwise collaborators can only comment and attend the event.
+        //if user 'Creator' he can edit the event. Otherwise collaborators can only comment and attend the event.
         if (id.equals("Creator")) {
             event_comments.setEnabled(false);
             attend.setEnabled(false);
@@ -237,7 +254,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    // Pop up window to choose date and time
+    //Pop up window to choose date and time
     @Override
     public void onClick(View v) {
         // Date picker pops up when date textboxes are clicked
@@ -302,7 +319,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 int radioButtonID = radioGroup.getCheckedRadioButtonId(); // get selected radio button from radioGroup
                 View radioButton = radioGroup.findViewById(radioButtonID); // find the radiobutton by returned id
-                int radioId = radioGroup.indexOfChild(radioButton); // get the index of the selected radio button
+                int radioId = radioGroup.indexOfChild(radioButton); //get the index of the selected radio button
                 RadioButton btn = (RadioButton) radioGroup.getChildAt(radioId);
                 String selection = (String) btn.getText();
                 if (selection.equals("Purple")) {
@@ -351,7 +368,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                                     flag = true;
                                 }
                             }
-                            if(!flag){  // collaborator does not exist in firebase -> add.
+                            if(!flag){  //collaborator does not exist in firebase -> add.
                                 usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot datasnapshot) {
@@ -384,16 +401,16 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                     collab_ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            // check if user already exists in firebase
+                            //check if user already exists in firebase
                             boolean flag = false;
                             String uid = "";
-                            for(DataSnapshot datasnapshot : snapshot.getChildren()){   // foreach event
+                            for(DataSnapshot datasnapshot : snapshot.getChildren()){   //foreach event
                                 if(c.getName().equals(datasnapshot.child("Name").getValue().toString()) && c.getPhoneNumber().equals(datasnapshot.child("Phone Number").getValue().toString())) {
                                     flag = true;
                                     uid = datasnapshot.getKey();
                                 }
                             }
-                            if(flag){  // collaborator exist in firebase -> remove.
+                            if(flag){  //collaborator exist in firebase -> remove.
                                 DatabaseReference user_ref = collab_ref.child(uid).getRef();
                                 user_ref.removeValue();
                             }
@@ -409,13 +426,13 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         } else if(id.equals("Collaborator")) {
             event_ref = eventsRef.child(key).getRef();
             String uid = currentUser.getUid();
-            // Attendance checkbox
+            //Attendance checkbox
             if(attend.isChecked()){
                 event_ref.child("Collaborators").child(uid).child("Attendance").setValue("true");
             } else {
                 event_ref.child("Collaborators").child(uid).child("Attendance").setValue("false");
             }
-            // Comments
+            //Comments
             event_ref.child("Collaborators").child(uid).child("Comments").setValue(event_comments.getText().toString());
         }
         Toast.makeText(this, R.string.toast_EventSave, Toast.LENGTH_LONG).show();
@@ -452,11 +469,15 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==GOOGLE_MAPS_ACTIVITY) {
-            lat = data.getDoubleExtra("latitude",0.0);
-            lon = data.getDoubleExtra("longitude",0.0);
-            location_name = data.getStringExtra("name");
-            editEvent_location.setText(location_name);
-        }
+            if(requestCode==GOOGLE_MAPS_ACTIVITY){
+                String result = data.getStringExtra("name");
+                if(result != "None"){
+                    lat = data.getDoubleExtra("latitude",0.0);
+                    lon = data.getDoubleExtra("longitude",0.0);
+                    location_name = data.getStringExtra("location");
+                    editEvent_location.setText(location_name);
+                }
+
+             }
     }
 }

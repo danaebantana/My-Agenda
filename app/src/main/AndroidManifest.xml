@@ -38,20 +38,20 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".MapsActivityOnEdit"
+            android:label="Map2"></activity>
+        <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps2"></activity>
+            android:label="@string/title_activity_maps2" />
         <activity
             android:name=".NewContactActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".NewEventActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".EditEventActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan">
-        </activity>
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".ContactActivity" />
         <activity android:name=".DayActivity" />
         <activity android:name=".MainActivity" />
@@ -68,7 +68,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
     </application>
 
 </manifest>

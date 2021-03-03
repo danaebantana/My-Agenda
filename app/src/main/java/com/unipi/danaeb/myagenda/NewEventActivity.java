@@ -87,6 +87,7 @@ public class NewEventActivity extends AppCompatActivity implements View.OnClickL
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
+
         // Back button
         button_back.setOnClickListener(new View.OnClickListener() {
             @Override
