@@ -150,9 +150,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     // Delete location from database and spinner
     public void deleteLocation(View view) {
-        text = name.getText().toString();
-        latitude = Double.valueOf(lat.getText().toString());
-        longitude = Double.valueOf(lon.getText().toString());
+        Object item = location_spinner.getSelectedItem();
+        String[] obj = item.toString().split(":");
+        String text = obj[0];
+        String[] obj1 = obj[1].split(",");
+        String latitude = obj1[0].substring(1);
+        String longitude = obj1[1].substring(1);
 
         AlertDialog.Builder alert = new AlertDialog.Builder(MapsActivity.this);
         alert.setTitle("Delete entry");

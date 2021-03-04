@@ -67,8 +67,8 @@ public class ContactActivity extends AppCompatActivity {
     private void viewContactList(){
         Cursor cursor = db.rawQuery("SELECT * FROM Contacts",null);
         ArrayList<String> listData = new ArrayList<>();
-        if (cursor.getCount()>0){
-            while (cursor.moveToNext()){
+        if (cursor.getCount()>0) {
+            while (cursor.moveToNext()) {
                 listData.add(cursor.getString(0) + "\n"
                         + cursor.getString(1));
             }
@@ -91,7 +91,7 @@ public class ContactActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         db.delete("Contacts","name=? AND phonenumber=?",new String[]{name,phoneNumber});
                         Toast.makeText(ContactActivity.this, R.string.toast_ContactDelete , Toast.LENGTH_LONG).show();
-                        viewContactList(); //Reload contact data after deletion.
+                        viewContactList(); // Reload contact data after deletion.
                     }
                 });
                 alert.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

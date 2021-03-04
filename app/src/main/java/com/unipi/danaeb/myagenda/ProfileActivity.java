@@ -225,7 +225,6 @@ public class ProfileActivity extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    Toast.makeText(getApplication(), exception.getMessage(), Toast.LENGTH_LONG).show();
                 }});
         } catch (IOException e) {
             Toast.makeText(this, "No profile picture", Toast.LENGTH_LONG).show();

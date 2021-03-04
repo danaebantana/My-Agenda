@@ -234,9 +234,6 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
 
                     }
                 });
-
-
-
             }
         });
 
@@ -442,7 +439,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
             event_ref.child("Collaborators").child(uid).child("Comments").setValue(event_comments.getText().toString());
         }
         Toast.makeText(this, R.string.toast_EventSave, Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(EditEventActivity.this, DayActivity.class);
+        Intent intent = new Intent(EditEventActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("Date", date);
         startActivity(intent);
