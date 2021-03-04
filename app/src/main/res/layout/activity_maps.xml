@@ -81,12 +81,13 @@
         android:id="@+id/location_spinner"
         android:layout_width="248dp"
         android:layout_height="37dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName"
-        app:layout_constraintVertical_bias="0.404" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/name_txt"
@@ -125,16 +126,18 @@
         android:id="@+id/button_saveL"
         android:layout_width="40dp"
         android:layout_height="43dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="4dp"
         android:clickable="true"
         android:contentDescription="@string/todo"
         android:onClick="saveLocation"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toEndOf="@+id/editTextName"
-        app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.513"
+        app:layout_constraintTop_toBottomOf="@+id/longTextView"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/heart"
         app:tint="@null" />
 
@@ -143,15 +146,17 @@
         android:layout_width="40dp"
         android:layout_height="43dp"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:clickable="true"
         android:contentDescription="@string/todo"
         android:onClick="deleteLocation"
         app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/location_spinner"
-        app:layout_constraintTop_toBottomOf="@+id/button_saveL"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/delete"
         app:tint="@null" />
 
