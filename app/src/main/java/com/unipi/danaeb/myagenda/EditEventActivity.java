@@ -44,20 +44,23 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
     private DatabaseReference usersRef, eventsRef, event_ref;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
+    private SQLiteDatabase db;
+
+    private int GOOGLE_MAPS_ACTIVITY = 123;
+
     private FloatingActionButton button_back, button_save, button_delete, button_location;
     private EditText editEvent_title, editEvent_location, editEvent_description, event_comments;
     private TextView start_date, start_time, end_date, end_time, colorPicker;
     private CheckBox attend;
     private Spinner spinner_editReminder, spinner_editCollaborators;
     private Dialog myDialog;
-    private SQLiteDatabase db;
-    private int GOOGLE_MAPS_ACTIVITY = 123;
+
     private Double lon, lat;
     private String location_name;
     private int mYear, mMonth, mDay, mHour, mMinute;
     private ArrayList<Contact> contacts = new ArrayList<Contact>();
     private String title, date, key, id;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         eventsRef = database.getReference("Events");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
+
         button_back = findViewById(R.id.button_back2);
         button_save = findViewById(R.id.button_saveEditEvent);
         button_delete = findViewById(R.id.button_deleteL);
@@ -85,7 +89,9 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
         attend = findViewById(R.id.checkBox_attendance);
         spinner_editCollaborators = findViewById(R.id.spinner_editCollaborators);
         spinner_editReminder = findViewById(R.id.spinner_editReminder);
+
         myDialog = new Dialog(this);
+
         db = openOrCreateDatabase("ContactsDB", Context.MODE_PRIVATE,null);
         db.execSQL("CREATE TABLE IF NOT EXISTS Contacts(name TEXT,phonenumber TEXT)");
 
@@ -122,7 +128,7 @@ public class EditEventActivity extends AppCompatActivity implements View.OnClick
                 //Create contact list isSelected of all contacts is false.
                 contacts.add(new Contact("Collaborators", "-"));
                 if (cursor.getCount()>0) {
-                    while (cursor.moveToNext()){
+                    while (cursor.moveToNext()) {
                         Contact contact = new Contact(cursor.getString(0), cursor.getString(1));
                         contacts.add(contact);
                     }
