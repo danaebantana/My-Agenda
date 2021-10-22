@@ -48,7 +48,6 @@ public class SpinnerContactAdapter extends ArrayAdapter<Contact> {
 
         holder.mTextView.setText(listContacts.get(position).getName());
 
-        // To check weather checked event fire from getview() or user input
         isFromView = true;
         holder.mCheckBox.setChecked(listContacts.get(position).isSelected());
         isFromView = false;
